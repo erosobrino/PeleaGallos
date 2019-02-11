@@ -12,26 +12,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class AcercaDe extends PlantillaEscenas {
 
-    Image fondo;
     Image home;
     Stage escenario;
     SpriteBatch batch;
     int posX;
 
-    public AcercaDe(JuegoPrincipal juego) {
+    public AcercaDe(final JuegoPrincipal juego) {
         super(juego);
+
         posX = anchoPantalla / 7;
-    }
-
-    @Override
-    public void show() {
-        super.show();
-        fuente.getData().setScale(0.4f);
         escenario = new Stage();
-
-        fondo = new Image(juego.manager.get("suelo.png", Texture.class));     //Coge imagen del assetmanager
-        fondo.setSize(anchoPantalla, altoPantalla);
-        fondo.setPosition(0, 0);
 
         home = new Image(juego.manager.get("iconos/home.png", Texture.class));
         home.setSize(altoPantalla / 7, altoPantalla / 7);
@@ -39,12 +29,21 @@ public class AcercaDe extends PlantillaEscenas {
         home.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (juego.vibracionEncendida)
+                    Gdx.input.vibrate(juego.tiempoVibrar);
                 juego.setScreen(juego.menuInicio);
                 return true;
             }
         });
 
         batch = new SpriteBatch();
+    }
+
+    @Override
+    public void show() {
+        super.show();
+
+        fuente.getData().setScale(0.4f);
 
         escenario.addActor(fondo);
         escenario.addActor(home);
@@ -54,7 +53,7 @@ public class AcercaDe extends PlantillaEscenas {
 
     @Override
     public void render(float delta) {
-       super.render(delta);
+        super.render(delta);
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK))
             juego.setScreen(juego.menuInicio);
@@ -72,7 +71,7 @@ public class AcercaDe extends PlantillaEscenas {
     public void hide() {
         home.remove();
         fondo.remove();
-        escenario.dispose();
+//        escenario.dispose();
         Gdx.input.setInputProcessor(null);
 
     }

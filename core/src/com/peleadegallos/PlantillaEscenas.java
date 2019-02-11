@@ -5,7 +5,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class PlantillaEscenas implements Screen {
 
@@ -14,9 +16,14 @@ public class PlantillaEscenas implements Screen {
     int altoPantalla = Gdx.graphics.getHeight();
     BitmapFont fuente;
     Music musica;
+    Image fondo;
 
     public PlantillaEscenas(JuegoPrincipal juego) {
         this.juego = juego;
+
+        fondo = new Image(juego.manager.get("suelo.png", Texture.class));     //Coge imagen del assetmanager
+        fondo.setSize(anchoPantalla, altoPantalla);
+        fondo.setPosition(0, 0);
 
         fuente = juego.manager.get("skin/fuente200.fnt", BitmapFont.class);
         fuente.setColor(Color.BLACK);

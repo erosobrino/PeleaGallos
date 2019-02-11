@@ -19,7 +19,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 class Opciones extends PlantillaEscenas {
 
-    Image fondo;
     Stage escenario;
     Image home;
     Image imgVolumen;
@@ -27,20 +26,11 @@ class Opciones extends PlantillaEscenas {
     SpriteBatch batch;
     int posX;
 
-    public Opciones(JuegoPrincipal juego) {
+    public Opciones(final JuegoPrincipal juego) {
         super(juego);
         posX = anchoPantalla / 7;
-    }
 
-    @Override
-    public void show() {
-        super.show();
-        fuente.getData().setScale(0.75f);
         escenario = new Stage();
-
-        fondo = new Image(juego.manager.get("suelo.png", Texture.class));
-        fondo.setSize(anchoPantalla, altoPantalla);
-        fondo.setPosition(0, 0);
 
         home = new Image(juego.manager.get("iconos/home.png", Texture.class));
         home.setSize(altoPantalla / 7, altoPantalla / 7);
@@ -48,10 +38,23 @@ class Opciones extends PlantillaEscenas {
         home.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (juego.vibracionEncendida)
+                    Gdx.input.vibrate(juego.tiempoVibrar);
                 juego.setScreen(juego.menuInicio);
                 return true;
             }
         });
+
+        actualizaIconos();
+
+        batch = new SpriteBatch();
+    }
+
+    private void actualizaIconos() {
+        if (imgVibrar != null)
+            imgVibrar.remove();
+        if (imgVolumen != null)
+            imgVolumen.remove();
 
         if (juego.musicaEncendida) {
             imgVolumen = new Image(juego.manager.get("iconos/volume-up.png", Texture.class));
@@ -66,7 +69,9 @@ class Opciones extends PlantillaEscenas {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 juego.musicaEncendida = !juego.musicaEncendida;
-                show();
+                if (juego.vibracionEncendida)
+                    Gdx.input.vibrate(juego.tiempoVibrar);
+                actualizaIconos();
                 return true;
             }
         });
@@ -78,19 +83,26 @@ class Opciones extends PlantillaEscenas {
         } else {
             imgVibrar = new Image(juego.manager.get("iconos/bell-slash.png", Texture.class));
             imgVibrar.setSize(altoPantalla / 7 * 1.25f, altoPantalla / 7);
-            imgVibrar.setPosition(anchoPantalla / 7 * 4 * 0.95f, altoPantalla / 10 * 5.5f);
+            imgVibrar.setPosition(anchoPantalla / 7 * 4 * 0.97f, altoPantalla / 10 * 5.5f);
         }
         imgVibrar.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 juego.vibracionEncendida = !juego.vibracionEncendida;
-                System.out.println("sadasdffasdf");
-                show();
+                if (juego.vibracionEncendida)
+                    Gdx.input.vibrate(juego.tiempoVibrar);
+                actualizaIconos();
                 return true;
             }
         });
+        show();
+    }
 
-        batch = new SpriteBatch();
+    @Override
+    public void show() {
+        super.show();
+
+        fuente.getData().setScale(0.75f);
 
         escenario.addActor(fondo);
         escenario.addActor(home);
@@ -112,8 +124,8 @@ class Opciones extends PlantillaEscenas {
         escenario.draw();
 
         batch.begin();
-        fuente.draw(batch, "Volumen", posX, altoPantalla / 10 * 9);
-        fuente.draw(batch, "Vibrar", posX, altoPantalla / 10 * 7);
+        fuente.draw(batch, juego.idiomas.get("volumen"), posX, altoPantalla / 10 * 9);
+        fuente.draw(batch, juego.idiomas.get("vibrar"), posX, altoPantalla / 10 * 7);
         batch.end();
     }
 
@@ -123,7 +135,7 @@ class Opciones extends PlantillaEscenas {
         home.remove();
         imgVolumen.remove();
         imgVibrar.remove();
-        escenario.dispose();
+//        escenario.dispose();
 //        musica.pause();
         Gdx.input.setInputProcessor(null);
     }
