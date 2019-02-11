@@ -12,4 +12,9 @@ public class AndroidLauncher extends AndroidApplication {
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		initialize(new JuegoPrincipal(), config);
 	}
+
+	@Override
+	public void onBackPressed() {
+//		super.onBackPressed();  // Evita salir
+	}
 }
