@@ -23,7 +23,12 @@ public class JuegoPrincipal extends Game {
     public boolean musicaEncendida = true;
     public boolean vibracionEncendida = true;
     public int tiempoVibrar=60;
-    int PIXEL_METRO;  //Escala para box2s
+    public boolean debug=true;
+    float PIXEL_METRO_X;  //Escala para box2s
+    float PIXEL_METRO_Y;  //Escala para box2s
+    float metrosX=16;
+    float metrosY=9;
+
 
     @Override
     public void create() {
@@ -32,6 +37,7 @@ public class JuegoPrincipal extends Game {
         manager = new AssetManager();                         //Carga las imagenes y audio
         manager.load("suelo.png", Texture.class);    //Imagen del suelo
         manager.load("suelo2.png", Texture.class);    //Imagen del suelo
+        manager.load("2.png", Texture.class);    //Imagen del suelo
 
         manager.load("nubes/nube1.png", Texture.class);    //Imagen nube
         manager.load("nubes/cloud_PNG2.png", Texture.class);    //Imagen nube

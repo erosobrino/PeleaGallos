@@ -37,11 +37,13 @@ public class MenuInicio extends PlantillaEscenas {
         alto = altoPantalla / 5;
         ancho = anchoPantalla / 7;
 
-        juego.PIXEL_METRO=Gdx.graphics.getHeight()/4;
+        juego.PIXEL_METRO_X=Gdx.graphics.getWidth()/juego.metrosX;
+        juego.PIXEL_METRO_Y=Gdx.graphics.getHeight()/juego.metrosY;
 
         rand = new Random();
 
         escenario = new Stage();
+        escenario.setDebugAll(juego.debug);
 
         nubes = new ArrayList<Nube>();
         nubesTextura = new ArrayList<Texture>();

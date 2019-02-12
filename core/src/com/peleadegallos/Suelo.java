@@ -22,34 +22,41 @@ public class Suelo extends Actor {
     JuegoPrincipal juego;
 
     int anchoPantalla, altoPantalla;
+    float tamañoX, tamañoY;//Son la mitad del real
 
-    public Suelo(World mundo, Texture textura, Vector2 posicion, JuegoPrincipal juego, int anchoPantalla, int altoPantalla) {
+    public Suelo(World mundo, Texture textura, Vector2 posicion, JuegoPrincipal juego, int anchoPantalla, int altoPantalla, float tamañoX, float tamañoY){
         this.mundo = mundo;
         this.textura = textura;
         this.juego = juego;
-        this.altoPantalla=altoPantalla;
-        this.anchoPantalla=anchoPantalla;
+        this.altoPantalla = altoPantalla;
+        this.anchoPantalla = anchoPantalla;
+        this.tamañoX=tamañoX;
+        this.tamañoY=tamañoY;
 
         BodyDef def = new BodyDef();
-        def.position.set(posicion);
+        def.position.set(posicion.x-1f,posicion.y+0.5f);
         def.type = BodyDef.BodyType.StaticBody;
         body = mundo.createBody(def);
 
         PolygonShape forma = new PolygonShape();
-        forma.setAsBox(anchoPantalla/2, textura.getHeight()/juego.PIXEL_METRO);
-        fixture = body.createFixture(forma, 3);
+        forma.setAsBox(tamañoX, tamañoY);
+        fixture = body.createFixture(forma, 1);
         forma.dispose();
+
+    }
+
+    public Suelo(World mundo, Texture textura, Vector2 posicion, JuegoPrincipal juego, int anchoPantalla, int altoPantalla) {
+       this(mundo,textura,posicion,juego,anchoPantalla,altoPantalla,1,1);
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        setPosition(body.getPosition().x * juego.PIXEL_METRO, body.getPosition().y * juego.PIXEL_METRO);
-        batch.draw(textura, getX(), getY(),anchoPantalla,textura.getHeight()+30);
+        setPosition(body.getPosition().x * juego.PIXEL_METRO_X+1f*juego.PIXEL_METRO_Y, body.getPosition().y * juego.PIXEL_METRO_Y-0.5f*juego.PIXEL_METRO_Y);
+        batch.draw(textura, getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY);
     }
 
     @Override
     public void act(float delta) {
-//        body.setLinearVelocity(8,8);
     }
 
     public void elimina() {

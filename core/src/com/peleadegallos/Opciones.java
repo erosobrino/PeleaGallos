@@ -31,6 +31,7 @@ class Opciones extends PlantillaEscenas {
         posX = anchoPantalla / 7;
 
         escenario = new Stage();
+        escenario.setDebugAll(juego.debug);
 
         home = new Image(juego.manager.get("iconos/home.png", Texture.class));
         home.setSize(altoPantalla / 7, altoPantalla / 7);

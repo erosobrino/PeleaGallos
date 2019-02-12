@@ -28,6 +28,8 @@ public class Jugador extends Actor {
 
     JuegoPrincipal juego;
 
+    float tamañoX=0.5f, tamañoY=0.5f;
+
     public Jugador(World mundo, Texture textura, Vector2 posicion, JuegoPrincipal juego) {
         this.mundo = mundo;
         this.textura = textura;
@@ -35,20 +37,22 @@ public class Jugador extends Actor {
         this.juego = juego;
 
         BodyDef def = new BodyDef();
-        def.position.set(posicion);
+        System.out.println(posicion.x);
+        def.position.set(posicion.x-1.5f,posicion.y);
         def.type = BodyDef.BodyType.DynamicBody;
         body = mundo.createBody(def);
 
         PolygonShape forma = new PolygonShape();
-        forma.setAsBox(0.5f, 0.5f);
+        forma.setAsBox(tamañoX, tamañoY);
         fixture = body.createFixture(forma, 3);
         forma.dispose();
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        setPosition(body.getPosition().x * juego.PIXEL_METRO, body.getPosition().y * juego.PIXEL_METRO);
-        batch.draw(textura, getX(), getY()-10);
+        setPosition(body.getPosition().x * juego.PIXEL_METRO_X+1.5f*juego.PIXEL_METRO_X, body.getPosition().y * juego.PIXEL_METRO_Y);
+        batch.draw(textura, getX(),getY(),juego.PIXEL_METRO_X*2*tamañoX,juego.PIXEL_METRO_Y*2*tamañoY);
+
     }
 
     @Override
