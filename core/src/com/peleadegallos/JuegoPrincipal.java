@@ -22,7 +22,7 @@ public class JuegoPrincipal extends Game {
     AssetManager manager;
     public boolean musicaEncendida = true;
     public boolean vibracionEncendida = true;
-    public int tiempoVibrar=60;
+    public int tiempoVibrar=50;
     public boolean debug=true;
     float PIXEL_METRO_X;  //Escala para box2s
     float PIXEL_METRO_Y;  //Escala para box2s
@@ -51,6 +51,10 @@ public class JuegoPrincipal extends Game {
         manager.load("iconos/info-circle.png", Texture.class);
         manager.load("iconos/volume-mute.png", Texture.class);
         manager.load("iconos/volume-up.png", Texture.class);
+        manager.load("iconos/flechaArriba.png", Texture.class);
+        manager.load("iconos/flechaDerecha.png", Texture.class);
+        manager.load("iconos/flechaIzquierda.png", Texture.class);
+        manager.load("iconos/disparo.png", Texture.class);
 
         manager.load("dino1.png", Texture.class);
 

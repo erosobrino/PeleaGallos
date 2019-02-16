@@ -1,11 +1,9 @@
 package com.peleadegallos;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -37,8 +35,8 @@ public class MenuInicio extends PlantillaEscenas {
         alto = altoPantalla / 5;
         ancho = anchoPantalla / 7;
 
-        juego.PIXEL_METRO_X=Gdx.graphics.getWidth()/juego.metrosX;
-        juego.PIXEL_METRO_Y=Gdx.graphics.getHeight()/juego.metrosY;
+        juego.PIXEL_METRO_X = Gdx.graphics.getWidth() / juego.metrosX;
+        juego.PIXEL_METRO_Y = Gdx.graphics.getHeight() / juego.metrosY;
 
         rand = new Random();
 
