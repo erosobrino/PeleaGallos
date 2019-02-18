@@ -25,6 +25,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -33,6 +34,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import java.util.ArrayList;
@@ -51,6 +53,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
     ArrayList<Jugador> jugadores;
     ArrayList<Suelo> suelos;
 
+    Bala bala;
     ArrayList<Bala> balas;
 
     Image btAdelante, btAtras, btSaltarAdelante, btSaltarAtras, btDisparo;
@@ -67,6 +70,11 @@ public class PantallaJuego1 extends PlantillaEscenas {
     SpriteBatch batchTexto;
 
     ActorLimiteMapa limiteMapa;
+
+    String tiempoString=20+"";
+    int tiempoTurno = 20;
+    int tiempo = tiempoTurno;
+    int contTimer = 0;
 
     public PantallaJuego1(final JuegoPrincipal juego) {
         super(juego);
@@ -186,9 +194,13 @@ public class PantallaJuego1 extends PlantillaEscenas {
                     Gdx.input.vibrate(juego.tiempoVibrar);
                 Vector2 inicio = null;
                 Vector2 centroJugador = null;
-                double angulo = Math.toRadians(45); //angulo predefinido
+                double angulo;
                 for (Jugador jugador : jugadores) {
                     if (jugador.turno) {
+                        if (jugador.avanza)
+                            angulo = Math.toRadians(45); //angulo predefinido
+                        else
+                            angulo = Math.toRadians(135); //angulo predefinido
                         inicio = new Vector2(jugador.getX() / juego.PIXEL_METRO_X, jugador.getY() / juego.PIXEL_METRO_Y); //Punto de salida de la bala, en la esquina a la que apunte
                         if (jugador.avanza)
                             inicio.x += jugador.tamañoX * 1.5f;
@@ -203,11 +215,11 @@ public class PantallaJuego1 extends PlantillaEscenas {
                             float xx = ptoFinal.x - centroJugador.x;
                             angulo = (float) Math.atan2(yy, xx);
                         }
+                        if (inicio != null) {
+                            balas.add(new Bala(mundo, juego.manager.get("dino1.png", Texture.class), inicio, juego, (float) angulo));
+                            escenario.addActor(balas.get(balas.size() - 1));
+                        }
                     }
-                }
-                if (inicio != null) {
-                    balas.add(new Bala(mundo, juego.manager.get("dino1.png", Texture.class), inicio, juego, (float) angulo));
-                    escenario.addActor(balas.get(balas.size() - 1));
                 }
                 return true;
             }
@@ -230,6 +242,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
                     if (jugador.turno)
                         jugadorActual = jugador.fixture.getUserData().toString();
                 }
+                fling.clear();
             }
         });
 
@@ -253,9 +266,32 @@ public class PantallaJuego1 extends PlantillaEscenas {
         suelos.add(new Suelo(mundo, juego.manager.get("2.png", Texture.class), new Vector2(12, 0), juego, anchoPantalla, altoPantalla, false));
         suelos.add(new Suelo(mundo, juego.manager.get("2.png", Texture.class), new Vector2(14, 0), juego, anchoPantalla, altoPantalla, false));
 
+        Texture[] parado = new Texture[10];
+        parado[0] = juego.manager.get("dino/Idle (1).png", Texture.class);
+        parado[1] = juego.manager.get("dino/Idle (2).png", Texture.class);
+        parado[2] = juego.manager.get("dino/Idle (3).png", Texture.class);
+        parado[3] = juego.manager.get("dino/Idle (4).png", Texture.class);
+        parado[4] = juego.manager.get("dino/Idle (5).png", Texture.class);
+        parado[5] = juego.manager.get("dino/Idle (6).png", Texture.class);
+        parado[6] = juego.manager.get("dino/Idle (7).png", Texture.class);
+        parado[7] = juego.manager.get("dino/Idle (8).png", Texture.class);
+        parado[8] = juego.manager.get("dino/Idle (9).png", Texture.class);
+        parado[9] = juego.manager.get("dino/Idle (10).png", Texture.class);
 
-        jugador1 = new Jugador(mundo, juego.manager.get("dino1.png", Texture.class), new Vector2(0, 3), juego, true, Jugador.Movimiento.nada);
-        jugador2 = new Jugador(mundo, juego.manager.get("dino1.png", Texture.class), new Vector2(15, 3), juego, false, Jugador.Movimiento.nada);
+        Texture[] mov = new Texture[10];
+        mov[0] = juego.manager.get("dino/Walk (1).png", Texture.class);
+        mov[1] = juego.manager.get("dino/Walk (2).png", Texture.class);
+        mov[2] = juego.manager.get("dino/Walk (3).png", Texture.class);
+        mov[3] = juego.manager.get("dino/Walk (4).png", Texture.class);
+        mov[4] = juego.manager.get("dino/Walk (5).png", Texture.class);
+        mov[5] = juego.manager.get("dino/Walk (6).png", Texture.class);
+        mov[6] = juego.manager.get("dino/Walk (7).png", Texture.class);
+        mov[7] = juego.manager.get("dino/Walk (8).png", Texture.class);
+        mov[8] = juego.manager.get("dino/Walk (9).png", Texture.class);
+        mov[9] = juego.manager.get("dino/Walk (10).png", Texture.class);
+
+        jugador1 = new Jugador(mundo, parado, mov, new Vector2(0, 3), juego, true, Jugador.Movimiento.nada);
+        jugador2 = new Jugador(mundo, parado, mov, new Vector2(15, 3), juego, false, Jugador.Movimiento.nada);
 
         jugador1.fixture.setUserData("jugador1");
         jugador2.fixture.setUserData("jugador2");
@@ -301,24 +337,19 @@ public class PantallaJuego1 extends PlantillaEscenas {
                     jugador2.saltando = false;
                 }
 
-                if (hanColisionado(contact, "bala", "jugador1")) {
-                    for (Bala bala : balas) {
-                        jugador1.vida += bala.daño;
+                for (Bala bala : balas) {
+                    if (hanColisionado(contact, bala.idBala, "jugador1")) {
+                        jugador1.vida -= bala.daño;
                         bala.impacto = true;
                     }
-                }
-                if (hanColisionado(contact, "bala", "jugador2")) {
-                    for (Bala bala : balas) {
+                    if (hanColisionado(contact, bala.idBala, "jugador2")) {
                         jugador2.vida -= bala.daño;
                         bala.impacto = true;
                     }
-                }
-                if (hanColisionado(contact, "bala", "suelo")) {
-                    for (Bala bala : balas) {
+                    if (hanColisionado(contact, bala.idBala, "suelo")) {
                         bala.impacto = true;
                     }
                 }
-
             }
 
             @Override
@@ -341,6 +372,35 @@ public class PantallaJuego1 extends PlantillaEscenas {
 
         fuente.getData().setScale(0.4f);
 
+
+        Timer.Task t = Timer.schedule(new Timer.Task() {
+                                          @Override
+                                          public void run() {
+                                              timer();
+                                          }
+                                      }
+                , 0, 0.200f
+        );
+    }
+
+    private void timer() {
+        contTimer++;
+        if (contTimer > 5) {
+            contTimer = 0;
+            tiempo--;
+            tiempoString = tiempo + "";
+            if (tiempo <= 0) {
+                tiempo = 20;
+                InputEvent evento = new InputEvent();
+                evento.setType(InputEvent.Type.touchDown);
+                btCambioPersonaje.fire(evento);
+                evento.setType(InputEvent.Type.touchUp);
+                btCambioPersonaje.fire(evento);
+            }
+        }
+        for (Jugador jugador : jugadores) {
+            jugador.cambiaFrame();
+        }
     }
 
     @Override
@@ -352,7 +412,10 @@ public class PantallaJuego1 extends PlantillaEscenas {
         }
 
         batchTexto.begin();
-        fuente.draw(batchTexto, jugadorActual, anchoPantalla / 15, altoPantalla - altoPantalla / 8);
+        fuente.draw(batchTexto, jugadorActual, anchoPantalla / 3, altoPantalla - altoPantalla / 10);
+        fuente.draw(batchTexto, tiempoString + "s", anchoPantalla / 3 * 2, altoPantalla - altoPantalla / 10);
+        fuente.draw(batchTexto, jugador1.vida + "", anchoPantalla / 18, altoPantalla - altoPantalla / 10);
+        fuente.draw(batchTexto, jugador2.vida + "", anchoPantalla - anchoPantalla / 12, altoPantalla - altoPantalla / 10);
         batchTexto.end();
 
         if (fling.size() > 1) {
@@ -374,6 +437,15 @@ public class PantallaJuego1 extends PlantillaEscenas {
         camera.update();
         renderer.render(mundo, camera.combined);
         escenario.draw();
+
+        for (int i = balas.size() - 1; i >= 0; i--) {
+            if (balas.get(i).impacto) { //Se elimina despues del mundo step para evitar error al renderizar la bala a null
+                balas.get(i).elimina();
+                balas.get(i).remove();
+                balas.remove(i);
+                System.out.println("elimina bala");
+            }
+        }
     }
 
     @Override
@@ -387,7 +459,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
         jugador2.elimina();
         jugador2.remove();
 
-        for (Bala bala : balas) {
+        if (bala != null) {
             bala.elimina();
             bala.remove();
         }

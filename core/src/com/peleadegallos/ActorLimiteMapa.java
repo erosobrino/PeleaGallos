@@ -16,7 +16,7 @@ public class ActorLimiteMapa extends Actor {
 
     Body bodyIzq, bodyDer;
 
-    Fixture fixture;
+    Fixture fixtureIzq, fixtureDer;
 
     public ActorLimiteMapa(World mundo, JuegoPrincipal juego, int altoPantalla, int anchoPantalla) {
         this.mundo = mundo;
@@ -28,21 +28,21 @@ public class ActorLimiteMapa extends Actor {
 
         PolygonShape forma = new PolygonShape();
         forma.setAsBox(0, altoPantalla);
-        fixture = bodyIzq.createFixture(forma, 3);
-        fixture.setUserData("limiteIzquierda");
+        fixtureIzq = bodyIzq.createFixture(forma, 3);
+        fixtureIzq.setUserData("limiteIzquierda");
 
         def.position.set(14, 0);
         def.type = BodyDef.BodyType.StaticBody;
         bodyDer = mundo.createBody(def);
 
-        fixture = bodyDer.createFixture(forma, 3);
-        fixture.setUserData("limiteDerecha");
+        fixtureDer = bodyDer.createFixture(forma, 3);
+        fixtureDer.setUserData("limiteDerecha");
         forma.dispose();
     }
 
     public void elimina() {
-        bodyIzq.destroyFixture(fixture);
-        bodyDer.destroyFixture(fixture);
+        bodyIzq.destroyFixture(fixtureIzq);
+        bodyDer.destroyFixture(fixtureDer);
         mundo.destroyBody(bodyIzq);
         mundo.destroyBody(bodyDer);
     }

@@ -22,17 +22,17 @@ public class JuegoPrincipal extends Game {
     AssetManager manager;
     public boolean musicaEncendida = true;
     public boolean vibracionEncendida = true;
-    public int tiempoVibrar=50;
-    public boolean debug=true;
+    public int tiempoVibrar = 50;
+    public boolean debug = true;
     float PIXEL_METRO_X;  //Escala para box2s
     float PIXEL_METRO_Y;  //Escala para box2s
-    float metrosX=16;
-    float metrosY=9;
+    float metrosX = 16;
+    float metrosY = 9;
 
 
     @Override
     public void create() {
-        idiomas=I18NBundle.createBundle(Gdx.files.internal("locale/locale"));
+        idiomas = I18NBundle.createBundle(Gdx.files.internal("locale/locale"));
 
         manager = new AssetManager();                         //Carga las imagenes y audio
         manager.load("suelo.png", Texture.class);    //Imagen del suelo
@@ -55,6 +55,27 @@ public class JuegoPrincipal extends Game {
         manager.load("iconos/flechaDerecha.png", Texture.class);
         manager.load("iconos/flechaIzquierda.png", Texture.class);
         manager.load("iconos/disparo.png", Texture.class);
+
+        manager.load("dino/Idle (1).png", Texture.class);
+        manager.load("dino/Idle (2).png", Texture.class);
+        manager.load("dino/Idle (3).png", Texture.class);
+        manager.load("dino/Idle (4).png", Texture.class);
+        manager.load("dino/Idle (5).png", Texture.class);
+        manager.load("dino/Idle (6).png", Texture.class);
+        manager.load("dino/Idle (7).png", Texture.class);
+        manager.load("dino/Idle (8).png", Texture.class);
+        manager.load("dino/Idle (9).png", Texture.class);
+        manager.load("dino/Idle (10).png", Texture.class);
+        manager.load("dino/Walk (1).png", Texture.class);
+        manager.load("dino/Walk (2).png", Texture.class);
+        manager.load("dino/Walk (3).png", Texture.class);
+        manager.load("dino/Walk (4).png", Texture.class);
+        manager.load("dino/Walk (5).png", Texture.class);
+        manager.load("dino/Walk (6).png", Texture.class);
+        manager.load("dino/Walk (7).png", Texture.class);
+        manager.load("dino/Walk (8).png", Texture.class);
+        manager.load("dino/Walk (9).png", Texture.class);
+        manager.load("dino/Walk (10).png", Texture.class);
 
         manager.load("dino1.png", Texture.class);
 

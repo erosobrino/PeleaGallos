@@ -12,6 +12,8 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Bala extends Actor {
+
+    public static int cantidadBalas=0;
     Texture textura;
 
     World mundo;
@@ -32,6 +34,7 @@ public class Bala extends Actor {
 
     int fuerza;
     float angulo;
+    int idBala;
 
     public Bala(World mundo, Texture textura, Vector2 posicion, JuegoPrincipal juego, float radio, int daño, int fuerza, float angulo) {
         this.mundo = mundo;
@@ -43,6 +46,8 @@ public class Bala extends Actor {
         this.daño = daño;
         this.fuerza = fuerza;
         this.angulo = angulo;
+        cantidadBalas++;
+        idBala=cantidadBalas;
 
         BodyDef def = new BodyDef();
         def.position.set(posicion.x - 1.5f, posicion.y);
@@ -52,7 +57,7 @@ public class Bala extends Actor {
         CircleShape forma = new CircleShape();
         forma.setRadius(radio);
         fixture = body.createFixture(forma, 1);
-        fixture.setUserData("bala");
+        fixture.setUserData(idBala);
         forma.dispose();
 
     }
@@ -74,7 +79,7 @@ public class Bala extends Actor {
                 Vector2 posicionCuerpo = body.getPosition();
                 double x = fuerza * Math.cos(angulo);
                 double y = fuerza * Math.sin(angulo);
-                System.out.println(angulo);
+//                System.out.println(angulo);
                 body.applyLinearImpulse((float) x, (float) y, posicionCuerpo.x, posicionCuerpo.y, true);
                 cont++;
             }
