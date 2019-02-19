@@ -2,6 +2,7 @@ package com.peleadegallos;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -29,6 +30,7 @@ import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -76,6 +78,12 @@ public class PantallaJuego1 extends PlantillaEscenas {
     int tiempo = tiempoTurno;
     int contTimer = 0;
 
+    boolean partidaAcabada;
+    int idGanador;
+    boolean visible;
+
+    Sound sonidoCanon, sonidoSalto, sonidoAndar;
+
     public PantallaJuego1(final JuegoPrincipal juego) {
         super(juego);
 
@@ -87,6 +95,10 @@ public class PantallaJuego1 extends PlantillaEscenas {
         escenario.setDebugAll(true);
         camera.translate(6, 4);
 
+        sonidoCanon=juego.manager.get("sonidos/sonidoCanon.mp3",Sound.class);
+        sonidoSalto=juego.manager.get("sonidos/sonidoSalto.mp3",Sound.class);
+        sonidoAndar=juego.manager.get("sonidos/sonidoAndar.mp3",Sound.class);
+
 
         btAdelante = new Image(juego.manager.get("iconos/flechaDerecha.png", Texture.class));
         btAdelante.setSize(altoPantalla / 7, altoPantalla / 7);
@@ -94,8 +106,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
         btAdelante.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (juego.vibracionEncendida)
-                    Gdx.input.vibrate(juego.tiempoVibrar);
+                botonPulsado(sonidoAndar);
                 for (Jugador jugador : jugadores) {
                     if (jugador.turno)
                         jugador.movimiento = Jugador.Movimiento.adelante;
@@ -118,8 +129,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
         btAtras.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (juego.vibracionEncendida)
-                    Gdx.input.vibrate(juego.tiempoVibrar);
+                botonPulsado(sonidoAndar);
                 for (Jugador jugador : jugadores) {
                     if (jugador.turno)
                         jugador.movimiento = Jugador.Movimiento.atras;
@@ -142,8 +152,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
         btSaltarAdelante.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (juego.vibracionEncendida)
-                    Gdx.input.vibrate(juego.tiempoVibrar);
+                botonPulsado(sonidoSalto);
                 for (Jugador jugador : jugadores) {
                     if (jugador.turno)
                         jugador.movimiento = Jugador.Movimiento.saltaAdelante;
@@ -166,8 +175,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
         btSaltarAtras.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (juego.vibracionEncendida)
-                    Gdx.input.vibrate(juego.tiempoVibrar);
+                botonPulsado(sonidoSalto);
                 for (Jugador jugador : jugadores) {
                     if (jugador.turno)
                         jugador.movimiento = Jugador.Movimiento.saltaAtras;
@@ -190,8 +198,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
         btDisparo.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (juego.vibracionEncendida)
-                    Gdx.input.vibrate(juego.tiempoVibrar);
+                botonPulsado(sonidoCanon);
                 Vector2 inicio = null;
                 Vector2 centroJugador = null;
                 double angulo;
@@ -235,8 +242,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
         btCambioPersonaje.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (juego.vibracionEncendida)
-                    Gdx.input.vibrate(juego.tiempoVibrar);
+                botonPulsado(sonidoClick);
                 for (Jugador jugador : jugadores) {
                     jugador.turno = !jugador.turno;
                     if (jugador.turno)
@@ -257,6 +263,9 @@ public class PantallaJuego1 extends PlantillaEscenas {
         super.show();
         fling = new ArrayList<Vector2>();
         balas = new ArrayList<Bala>();
+        idGanador = 0;
+        partidaAcabada = false;
+        visible = true;
         //Limites  visible 0-8x 0-15y
         suelos = new ArrayList<Suelo>();
         suelos.add(new Suelo(mundo, juego.manager.get("2.png", Texture.class), new Vector2(0, 0), juego, anchoPantalla, altoPantalla, false));
@@ -303,8 +312,18 @@ public class PantallaJuego1 extends PlantillaEscenas {
         salto[7] = juego.manager.get("dino/Jump (10).png", Texture.class);
         salto[8] = juego.manager.get("dino/Jump (11).png", Texture.class);
 
-        jugador1 = new Jugador(mundo, parado, mov, salto, new Vector2(0, 3), juego, true, Jugador.Movimiento.nada);
-        jugador2 = new Jugador(mundo, parado, mov, salto, new Vector2(15, 3), juego, false, Jugador.Movimiento.nada);
+        Texture[] muerto = new Texture[8];
+        muerto[0] = juego.manager.get("dino/Dead (1).png", Texture.class);
+        muerto[1] = juego.manager.get("dino/Dead (2).png", Texture.class);
+        muerto[2] = juego.manager.get("dino/Dead (3).png", Texture.class);
+        muerto[3] = juego.manager.get("dino/Dead (4).png", Texture.class);
+        muerto[4] = juego.manager.get("dino/Dead (5).png", Texture.class);
+        muerto[5] = juego.manager.get("dino/Dead (6).png", Texture.class);
+        muerto[6] = juego.manager.get("dino/Dead (7).png", Texture.class);
+        muerto[7] = juego.manager.get("dino/Dead (8).png", Texture.class);
+
+        jugador1 = new Jugador(mundo, parado, mov, salto, muerto, new Vector2(0, 3), juego, true, Jugador.Movimiento.nada);
+        jugador2 = new Jugador(mundo, parado, mov, salto, muerto, new Vector2(15, 3), juego, false, Jugador.Movimiento.nada);
 
         jugador1.fixture.setUserData("jugador1");
         jugador2.fixture.setUserData("jugador2");
@@ -358,12 +377,14 @@ public class PantallaJuego1 extends PlantillaEscenas {
 
                 for (Bala bala : balas) {
                     if (hanColisionado(contact, bala.idBala, "jugador1")) {
-                        jugador1.vida -= bala.daño;
+                        jugador1.setVida(jugador1.getVida() - bala.daño);
                         bala.impacto = true;
+                        comprobarFinalizacion();
                     }
                     if (hanColisionado(contact, bala.idBala, "jugador2")) {
-                        jugador2.vida -= bala.daño;
+                        jugador2.setVida(jugador2.getVida() - bala.daño);
                         bala.impacto = true;
+                        comprobarFinalizacion();
                     }
                     if (hanColisionado(contact, bala.idBala, "suelo")) {
                         bala.impacto = true;
@@ -373,17 +394,14 @@ public class PantallaJuego1 extends PlantillaEscenas {
 
             @Override
             public void endContact(Contact contact) {
-
             }
 
             @Override
             public void preSolve(Contact contact, Manifold oldManifold) {
-
             }
 
             @Override
             public void postSolve(Contact contact, ContactImpulse impulse) {
-
             }
         });
 
@@ -402,23 +420,40 @@ public class PantallaJuego1 extends PlantillaEscenas {
         );
     }
 
-    private void timer() {
-        contTimer++;
-        if (contTimer > 5) {
-            contTimer = 0;
-            tiempo--;
-            tiempoString = tiempo + "";
-            if (tiempo <= 0) {
-                tiempo = 20;
-                InputEvent evento = new InputEvent();
-                evento.setType(InputEvent.Type.touchDown);
-                btCambioPersonaje.fire(evento);
-                evento.setType(InputEvent.Type.touchUp);
-                btCambioPersonaje.fire(evento);
+    private void comprobarFinalizacion() {
+        for (Jugador jugador : jugadores) {
+            if (!partidaAcabada) {
+                if (!jugador.vivo) {
+                    partidaAcabada = true;
+                    if (jugador.fixture.getUserData().equals("jugador1"))
+                        idGanador = 2;
+                    else
+                        idGanador = 1;
+                    Gdx.input.setInputProcessor(null);
+                }
             }
         }
-        for (Jugador jugador : jugadores) {
-            jugador.cambiaFrame();
+    }
+
+    private void timer() {
+        if (visible && !partidaAcabada) {
+            contTimer++;
+            if (contTimer > 5) {
+                contTimer = 0;
+                tiempo--;
+                tiempoString = tiempo + "";
+                if (tiempo <= 0) {
+                    tiempo = 20;
+                    InputEvent evento = new InputEvent();
+                    evento.setType(InputEvent.Type.touchDown);
+                    btCambioPersonaje.fire(evento);
+                    evento.setType(InputEvent.Type.touchUp);
+                    btCambioPersonaje.fire(evento);
+                }
+            }
+            for (Jugador jugador : jugadores) {
+                jugador.cambiaFrame();
+            }
         }
     }
 
@@ -431,10 +466,15 @@ public class PantallaJuego1 extends PlantillaEscenas {
         }
 
         batchTexto.begin();
+        if (idGanador == 1)
+            fuente.draw(batchTexto, juego.idiomas.get("jug1Gana"), anchoPantalla / 5, altoPantalla - altoPantalla / 5);
+        if (idGanador == 2)
+            fuente.draw(batchTexto, juego.idiomas.get("jug2Gana"), anchoPantalla / 3, altoPantalla - altoPantalla / 5);
+
         fuente.draw(batchTexto, jugadorActual, anchoPantalla / 3, altoPantalla - altoPantalla / 10);
         fuente.draw(batchTexto, tiempoString + "s", anchoPantalla / 3 * 2, altoPantalla - altoPantalla / 10);
-        fuente.draw(batchTexto, jugador1.vida + "", anchoPantalla / 18, altoPantalla - altoPantalla / 10);
-        fuente.draw(batchTexto, jugador2.vida + "", anchoPantalla - anchoPantalla / 12, altoPantalla - altoPantalla / 10);
+        fuente.draw(batchTexto, jugador1.getVida() + "", anchoPantalla / 18, altoPantalla - altoPantalla / 10);
+        fuente.draw(batchTexto, jugador2.getVida() + "", anchoPantalla - anchoPantalla / 12, altoPantalla - altoPantalla / 10);
         batchTexto.end();
 
         if (fling.size() > 1) {
@@ -451,6 +491,18 @@ public class PantallaJuego1 extends PlantillaEscenas {
             formas.end();
         }
 
+        //Cuando acaba la partida espera 1 segundo y ejecuta el siguiente codigo
+        if (partidaAcabada) {
+            escenario.addAction(Actions.sequence(Actions.delay(10), Actions.run(new Runnable() {
+                @Override
+                public void run() {
+                    juego.finalizacionPartida.pantallaAnterior = juego.pantallaJuego1;
+                    juego.pantallaJuego1 = new PantallaJuego1(juego);
+                    juego.setScreen(juego.finalizacionPartida);
+                }
+            })));
+        }
+
         escenario.act();
         mundo.step(delta, 6, 2);
         camera.update();
@@ -462,13 +514,13 @@ public class PantallaJuego1 extends PlantillaEscenas {
                 balas.get(i).elimina();
                 balas.get(i).remove();
                 balas.remove(i);
-                System.out.println("elimina bala");
             }
         }
     }
 
     @Override
     public void hide() {
+        visible = false;
         for (Suelo suelo : suelos) {
             suelo.elimina();
             suelo.remove();

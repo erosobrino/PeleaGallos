@@ -5,6 +5,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -16,6 +17,7 @@ public class JuegoPrincipal extends Game {
     Opciones opciones;
     AcercaDe info;
     PantallaJuego1 pantallaJuego1;
+    FinalizacionPartida finalizacionPartida;
 
     I18NBundle idiomas;
 
@@ -91,6 +93,20 @@ public class JuegoPrincipal extends Game {
         manager.load("dino/Jump (11).png", Texture.class);
         manager.load("dino/Jump (12).png", Texture.class);
 
+        manager.load("dino/Dead (1).png", Texture.class);
+        manager.load("dino/Dead (2).png", Texture.class);
+        manager.load("dino/Dead (3).png", Texture.class);
+        manager.load("dino/Dead (4).png", Texture.class);
+        manager.load("dino/Dead (5).png", Texture.class);
+        manager.load("dino/Dead (6).png", Texture.class);
+        manager.load("dino/Dead (7).png", Texture.class);
+        manager.load("dino/Dead (8).png", Texture.class);
+
+        manager.load("sonidos/sonidoClick.mp3", Sound.class);
+        manager.load("sonidos/sonidoCanon.mp3", Sound.class);
+        manager.load("sonidos/sonidoSalto.mp3", Sound.class);
+        manager.load("sonidos/sonidoEscopeta.mp3", Sound.class);
+        manager.load("sonidos/sonidoAndar.mp3", Sound.class);
 
         manager.load("skin/fuente200.fnt", BitmapFont.class);    //Fuente
         manager.finishLoading();                             //Espera a que acabe de cargar
@@ -99,6 +115,7 @@ public class JuegoPrincipal extends Game {
         opciones = new Opciones(this);
         info = new AcercaDe(this);
         pantallaJuego1 = new PantallaJuego1(this);
+        finalizacionPartida = new FinalizacionPartida(this);
 
         setScreen(menuInicio);                             //Cambia al menu de inicio
     }

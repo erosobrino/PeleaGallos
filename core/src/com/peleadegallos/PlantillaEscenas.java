@@ -3,6 +3,7 @@ package com.peleadegallos;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,6 +18,7 @@ public class PlantillaEscenas implements Screen {
     BitmapFont fuente;
     Music musica;
     Image fondo;
+    Sound sonidoClick;
 
     public PlantillaEscenas(JuegoPrincipal juego) {
         this.juego = juego;
@@ -29,6 +31,9 @@ public class PlantillaEscenas implements Screen {
         fuente.setColor(Color.BLACK);
         musica = juego.manager.get("Music.wav", Music.class);
         musica.setLooping(true);
+        musica.setVolume(0.75f);
+
+        sonidoClick=juego.manager.get("sonidos/sonidoClick.mp3",Sound.class);
     }
 
     @Override
@@ -36,6 +41,14 @@ public class PlantillaEscenas implements Screen {
         if (juego.musicaEncendida)
             musica.play();
 
+    }
+
+    public void botonPulsado(Sound sonido){
+        if (juego.vibracionEncendida)
+            Gdx.input.vibrate(juego.tiempoVibrar);
+        if (juego.musicaEncendida){
+            sonido.play();
+        }
     }
 
     @Override

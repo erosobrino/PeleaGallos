@@ -60,8 +60,7 @@ public class MenuInicio extends PlantillaEscenas {
         jugar.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (juego.vibracionEncendida)
-                    Gdx.input.vibrate(juego.tiempoVibrar);
+               botonPulsado(sonidoClick);
                 juego.setScreen(juego.pantallaJuego1);
             }
         });
@@ -74,8 +73,7 @@ public class MenuInicio extends PlantillaEscenas {
         opciones.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (juego.vibracionEncendida)
-                    Gdx.input.vibrate(juego.tiempoVibrar);
+                botonPulsado(sonidoClick);
                 juego.setScreen(juego.opciones);
             }
         });
@@ -98,8 +96,7 @@ public class MenuInicio extends PlantillaEscenas {
         imgInfo.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (juego.vibracionEncendida)
-                    Gdx.input.vibrate(juego.tiempoVibrar);
+                botonPulsado(sonidoClick);
                 juego.setScreen(juego.info);
                 return true;
             }

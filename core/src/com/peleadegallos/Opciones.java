@@ -39,8 +39,7 @@ class Opciones extends PlantillaEscenas {
         home.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (juego.vibracionEncendida)
-                    Gdx.input.vibrate(juego.tiempoVibrar);
+                botonPulsado(sonidoClick);
                 juego.setScreen(juego.menuInicio);
                 return true;
             }
@@ -50,6 +49,7 @@ class Opciones extends PlantillaEscenas {
 
         batch = new SpriteBatch();
     }
+
 
     private void actualizaIconos() {
         if (imgVibrar != null)
@@ -70,8 +70,7 @@ class Opciones extends PlantillaEscenas {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 juego.musicaEncendida = !juego.musicaEncendida;
-                if (juego.vibracionEncendida)
-                    Gdx.input.vibrate(juego.tiempoVibrar);
+                botonPulsado(sonidoClick);
                 actualizaIconos();
                 return true;
             }
@@ -90,8 +89,7 @@ class Opciones extends PlantillaEscenas {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 juego.vibracionEncendida = !juego.vibracionEncendida;
-                if (juego.vibracionEncendida)
-                    Gdx.input.vibrate(juego.tiempoVibrar);
+                botonPulsado(sonidoClick);
                 actualizaIconos();
                 return true;
             }

@@ -63,8 +63,8 @@ public class AcercaDe extends PlantillaEscenas {
         escenario.draw();
 
         batch.begin();
-        fuente.draw(batch, "Creado por: Ero Sobrino Dorado", posX, altoPantalla / 10 * 9);
-        fuente.draw(batch, "Musica de: DL Sounds", posX, altoPantalla / 10 * 7);
+        fuente.draw(batch, juego.idiomas.get("creado")+": Ero Sobrino Dorado", posX, altoPantalla / 10 * 9);
+        fuente.draw(batch, juego.idiomas.get("musica")+": DL Sounds", posX, altoPantalla / 10 * 7);
         batch.end();
     }
 
