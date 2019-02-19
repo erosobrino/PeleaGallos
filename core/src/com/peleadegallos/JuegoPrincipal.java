@@ -66,6 +66,7 @@ public class JuegoPrincipal extends Game {
         manager.load("dino/Idle (8).png", Texture.class);
         manager.load("dino/Idle (9).png", Texture.class);
         manager.load("dino/Idle (10).png", Texture.class);
+
         manager.load("dino/Walk (1).png", Texture.class);
         manager.load("dino/Walk (2).png", Texture.class);
         manager.load("dino/Walk (3).png", Texture.class);
@@ -77,7 +78,19 @@ public class JuegoPrincipal extends Game {
         manager.load("dino/Walk (9).png", Texture.class);
         manager.load("dino/Walk (10).png", Texture.class);
 
-        manager.load("dino1.png", Texture.class);
+        manager.load("dino/Jump (1).png", Texture.class);
+        manager.load("dino/Jump (2).png", Texture.class);
+        manager.load("dino/Jump (3).png", Texture.class);
+        manager.load("dino/Jump (4).png", Texture.class);
+        manager.load("dino/Jump (5).png", Texture.class);
+        manager.load("dino/Jump (6).png", Texture.class);
+        manager.load("dino/Jump (7).png", Texture.class);
+        manager.load("dino/Jump (8).png", Texture.class);
+        manager.load("dino/Jump (9).png", Texture.class);
+        manager.load("dino/Jump (10).png", Texture.class);
+        manager.load("dino/Jump (11).png", Texture.class);
+        manager.load("dino/Jump (12).png", Texture.class);
+
 
         manager.load("skin/fuente200.fnt", BitmapFont.class);    //Fuente
         manager.finishLoading();                             //Espera a que acabe de cargar

@@ -71,7 +71,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
 
     ActorLimiteMapa limiteMapa;
 
-    String tiempoString=20+"";
+    String tiempoString = 20 + "";
     int tiempoTurno = 20;
     int tiempo = tiempoTurno;
     int contTimer = 0;
@@ -216,7 +216,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
                             angulo = (float) Math.atan2(yy, xx);
                         }
                         if (inicio != null) {
-                            balas.add(new Bala(mundo, juego.manager.get("dino1.png", Texture.class), inicio, juego, (float) angulo));
+                            balas.add(new Bala(mundo, juego.manager.get("dino/Idle (1).png", Texture.class), inicio, juego, (float) angulo));
                             escenario.addActor(balas.get(balas.size() - 1));
                         }
                     }
@@ -241,6 +241,8 @@ public class PantallaJuego1 extends PlantillaEscenas {
                     jugador.turno = !jugador.turno;
                     if (jugador.turno)
                         jugadorActual = jugador.fixture.getUserData().toString();
+                    else
+                        jugador.movimiento = Jugador.Movimiento.nada;
                 }
                 fling.clear();
             }
@@ -290,12 +292,22 @@ public class PantallaJuego1 extends PlantillaEscenas {
         mov[8] = juego.manager.get("dino/Walk (9).png", Texture.class);
         mov[9] = juego.manager.get("dino/Walk (10).png", Texture.class);
 
-        jugador1 = new Jugador(mundo, parado, mov, new Vector2(0, 3), juego, true, Jugador.Movimiento.nada);
-        jugador2 = new Jugador(mundo, parado, mov, new Vector2(15, 3), juego, false, Jugador.Movimiento.nada);
+        Texture[] salto = new Texture[9];
+        salto[0] = juego.manager.get("dino/Jump (3).png", Texture.class);
+        salto[1] = juego.manager.get("dino/Jump (4).png", Texture.class);
+        salto[2] = juego.manager.get("dino/Jump (5).png", Texture.class);
+        salto[3] = juego.manager.get("dino/Jump (6).png", Texture.class);
+        salto[4] = juego.manager.get("dino/Jump (7).png", Texture.class);
+        salto[5] = juego.manager.get("dino/Jump (8).png", Texture.class);
+        salto[6] = juego.manager.get("dino/Jump (9).png", Texture.class);
+        salto[7] = juego.manager.get("dino/Jump (10).png", Texture.class);
+        salto[8] = juego.manager.get("dino/Jump (11).png", Texture.class);
+
+        jugador1 = new Jugador(mundo, parado, mov, salto, new Vector2(0, 3), juego, true, Jugador.Movimiento.nada);
+        jugador2 = new Jugador(mundo, parado, mov, salto, new Vector2(15, 3), juego, false, Jugador.Movimiento.nada);
 
         jugador1.fixture.setUserData("jugador1");
         jugador2.fixture.setUserData("jugador2");
-
 
         jugadores = new ArrayList<Jugador>();
         jugadores.add(jugador1);
@@ -303,6 +315,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
 
         for (Suelo suelo : suelos) {
             escenario.addActor(suelo);
+            suelo.fixture.setFriction(0.7f);
         }
 
         limiteMapa = new ActorLimiteMapa(mundo, juego, altoPantalla, anchoPantalla);
@@ -331,10 +344,16 @@ public class PantallaJuego1 extends PlantillaEscenas {
             @Override
             public void beginContact(Contact contact) {
                 if (hanColisionado(contact, "jugador1", "suelo")) {
-                    jugador1.saltando = false;
+                    if (jugador1.saltando) {
+                        jugador1.saltando = false;
+                        jugador1.tocaSuelo = true;
+                    }
                 }
                 if (hanColisionado(contact, "jugador2", "suelo")) {
-                    jugador2.saltando = false;
+                    if (jugador2.saltando) {
+                        jugador2.saltando = false;
+                        jugador2.tocaSuelo = true;
+                    }
                 }
 
                 for (Bala bala : balas) {
