@@ -117,6 +117,23 @@ public class JuegoPrincipal extends Game {
         pantallaJuego1 = new PantallaJuego1(this);
         finalizacionPartida = new FinalizacionPartida(this);
 
-        setScreen(menuInicio);                             //Cambia al menu de inicio
+
+
+        Texture[] parado = new Texture[10];
+        parado[0] = manager.get("dino/Idle (1).png", Texture.class);
+        parado[1] = manager.get("dino/Idle (2).png", Texture.class);
+        parado[2] = manager.get("dino/Idle (3).png", Texture.class);
+        parado[3] = manager.get("dino/Idle (4).png", Texture.class);
+        parado[4] = manager.get("dino/Idle (5).png", Texture.class);
+        parado[5] = manager.get("dino/Idle (6).png", Texture.class);
+        parado[6] = manager.get("dino/Idle (7).png", Texture.class);
+        parado[7] = manager.get("dino/Idle (8).png", Texture.class);
+        parado[8] = manager.get("dino/Idle (9).png", Texture.class);
+        parado[9] = manager.get("dino/Idle (10).png", Texture.class);
+        finalizacionPartida.ganador=1;
+        finalizacionPartida.balas=50;
+        finalizacionPartida.tiempo=30;
+        finalizacionPartida.framesGanador=parado;
+        setScreen(finalizacionPartida);                             //Cambia al menu de inicio
     }
 }

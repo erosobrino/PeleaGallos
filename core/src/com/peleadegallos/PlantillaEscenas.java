@@ -31,7 +31,7 @@ public class PlantillaEscenas implements Screen {
         fuente.setColor(Color.BLACK);
         musica = juego.manager.get("Music.wav", Music.class);
         musica.setLooping(true);
-        musica.setVolume(0.75f);
+        musica.setVolume(0.5f);
 
         sonidoClick=juego.manager.get("sonidos/sonidoClick.mp3",Sound.class);
     }

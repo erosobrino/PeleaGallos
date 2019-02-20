@@ -77,10 +77,12 @@ public class PantallaJuego1 extends PlantillaEscenas {
     int tiempoTurno = 20;
     int tiempo = tiempoTurno;
     int contTimer = 0;
+    int segundosPartida = 0;
 
     boolean partidaAcabada;
     int idGanador;
     boolean visible;
+    int balasUtilizadas = 0;
 
     Sound sonidoCanon, sonidoSalto, sonidoAndar;
 
@@ -95,9 +97,9 @@ public class PantallaJuego1 extends PlantillaEscenas {
         escenario.setDebugAll(true);
         camera.translate(6, 4);
 
-        sonidoCanon=juego.manager.get("sonidos/sonidoCanon.mp3",Sound.class);
-        sonidoSalto=juego.manager.get("sonidos/sonidoSalto.mp3",Sound.class);
-        sonidoAndar=juego.manager.get("sonidos/sonidoAndar.mp3",Sound.class);
+        sonidoCanon = juego.manager.get("sonidos/sonidoCanon.mp3", Sound.class);
+        sonidoSalto = juego.manager.get("sonidos/sonidoSalto.mp3", Sound.class);
+        sonidoAndar = juego.manager.get("sonidos/sonidoAndar.mp3", Sound.class);
 
 
         btAdelante = new Image(juego.manager.get("iconos/flechaDerecha.png", Texture.class));
@@ -223,6 +225,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
                             angulo = (float) Math.atan2(yy, xx);
                         }
                         if (inicio != null) {
+                            balasUtilizadas++;
                             balas.add(new Bala(mundo, juego.manager.get("dino/Idle (1).png", Texture.class), inicio, juego, (float) angulo));
                             escenario.addActor(balas.get(balas.size() - 1));
                         }
@@ -374,6 +377,16 @@ public class PantallaJuego1 extends PlantillaEscenas {
                         jugador2.tocaSuelo = true;
                     }
                 }
+                if (hanColisionado(contact, "jugador1", "jugador1")) {
+                    if (jugador1.saltando) {
+                        jugador1.saltando = false;
+                        jugador1.tocaSuelo = true;
+                    }
+                    if (jugador2.saltando) {
+                        jugador2.saltando = false;
+                        jugador2.tocaSuelo = true;
+                    }
+                }
 
                 for (Bala bala : balas) {
                     if (hanColisionado(contact, bala.idBala, "jugador1")) {
@@ -421,7 +434,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
     }
 
     private void comprobarFinalizacion() {
-        for (Jugador jugador : jugadores) {
+        for (final Jugador jugador : jugadores) {
             if (!partidaAcabada) {
                 if (!jugador.vivo) {
                     partidaAcabada = true;
@@ -430,6 +443,23 @@ public class PantallaJuego1 extends PlantillaEscenas {
                     else
                         idGanador = 1;
                     Gdx.input.setInputProcessor(null);
+                    fling.clear();
+                    //Cuando acaba la partida espera 1 segundo y ejecuta el siguiente codigo
+                    escenario.addAction(Actions.sequence(Actions.delay(2), Actions.run(new Runnable() {
+                        @Override
+                        public void run() {
+                            juego.finalizacionPartida.pantallaAnterior = juego.pantallaJuego1;
+                            juego.finalizacionPartida.ganador = idGanador;
+                            juego.finalizacionPartida.tiempo = segundosPartida;
+                            juego.finalizacionPartida.balas = balasUtilizadas;
+                            if (jugadorActual.equals("jugador1"))
+                                juego.finalizacionPartida.framesGanador = jugador1.frameParadoAv;
+                            else
+                                juego.finalizacionPartida.framesGanador = jugador2.frameParadoAv;
+                            juego.pantallaJuego1 = new PantallaJuego1(juego);
+                            juego.setScreen(juego.finalizacionPartida);
+                        }
+                    })));
                 }
             }
         }
@@ -438,6 +468,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
     private void timer() {
         if (visible && !partidaAcabada) {
             contTimer++;
+            segundosPartida++;
             if (contTimer > 5) {
                 contTimer = 0;
                 tiempo--;
@@ -466,11 +497,6 @@ public class PantallaJuego1 extends PlantillaEscenas {
         }
 
         batchTexto.begin();
-        if (idGanador == 1)
-            fuente.draw(batchTexto, juego.idiomas.get("jug1Gana"), anchoPantalla / 5, altoPantalla - altoPantalla / 5);
-        if (idGanador == 2)
-            fuente.draw(batchTexto, juego.idiomas.get("jug2Gana"), anchoPantalla / 3, altoPantalla - altoPantalla / 5);
-
         fuente.draw(batchTexto, jugadorActual, anchoPantalla / 3, altoPantalla - altoPantalla / 10);
         fuente.draw(batchTexto, tiempoString + "s", anchoPantalla / 3 * 2, altoPantalla - altoPantalla / 10);
         fuente.draw(batchTexto, jugador1.getVida() + "", anchoPantalla / 18, altoPantalla - altoPantalla / 10);
@@ -489,18 +515,6 @@ public class PantallaJuego1 extends PlantillaEscenas {
             if (inicio != null)
                 formas.line(inicio.x, inicio.y, fling.get(fling.size() - 1).x, altoPantalla - fling.get(fling.size() - 1).y);
             formas.end();
-        }
-
-        //Cuando acaba la partida espera 1 segundo y ejecuta el siguiente codigo
-        if (partidaAcabada) {
-            escenario.addAction(Actions.sequence(Actions.delay(10), Actions.run(new Runnable() {
-                @Override
-                public void run() {
-                    juego.finalizacionPartida.pantallaAnterior = juego.pantallaJuego1;
-                    juego.pantallaJuego1 = new PantallaJuego1(juego);
-                    juego.setScreen(juego.finalizacionPartida);
-                }
-            })));
         }
 
         escenario.act();

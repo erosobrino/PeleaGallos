@@ -27,7 +27,7 @@ public class Jugador extends Actor {
 
     Texture textura;
 
-    private Texture[] frameParadoAv;//avanza
+    public Texture[] frameParadoAv;//avanza
     private Texture[] frameMovimientoAv;//avanza
     private Texture[] frameSaltaAV;//avanza
     private Sprite[] frameParadoRe;//retrocede
@@ -54,7 +54,7 @@ public class Jugador extends Actor {
     boolean avanza = true;
     boolean turno;
     Movimiento movimiento;
-    int tiempoFrame = 125;
+    int tiempoFrameMuerto = 100;
     private long tiempoF = System.currentTimeMillis();
     int indice = 1;
     float tamañoX = 0.5f, tamañoY = 0.5f;
@@ -179,12 +179,15 @@ public class Jugador extends Actor {
                     break;
             }
         } else {
-            if (contFrameMuerto <= 6)
-                contFrameMuerto++;
+            if ((System.currentTimeMillis() - tiempoF) > tiempoFrameMuerto) {
+                if (contFrameMuerto < frameMuertoAv.length - 1)
+                    contFrameMuerto++;
+                tiempoF = System.currentTimeMillis();
+            }
             if (avanza)
-                batch.draw(frameMuertoAv[contFrameMuerto], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX * 1.5f, juego.PIXEL_METRO_Y * 2 * tamañoY * 0.7f);
+                batch.draw(frameMuertoAv[contFrameMuerto], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX * 1.2f, juego.PIXEL_METRO_Y * 2 * tamañoY);
             else
-                batch.draw(frameMuertoRe[contFrameMuerto], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX * 1.5f, juego.PIXEL_METRO_Y * 2 * tamañoY * 0.7f);
+                batch.draw(frameMuertoRe[contFrameMuerto], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX * 1.2f, juego.PIXEL_METRO_Y * 2 * tamañoY);
         }
     }
 
