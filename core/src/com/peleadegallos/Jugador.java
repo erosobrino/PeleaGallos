@@ -1,5 +1,6 @@
 package com.peleadegallos;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -59,6 +60,7 @@ public class Jugador extends Actor {
     int indice = 1;
     float tamañoX = 0.5f, tamañoY = 0.5f;
     int contFrameMuerto = 0;
+    Sound sonidoSalto, sonidoAndar;
 
     public int getVida() {
         return vida;
@@ -81,6 +83,9 @@ public class Jugador extends Actor {
         this.juego = juego;
         this.turno = turno;
         this.movimiento = movimiento;
+
+        sonidoSalto = juego.manager.get("sonidos/sonidoSalto.mp3", Sound.class);
+        sonidoAndar = juego.manager.get("sonidos/sonidoAndar.mp3", Sound.class);
 
         this.frameParadoRe = new Sprite[frameParadoAv.length];
         for (int i = 0; i < frameParadoAv.length; i++) {//lo invierte
@@ -172,9 +177,11 @@ public class Jugador extends Actor {
                     batch.draw(frameMovimientoAv[indice], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY);
                     break;
                 case saltaAdelante:
+                    mundo.clearForces();
                     batch.draw(frameSaltaAV[0], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX * 1.1f, juego.PIXEL_METRO_Y * 2 * tamañoY);
                     break;
                 case saltaAtras:
+                    mundo.clearForces();
                     batch.draw(frameSaltaRe[0], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY);
                     break;
             }

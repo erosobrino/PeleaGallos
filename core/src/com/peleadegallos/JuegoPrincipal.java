@@ -31,6 +31,14 @@ public class JuegoPrincipal extends Game {
     float metrosX = 16;
     float metrosY = 9;
 
+    public void botonPulsado(Sound sonido) {
+        if (vibracionEncendida)
+            Gdx.input.vibrate(tiempoVibrar);
+        if (musicaEncendida) {
+            sonido.play();
+        }
+    }
+
 
     @Override
     public void create() {
@@ -118,7 +126,6 @@ public class JuegoPrincipal extends Game {
         finalizacionPartida = new FinalizacionPartida(this);
 
 
-
         Texture[] parado = new Texture[10];
         parado[0] = manager.get("dino/Idle (1).png", Texture.class);
         parado[1] = manager.get("dino/Idle (2).png", Texture.class);
@@ -130,10 +137,10 @@ public class JuegoPrincipal extends Game {
         parado[7] = manager.get("dino/Idle (8).png", Texture.class);
         parado[8] = manager.get("dino/Idle (9).png", Texture.class);
         parado[9] = manager.get("dino/Idle (10).png", Texture.class);
-        finalizacionPartida.ganador=1;
-        finalizacionPartida.balas=50;
-        finalizacionPartida.tiempo=30;
-        finalizacionPartida.framesGanador=parado;
+        finalizacionPartida.ganador = 1;
+        finalizacionPartida.balas = 50;
+        finalizacionPartida.tiempo = 30;
+        finalizacionPartida.framesGanador = parado;
         setScreen(finalizacionPartida);                             //Cambia al menu de inicio
     }
 }

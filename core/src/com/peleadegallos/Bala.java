@@ -1,5 +1,6 @@
 package com.peleadegallos;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -13,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Bala extends Actor {
 
-    public static int cantidadBalas=0;
+    public static int cantidadBalas = 0;
     Texture textura;
 
     World mundo;
@@ -35,6 +36,7 @@ public class Bala extends Actor {
     int fuerza;
     float angulo;
     int idBala;
+    Sound sonidoCanon;
 
     public Bala(World mundo, Texture textura, Vector2 posicion, JuegoPrincipal juego, float radio, int daño, int fuerza, float angulo) {
         this.mundo = mundo;
@@ -47,7 +49,10 @@ public class Bala extends Actor {
         this.fuerza = fuerza;
         this.angulo = angulo;
         cantidadBalas++;
-        idBala=cantidadBalas;
+        idBala = cantidadBalas;
+
+        sonidoCanon = juego.manager.get("sonidos/sonidoCanon.mp3", Sound.class);
+        juego.botonPulsado(sonidoCanon);
 
         BodyDef def = new BodyDef();
         def.position.set(posicion.x - 1.5f, posicion.y);

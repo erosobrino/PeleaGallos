@@ -33,7 +33,7 @@ public class PlantillaEscenas implements Screen {
         musica.setLooping(true);
         musica.setVolume(0.5f);
 
-        sonidoClick=juego.manager.get("sonidos/sonidoClick.mp3",Sound.class);
+        sonidoClick = juego.manager.get("sonidos/sonidoClick.mp3", Sound.class);
     }
 
     @Override
@@ -41,14 +41,6 @@ public class PlantillaEscenas implements Screen {
         if (juego.musicaEncendida)
             musica.play();
 
-    }
-
-    public void botonPulsado(Sound sonido){
-        if (juego.vibracionEncendida)
-            Gdx.input.vibrate(juego.tiempoVibrar);
-        if (juego.musicaEncendida){
-            sonido.play();
-        }
     }
 
     @Override

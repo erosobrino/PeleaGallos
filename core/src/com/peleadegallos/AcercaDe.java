@@ -30,8 +30,7 @@ public class AcercaDe extends PlantillaEscenas {
         home.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (juego.vibracionEncendida)
-                    Gdx.input.vibrate(juego.tiempoVibrar);
+               juego.botonPulsado(sonidoClick);
                 juego.setScreen(juego.menuInicio);
                 return true;
             }

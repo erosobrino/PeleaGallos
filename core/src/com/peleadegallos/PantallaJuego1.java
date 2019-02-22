@@ -83,8 +83,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
     int idGanador;
     boolean visible;
     int balasUtilizadas = 0;
-
-    Sound sonidoCanon, sonidoSalto, sonidoAndar;
+    boolean debeSaltar = false; //salto continuo con sonido, contact listener
 
     public PantallaJuego1(final JuegoPrincipal juego) {
         super(juego);
@@ -97,21 +96,17 @@ public class PantallaJuego1 extends PlantillaEscenas {
         escenario.setDebugAll(true);
         camera.translate(6, 4);
 
-        sonidoCanon = juego.manager.get("sonidos/sonidoCanon.mp3", Sound.class);
-        sonidoSalto = juego.manager.get("sonidos/sonidoSalto.mp3", Sound.class);
-        sonidoAndar = juego.manager.get("sonidos/sonidoAndar.mp3", Sound.class);
-
-
         btAdelante = new Image(juego.manager.get("iconos/flechaDerecha.png", Texture.class));
         btAdelante.setSize(altoPantalla / 7, altoPantalla / 7);
         btAdelante.setPosition(anchoPantalla - altoPantalla / 7 - 5, 5);
         btAdelante.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                botonPulsado(sonidoAndar);
                 for (Jugador jugador : jugadores) {
-                    if (jugador.turno)
+                    if (jugador.turno) {
                         jugador.movimiento = Jugador.Movimiento.adelante;
+                        juego.botonPulsado(jugador.sonidoAndar);
+                    }
                 }
                 return true;
             }
@@ -131,10 +126,11 @@ public class PantallaJuego1 extends PlantillaEscenas {
         btAtras.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                botonPulsado(sonidoAndar);
                 for (Jugador jugador : jugadores) {
-                    if (jugador.turno)
+                    if (jugador.turno) {
                         jugador.movimiento = Jugador.Movimiento.atras;
+                        juego.botonPulsado(jugador.sonidoAndar);
+                    }
                 }
                 return true;
             }
@@ -154,11 +150,14 @@ public class PantallaJuego1 extends PlantillaEscenas {
         btSaltarAdelante.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                botonPulsado(sonidoSalto);
                 for (Jugador jugador : jugadores) {
-                    if (jugador.turno)
+                    if (jugador.turno) {
                         jugador.movimiento = Jugador.Movimiento.saltaAdelante;
+                        if (!jugador.saltando)
+                            juego.botonPulsado(jugador.sonidoSalto);
+                    }
                 }
+                debeSaltar = true;
                 return true;
             }
 
@@ -168,6 +167,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
                     if (jugador.turno)
                         jugador.movimiento = Jugador.Movimiento.nada;
                 }
+                debeSaltar = false;
             }
         });
 
@@ -177,11 +177,14 @@ public class PantallaJuego1 extends PlantillaEscenas {
         btSaltarAtras.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                botonPulsado(sonidoSalto);
                 for (Jugador jugador : jugadores) {
-                    if (jugador.turno)
+                    if (jugador.turno) {
                         jugador.movimiento = Jugador.Movimiento.saltaAtras;
+                        if (!jugador.saltando)
+                            juego.botonPulsado(jugador.sonidoSalto);
+                    }
                 }
+                debeSaltar = true;
                 return true;
             }
 
@@ -191,6 +194,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
                     if (jugador.turno)
                         jugador.movimiento = Jugador.Movimiento.nada;
                 }
+                debeSaltar = false;
             }
         });
 
@@ -200,7 +204,6 @@ public class PantallaJuego1 extends PlantillaEscenas {
         btDisparo.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                botonPulsado(sonidoCanon);
                 Vector2 inicio = null;
                 Vector2 centroJugador = null;
                 double angulo;
@@ -245,7 +248,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
         btCambioPersonaje.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                botonPulsado(sonidoClick);
+                juego.botonPulsado(sonidoClick);
                 for (Jugador jugador : jugadores) {
                     jugador.turno = !jugador.turno;
                     if (jugador.turno)
@@ -259,6 +262,15 @@ public class PantallaJuego1 extends PlantillaEscenas {
 
         formas = new ShapeRenderer();
         batchTexto = new SpriteBatch();
+
+        Timer.Task t = Timer.schedule(new Timer.Task() {
+                                          @Override
+                                          public void run() {
+                                              timer();
+                                          }
+                                      }
+                , 0, 0.200f
+        );
     }
 
     @Override
@@ -369,22 +381,30 @@ public class PantallaJuego1 extends PlantillaEscenas {
                     if (jugador1.saltando) {
                         jugador1.saltando = false;
                         jugador1.tocaSuelo = true;
+                        if (debeSaltar)
+                            juego.botonPulsado(jugador1.sonidoSalto);
                     }
                 }
                 if (hanColisionado(contact, "jugador2", "suelo")) {
                     if (jugador2.saltando) {
                         jugador2.saltando = false;
                         jugador2.tocaSuelo = true;
+                        if (debeSaltar)
+                            juego.botonPulsado(jugador2.sonidoSalto);
                     }
                 }
-                if (hanColisionado(contact, "jugador1", "jugador1")) {
+                if (hanColisionado(contact, "jugador1", "jugador2")) {
                     if (jugador1.saltando) {
                         jugador1.saltando = false;
                         jugador1.tocaSuelo = true;
+                        if (debeSaltar)
+                            juego.botonPulsado(jugador1.sonidoSalto);
                     }
                     if (jugador2.saltando) {
                         jugador2.saltando = false;
                         jugador2.tocaSuelo = true;
+                        if (debeSaltar)
+                            juego.botonPulsado(jugador2.sonidoSalto);
                     }
                 }
 
@@ -422,15 +442,8 @@ public class PantallaJuego1 extends PlantillaEscenas {
 
         fuente.getData().setScale(0.4f);
 
-
-        Timer.Task t = Timer.schedule(new Timer.Task() {
-                                          @Override
-                                          public void run() {
-                                              timer();
-                                          }
-                                      }
-                , 0, 0.200f
-        );
+        tiempo = tiempoTurno;
+        tiempoString = tiempo + "";
     }
 
     private void comprobarFinalizacion() {

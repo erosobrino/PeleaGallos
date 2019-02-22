@@ -39,7 +39,7 @@ class Opciones extends PlantillaEscenas {
         home.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                botonPulsado(sonidoClick);
+                juego.botonPulsado(sonidoClick);
                 juego.setScreen(juego.menuInicio);
                 return true;
             }
@@ -70,7 +70,7 @@ class Opciones extends PlantillaEscenas {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 juego.musicaEncendida = !juego.musicaEncendida;
-                botonPulsado(sonidoClick);
+                juego.botonPulsado(sonidoClick);
                 actualizaIconos();
                 return true;
             }
@@ -89,7 +89,7 @@ class Opciones extends PlantillaEscenas {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 juego.vibracionEncendida = !juego.vibracionEncendida;
-                botonPulsado(sonidoClick);
+                juego.botonPulsado(sonidoClick);
                 actualizaIconos();
                 return true;
             }
@@ -134,8 +134,6 @@ class Opciones extends PlantillaEscenas {
         home.remove();
         imgVolumen.remove();
         imgVibrar.remove();
-//        escenario.dispose();
-//        musica.pause();
         Gdx.input.setInputProcessor(null);
     }
 }

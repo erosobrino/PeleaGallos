@@ -60,7 +60,7 @@ public class MenuInicio extends PlantillaEscenas {
         jugar.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-               botonPulsado(sonidoClick);
+                juego.botonPulsado(sonidoClick);
                 juego.setScreen(juego.pantallaJuego1);
             }
         });
@@ -73,7 +73,7 @@ public class MenuInicio extends PlantillaEscenas {
         opciones.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                botonPulsado(sonidoClick);
+                juego.botonPulsado(sonidoClick);
                 juego.setScreen(juego.opciones);
             }
         });
@@ -96,7 +96,7 @@ public class MenuInicio extends PlantillaEscenas {
         imgInfo.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                botonPulsado(sonidoClick);
+                juego.botonPulsado(sonidoClick);
                 juego.setScreen(juego.info);
                 return true;
             }
@@ -118,16 +118,19 @@ public class MenuInicio extends PlantillaEscenas {
     public void show() {
         super.show();
 
-        escenario.addActor(fondo);
+
         for (int i = 0; i < nubesTextura.size(); i++) {
             nubes.add(new Nube(altoPantalla, anchoPantalla, nubesTextura.get(i), rand));
             escenario.addActor(nubes.get(i));
         }
+
+        escenario.addActor(fondo);
         escenario.addActor(jugar);      //Añado los botones al escenario
         escenario.addActor(opciones);
         escenario.addActor(logros);
         escenario.addActor(ayuda);
         escenario.addActor(imgInfo);
+
 
         Gdx.input.setInputProcessor(escenario);  //Pone como listener al escenario, asi funcionan botones
     }
@@ -143,11 +146,10 @@ public class MenuInicio extends PlantillaEscenas {
     @Override
     public void hide() {
         imgInfo.remove();
-        musica.pause();
+//        musica.pause();
         for (Nube nube : nubes) {
             nube.remove();
         }
-        fondo.remove();
         jugar.remove();
         opciones.remove();
         logros.remove();
