@@ -26,11 +26,23 @@ public class FinalizacionPartida extends PlantillaEscenas {
     Texture[] framesGanador;
     Image imgGanador = null;
 
-    int tiempo, balas, ganador;
+
+    private int tiempo;
+    int balas, ganador;
+    String strTiempo;
+
     long tiempoF;
     int contFrame = 0;
     int tiempoFrame = 200;
 
+    public int getTiempo() {
+        return tiempo;
+    }
+
+    public void setTiempo(int tiempo) {
+        this.tiempo = tiempo;
+        strTiempo=String.format("%s: %02d:%02d",juego.idiomas.get("tiempoPartida"),tiempo/60,tiempo%60);
+    }
 
     public FinalizacionPartida(final JuegoPrincipal juego) {
         super(juego);
@@ -114,8 +126,8 @@ public class FinalizacionPartida extends PlantillaEscenas {
         if (ganador == 2)
             fuente.draw(batchTexto, juego.idiomas.get("jug2Gana"), anchoPantalla / 7, altoPantalla - altoPantalla / 7);
         fuente.getData().setScale(0.3f);
-        fuente.draw(batchTexto, juego.idiomas.get("balas"), anchoPantalla / 7, altoPantalla - altoPantalla / 6 * 2);
-        fuente.draw(batchTexto, juego.idiomas.get("tiempoPartida"), anchoPantalla / 7, altoPantalla - altoPantalla / 6 * 3);
+        fuente.draw(batchTexto, juego.idiomas.get("balas")+": "+balas, anchoPantalla / 7, altoPantalla - altoPantalla / 6 * 2);
+        fuente.draw(batchTexto, strTiempo, anchoPantalla / 7, altoPantalla - altoPantalla / 6 * 3);
         batchTexto.end();
 
         escenario.act();

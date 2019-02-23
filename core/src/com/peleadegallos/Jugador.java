@@ -1,9 +1,11 @@
 package com.peleadegallos;
 
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -15,6 +17,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Jugador extends Actor {
 
+    public Texture imgBala;
+    public Texture imgArma;
+
     enum Movimiento {
         nada(0),
         adelante(1),
@@ -25,8 +30,6 @@ public class Jugador extends Actor {
         Movimiento(int i) {
         }
     }
-
-    Texture textura;
 
     public Texture[] frameParadoAv;//avanza
     private Texture[] frameMovimientoAv;//avanza
@@ -60,7 +63,10 @@ public class Jugador extends Actor {
     int indice = 1;
     float tamañoX = 0.5f, tamañoY = 0.5f;
     int contFrameMuerto = 0;
-    Sound sonidoSalto, sonidoAndar;
+    Sound sonidoSalto;
+    Music sonidoAndar;
+
+    float aspectoArma;
 
     public int getVida() {
         return vida;
@@ -74,7 +80,12 @@ public class Jugador extends Actor {
         this.vida = vida;
     }
 
-    public Jugador(World mundo, Texture[] texturaParado, Texture[] texturaMovimiento, Texture[] texturaSaltando, Texture[] muerto, Vector2 posicion, JuegoPrincipal juego, boolean turno, Movimiento movimiento) {
+    PantallaJuego1 pantallaJuego;
+    TextureRegion regionArma;
+    TextureRegion regionArmaRe;//cuando mira hacia atras
+    float angulo;
+
+    public Jugador(World mundo, Texture[] texturaParado, Texture[] texturaMovimiento, Texture[] texturaSaltando, Texture[] muerto, Vector2 posicion, Texture imgBala, Texture imgArma, JuegoPrincipal juego, boolean turno, Movimiento movimiento, PantallaJuego1 pantallaJuego) {
         this.mundo = mundo;
         this.frameParadoAv = texturaParado;
         this.frameMovimientoAv = texturaMovimiento;
@@ -83,9 +94,19 @@ public class Jugador extends Actor {
         this.juego = juego;
         this.turno = turno;
         this.movimiento = movimiento;
+        this.imgBala = imgBala;
+        this.imgArma = imgArma;
+        this.pantallaJuego = pantallaJuego;
+        this.angulo = 45;
+
+        if (imgArma != null) {
+            aspectoArma = imgArma.getWidth() / imgArma.getHeight();
+            regionArma = new TextureRegion(imgArma); //nesecario para poder rotar arma
+            regionArmaRe = new TextureRegion(espejo(imgArma));
+        }
 
         sonidoSalto = juego.manager.get("sonidos/sonidoSalto.mp3", Sound.class);
-        sonidoAndar = juego.manager.get("sonidos/sonidoAndar.mp3", Sound.class);
+        sonidoAndar = juego.manager.get("sonidos/sonidoAndar.mp3", Music.class);
 
         this.frameParadoRe = new Sprite[frameParadoAv.length];
         for (int i = 0; i < frameParadoAv.length; i++) {//lo invierte
@@ -149,12 +170,15 @@ public class Jugador extends Actor {
                                 indiceAux = 7;
                             }
                             batch.draw(frameSaltaAV[indiceAux], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY);
-                        } else
+                        } else {
                             batch.draw(frameParadoAv[indice], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY);
+                        }
                         if (tocaSuelo) {
                             tocaSuelo = false;
                             batch.draw(frameSaltaAV[frameSaltaAV.length - 1], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY);
                         }
+                        if (regionArma != null)
+                            batch.draw(regionArma, getX() + juego.PIXEL_METRO_X / 2, getY() + juego.PIXEL_METRO_Y / 3 * 1.3f, 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 45);
                     } else {
                         if (saltando) {
                             int indiceAux = indice + 1;
@@ -162,27 +186,38 @@ public class Jugador extends Actor {
                                 indiceAux = 7;
                             }
                             batch.draw(frameSaltaRe[indiceAux], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY);
-                        } else
+                        } else {
                             batch.draw(frameParadoRe[indice], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY);
+                        }
                         if (tocaSuelo) {
                             tocaSuelo = false;
                             batch.draw(frameSaltaAV[frameSaltaAV.length - 1], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY);
                         }
+                        if (regionArmaRe != null)
+                            batch.draw(regionArmaRe, getX(), getY() + juego.PIXEL_METRO_Y * 0.15f, 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 135);
                     }
                     break;
                 case atras:
                     batch.draw(frameMovimientoRe[indice], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY * 1.07f);
+                    if (regionArmaRe != null)
+                        batch.draw(regionArmaRe, getX(), getY() + juego.PIXEL_METRO_Y * 0.15f, 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 135);
                     break;
                 case adelante:
                     batch.draw(frameMovimientoAv[indice], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY);
+                    if (regionArma != null)
+                        batch.draw(regionArma, getX() + juego.PIXEL_METRO_X / 2, getY() + juego.PIXEL_METRO_Y / 3 * 1.3f, 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 45);
                     break;
                 case saltaAdelante:
                     mundo.clearForces();
                     batch.draw(frameSaltaAV[0], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX * 1.1f, juego.PIXEL_METRO_Y * 2 * tamañoY);
+                    if (regionArma != null)
+                        batch.draw(regionArma, getX() + juego.PIXEL_METRO_X / 2, getY() + juego.PIXEL_METRO_Y / 3 * 1.3f, 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 45);
                     break;
                 case saltaAtras:
                     mundo.clearForces();
                     batch.draw(frameSaltaRe[0], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY);
+                    if (regionArmaRe != null)
+                        batch.draw(regionArmaRe, getX(), getY() + juego.PIXEL_METRO_Y * 0.15f, 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 135);
                     break;
             }
         } else {

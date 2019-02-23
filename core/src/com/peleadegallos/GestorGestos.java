@@ -9,11 +9,14 @@ import java.util.ArrayList;
 public class GestorGestos extends GestureDetector {
     private Stage escenario;
     ArrayList<Vector2> fling;
+    Jugador jugadorActual;
+    JuegoPrincipal juego;
 
-    public GestorGestos(GestureListener listener, Stage escenario, ArrayList<Vector2> fling) {
+    public GestorGestos(GestureListener listener, Stage escenario, ArrayList<Vector2> fling, JuegoPrincipal juego) {
         super(listener);
         this.escenario = escenario;
         this.fling = fling;
+        this.juego = juego;
     }
 
 
@@ -43,6 +46,10 @@ public class GestorGestos extends GestureDetector {
         if (!escenario.touchDown(screenX, screenY, pointer, button)) {
             super.touchDown(screenX, screenY, pointer, button);
             fling.clear();
+            if (jugadorActual.avanza)
+            jugadorActual.angulo=45;
+            else
+                jugadorActual.angulo=135;
             return false;
         } else return true;
     }
@@ -60,7 +67,14 @@ public class GestorGestos extends GestureDetector {
         if (!escenario.touchDragged(screenX, screenY, pointer)) {
             super.touchDragged(screenX, screenY, pointer);
 //        System.out.println(screenX + " " + screenY);
-            fling.add(new Vector2(screenX, screenY));
+            if (jugadorActual.avanza) {
+                if (screenX >= (jugadorActual.getX() + juego.PIXEL_METRO_X / 2))//limita angulo de disparo a 90 grados
+                    fling.add(new Vector2(screenX, screenY));
+            } else {
+                if (screenX <= (jugadorActual.getX() + juego.PIXEL_METRO_X / 2))
+                    fling.add(new Vector2(screenX, screenY));
+            }
+//            System.out.println(jugadorActual.fixture.getUserData());
             return true;
         } else return true;
     }

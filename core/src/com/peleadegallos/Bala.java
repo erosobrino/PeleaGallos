@@ -52,8 +52,12 @@ public class Bala extends Actor {
         idBala = cantidadBalas;
 
         sonidoCanon = juego.manager.get("sonidos/sonidoCanon.mp3", Sound.class);
-        juego.botonPulsado(sonidoCanon);
 
+        if (textura != juego.manager.get("armas/bomb.png", Texture.class))
+            juego.botonPulsado(sonidoCanon);
+        else {
+            juego.botonPulsado(null);
+        }
         BodyDef def = new BodyDef();
         def.position.set(posicion.x - 1.5f, posicion.y);
         def.type = BodyDef.BodyType.DynamicBody;
@@ -92,6 +96,8 @@ public class Bala extends Actor {
     }
 
     public void elimina() {
+        if (textura == juego.manager.get("armas/bomb.png", Texture.class))
+            juego.botonPulsado(sonidoCanon);
         body.destroyFixture(fixture);
         mundo.destroyBody(body);
     }

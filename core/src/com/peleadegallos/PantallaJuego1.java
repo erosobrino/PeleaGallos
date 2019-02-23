@@ -49,6 +49,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
 
     Jugador jugador1;
     Jugador jugador2;
+    Jugador jugActual;
 
     String jugadorActual = "jugador1";
 
@@ -85,6 +86,9 @@ public class PantallaJuego1 extends PlantillaEscenas {
     int balasUtilizadas = 0;
     boolean debeSaltar = false; //salto continuo con sonido, contact listener
 
+    double angulo;
+    GestorGestos gestorGestos;
+
     public PantallaJuego1(final JuegoPrincipal juego) {
         super(juego);
 
@@ -102,21 +106,18 @@ public class PantallaJuego1 extends PlantillaEscenas {
         btAdelante.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                for (Jugador jugador : jugadores) {
-                    if (jugador.turno) {
-                        jugador.movimiento = Jugador.Movimiento.adelante;
-                        juego.botonPulsado(jugador.sonidoAndar);
-                    }
-                }
+                jugActual.movimiento = Jugador.Movimiento.adelante;
+                juego.botonPulsadoMusica(jugActual.sonidoAndar);
+                jugActual.angulo=45;//predefinido
+                fling.clear();
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                for (Jugador jugador : jugadores) {
-                    if (jugador.turno)
-                        jugador.movimiento = Jugador.Movimiento.nada;
-                }
+                jugActual.movimiento = Jugador.Movimiento.nada;
+                if (jugActual.sonidoAndar.isPlaying())
+                    jugActual.sonidoAndar.stop();
             }
         });
 
@@ -126,21 +127,18 @@ public class PantallaJuego1 extends PlantillaEscenas {
         btAtras.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                for (Jugador jugador : jugadores) {
-                    if (jugador.turno) {
-                        jugador.movimiento = Jugador.Movimiento.atras;
-                        juego.botonPulsado(jugador.sonidoAndar);
-                    }
-                }
+                jugActual.movimiento = Jugador.Movimiento.atras;
+                juego.botonPulsadoMusica(jugActual.sonidoAndar);
+                jugActual.angulo=135;//predefinido
+                fling.clear();
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                for (Jugador jugador : jugadores) {
-                    if (jugador.turno)
-                        jugador.movimiento = Jugador.Movimiento.nada;
-                }
+                jugActual.movimiento = Jugador.Movimiento.nada;
+                if (jugActual.sonidoAndar.isPlaying())
+                    jugActual.sonidoAndar.stop();
             }
         });
 
@@ -150,23 +148,18 @@ public class PantallaJuego1 extends PlantillaEscenas {
         btSaltarAdelante.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                for (Jugador jugador : jugadores) {
-                    if (jugador.turno) {
-                        jugador.movimiento = Jugador.Movimiento.saltaAdelante;
-                        if (!jugador.saltando)
-                            juego.botonPulsado(jugador.sonidoSalto);
-                    }
-                }
+                jugActual.movimiento = Jugador.Movimiento.saltaAdelante;
+                if (!jugActual.saltando)
+                    juego.botonPulsado(jugActual.sonidoSalto);
+                jugActual.angulo=45;//predefinido
                 debeSaltar = true;
+                fling.clear();
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                for (Jugador jugador : jugadores) {
-                    if (jugador.turno)
-                        jugador.movimiento = Jugador.Movimiento.nada;
-                }
+                jugActual.movimiento = Jugador.Movimiento.nada;
                 debeSaltar = false;
             }
         });
@@ -177,23 +170,18 @@ public class PantallaJuego1 extends PlantillaEscenas {
         btSaltarAtras.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                for (Jugador jugador : jugadores) {
-                    if (jugador.turno) {
-                        jugador.movimiento = Jugador.Movimiento.saltaAtras;
-                        if (!jugador.saltando)
-                            juego.botonPulsado(jugador.sonidoSalto);
-                    }
-                }
+                jugActual.movimiento = Jugador.Movimiento.saltaAtras;
+                jugActual.angulo=135;//predefinido
+                if (!jugActual.saltando)
+                    juego.botonPulsado(jugActual.sonidoSalto);
                 debeSaltar = true;
+                fling.clear();
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                for (Jugador jugador : jugadores) {
-                    if (jugador.turno)
-                        jugador.movimiento = Jugador.Movimiento.nada;
-                }
+                jugActual.movimiento = Jugador.Movimiento.nada;
                 debeSaltar = false;
             }
         });
@@ -205,34 +193,16 @@ public class PantallaJuego1 extends PlantillaEscenas {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 Vector2 inicio = null;
-                Vector2 centroJugador = null;
-                double angulo;
-                for (Jugador jugador : jugadores) {
-                    if (jugador.turno) {
-                        if (jugador.avanza)
-                            angulo = Math.toRadians(45); //angulo predefinido
-                        else
-                            angulo = Math.toRadians(135); //angulo predefinido
-                        inicio = new Vector2(jugador.getX() / juego.PIXEL_METRO_X, jugador.getY() / juego.PIXEL_METRO_Y); //Punto de salida de la bala, en la esquina a la que apunte
-                        if (jugador.avanza)
-                            inicio.x += jugador.tamañoX * 1.5f;
-                        else
-                            inicio.x -= jugador.tamañoX * 1.5f;
-                        inicio.y += jugador.tamañoY * 1.5f;
-
-                        if (fling.size() > 1) {
-                            centroJugador = new Vector2(jugador.getX() + jugador.tamañoX * juego.PIXEL_METRO_X, jugador.getY() + jugador.tamañoY * juego.PIXEL_METRO_Y);
-                            Vector2 ptoFinal = fling.get(fling.size() - 1);
-                            float yy = altoPantalla - ptoFinal.y - centroJugador.y;
-                            float xx = ptoFinal.x - centroJugador.x;
-                            angulo = (float) Math.atan2(yy, xx);
-                        }
-                        if (inicio != null) {
-                            balasUtilizadas++;
-                            balas.add(new Bala(mundo, juego.manager.get("dino/Idle (1).png", Texture.class), inicio, juego, (float) angulo));
-                            escenario.addActor(balas.get(balas.size() - 1));
-                        }
-                    }
+                inicio = new Vector2(jugActual.getX() / juego.PIXEL_METRO_X, jugActual.getY() / juego.PIXEL_METRO_Y); //Punto de salida de la bala, en la esquina a la que apunte
+                if (jugActual.avanza)
+                    inicio.x += jugActual.tamañoX * 1.5f;
+                else
+                    inicio.x -= jugActual.tamañoX * 1.5f;
+                inicio.y += jugActual.tamañoY * 1.5f;
+                if (inicio != null) {
+                    balasUtilizadas++;
+                    balas.add(new Bala(mundo, jugActual.imgBala, inicio, juego, (float)Math.toRadians(jugActual.angulo)));
+                    escenario.addActor(balas.get(balas.size() - 1));
                 }
                 return true;
             }
@@ -251,11 +221,15 @@ public class PantallaJuego1 extends PlantillaEscenas {
                 juego.botonPulsado(sonidoClick);
                 for (Jugador jugador : jugadores) {
                     jugador.turno = !jugador.turno;
-                    if (jugador.turno)
+                    if (jugador.turno) {
                         jugadorActual = jugador.fixture.getUserData().toString();
-                    else
+                        jugActual = jugador;
+                        gestorGestos.jugadorActual = jugador;
+                    } else
                         jugador.movimiento = Jugador.Movimiento.nada;
                 }
+                tiempo=tiempoTurno;
+                tiempoString=tiempo+"";
                 fling.clear();
             }
         });
@@ -337,8 +311,17 @@ public class PantallaJuego1 extends PlantillaEscenas {
         muerto[6] = juego.manager.get("dino/Dead (7).png", Texture.class);
         muerto[7] = juego.manager.get("dino/Dead (8).png", Texture.class);
 
-        jugador1 = new Jugador(mundo, parado, mov, salto, muerto, new Vector2(0, 3), juego, true, Jugador.Movimiento.nada);
-        jugador2 = new Jugador(mundo, parado, mov, salto, muerto, new Vector2(15, 3), juego, false, Jugador.Movimiento.nada);
+        jugador1 = new Jugador(mundo, parado, mov, salto, muerto, new Vector2(0, 3),
+                juego.manager.get("armas/bullet.png", Texture.class),
+                juego.manager.get("armas/gun.png", Texture.class),
+                juego, true, Jugador.Movimiento.nada, juego.pantallaJuego1);
+
+        jugador2 = new Jugador(mundo, parado, mov, salto, muerto, new Vector2(15, 3),
+                juego.manager.get("armas/bomb.png", Texture.class),
+                null,
+                juego, false, Jugador.Movimiento.nada, juego.pantallaJuego1);
+        jugador2.avanza = false;
+        jugador2.angulo=135;
 
         jugador1.fixture.setUserData("jugador1");
         jugador2.fixture.setUserData("jugador2");
@@ -346,6 +329,8 @@ public class PantallaJuego1 extends PlantillaEscenas {
         jugadores = new ArrayList<Jugador>();
         jugadores.add(jugador1);
         jugadores.add(jugador2);
+
+        jugActual = jugador1;
 
         for (Suelo suelo : suelos) {
             escenario.addActor(suelo);
@@ -438,7 +423,9 @@ public class PantallaJuego1 extends PlantillaEscenas {
             }
         });
 
-        Gdx.input.setInputProcessor(new GestorGestos(new GestureDetector.GestureAdapter(), escenario, fling));//Poder usar gestos y que funcionen botones del escenario
+        gestorGestos = new GestorGestos(new GestureDetector.GestureAdapter(), escenario, fling, juego);
+        gestorGestos.jugadorActual = jugador1;
+        Gdx.input.setInputProcessor(gestorGestos);//Poder usar gestos y que funcionen botones del escenario
 
         fuente.getData().setScale(0.4f);
 
@@ -463,7 +450,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
                         public void run() {
                             juego.finalizacionPartida.pantallaAnterior = juego.pantallaJuego1;
                             juego.finalizacionPartida.ganador = idGanador;
-                            juego.finalizacionPartida.tiempo = segundosPartida;
+                            juego.finalizacionPartida.setTiempo(segundosPartida);
                             juego.finalizacionPartida.balas = balasUtilizadas;
                             if (jugadorActual.equals("jugador1"))
                                 juego.finalizacionPartida.framesGanador = jugador1.frameParadoAv;
@@ -481,10 +468,10 @@ public class PantallaJuego1 extends PlantillaEscenas {
     private void timer() {
         if (visible && !partidaAcabada) {
             contTimer++;
-            segundosPartida++;
             if (contTimer > 5) {
                 contTimer = 0;
                 tiempo--;
+                segundosPartida++;
                 tiempoString = tiempo + "";
                 if (tiempo <= 0) {
                     tiempo = 20;
@@ -520,11 +507,17 @@ public class PantallaJuego1 extends PlantillaEscenas {
             formas.begin(ShapeRenderer.ShapeType.Line);
             formas.setColor(Color.BLACK);
             Vector2 inicio = null;
-            for (Jugador jugador : jugadores) {
-                if (jugador.turno) {
-                    inicio = new Vector2(jugador.getX() + jugador.tamañoX * juego.PIXEL_METRO_X, jugador.getY() + jugador.tamañoY * juego.PIXEL_METRO_Y);
-                }
-            }
+
+            Vector2 centroJugador = new Vector2(jugActual.getX() + jugActual.tamañoX * juego.PIXEL_METRO_X, jugActual.getY() + jugActual.tamañoY * juego.PIXEL_METRO_Y);
+            Vector2 ptoFinal = fling.get(fling.size() - 1);
+            float yy = altoPantalla - ptoFinal.y - centroJugador.y;
+            float xx = ptoFinal.x - centroJugador.x;
+            angulo = (float) Math.atan2(yy, xx);
+            jugActual.angulo = (float) Math.toDegrees(angulo);
+//            System.out.println(jugActual.angulo);
+
+            inicio = new Vector2(jugActual.getX() + jugActual.tamañoX * juego.PIXEL_METRO_X, jugActual.getY() + jugActual.tamañoY * juego.PIXEL_METRO_Y);
+
             if (inicio != null)
                 formas.line(inicio.x, inicio.y, fling.get(fling.size() - 1).x, altoPantalla - fling.get(fling.size() - 1).y);
             formas.end();
