@@ -108,7 +108,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 jugActual.movimiento = Jugador.Movimiento.adelante;
                 juego.botonPulsadoMusica(jugActual.sonidoAndar);
-                jugActual.angulo=45;//predefinido
+                jugActual.angulo = 45;//predefinido
                 fling.clear();
                 return true;
             }
@@ -129,7 +129,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 jugActual.movimiento = Jugador.Movimiento.atras;
                 juego.botonPulsadoMusica(jugActual.sonidoAndar);
-                jugActual.angulo=135;//predefinido
+                jugActual.angulo = 135;//predefinido
                 fling.clear();
                 return true;
             }
@@ -151,7 +151,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
                 jugActual.movimiento = Jugador.Movimiento.saltaAdelante;
                 if (!jugActual.saltando)
                     juego.botonPulsado(jugActual.sonidoSalto);
-                jugActual.angulo=45;//predefinido
+                jugActual.angulo = 45;//predefinido
                 debeSaltar = true;
                 fling.clear();
                 return true;
@@ -171,7 +171,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 jugActual.movimiento = Jugador.Movimiento.saltaAtras;
-                jugActual.angulo=135;//predefinido
+                jugActual.angulo = 135;//predefinido
                 if (!jugActual.saltando)
                     juego.botonPulsado(jugActual.sonidoSalto);
                 debeSaltar = true;
@@ -194,14 +194,14 @@ public class PantallaJuego1 extends PlantillaEscenas {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 Vector2 inicio = null;
                 inicio = new Vector2(jugActual.getX() / juego.PIXEL_METRO_X, jugActual.getY() / juego.PIXEL_METRO_Y); //Punto de salida de la bala, en la esquina a la que apunte
-                if (jugActual.avanza)
+                if (jugActual.avanza)                       //prefeinido para cuando lanza a 45
                     inicio.x += jugActual.tamañoX * 1.5f;
                 else
                     inicio.x -= jugActual.tamañoX * 1.5f;
                 inicio.y += jugActual.tamañoY * 1.5f;
                 if (inicio != null) {
                     balasUtilizadas++;
-                    balas.add(new Bala(mundo, jugActual.imgBala, inicio, juego, (float)Math.toRadians(jugActual.angulo)));
+                    balas.add(new Bala(mundo, inicio, juego, jugActual));
                     escenario.addActor(balas.get(balas.size() - 1));
                 }
                 return true;
@@ -228,8 +228,8 @@ public class PantallaJuego1 extends PlantillaEscenas {
                     } else
                         jugador.movimiento = Jugador.Movimiento.nada;
                 }
-                tiempo=tiempoTurno;
-                tiempoString=tiempo+"";
+                tiempo = tiempoTurno;
+                tiempoString = tiempo + "";
                 fling.clear();
             }
         });
@@ -321,7 +321,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
                 null,
                 juego, false, Jugador.Movimiento.nada, juego.pantallaJuego1);
         jugador2.avanza = false;
-        jugador2.angulo=135;
+        jugador2.angulo = 135;
 
         jugador1.fixture.setUserData("jugador1");
         jugador2.fixture.setUserData("jugador2");
@@ -398,14 +398,31 @@ public class PantallaJuego1 extends PlantillaEscenas {
                         jugador1.setVida(jugador1.getVida() - bala.daño);
                         bala.impacto = true;
                         comprobarFinalizacion();
-                    }
-                    if (hanColisionado(contact, bala.idBala, "jugador2")) {
-                        jugador2.setVida(jugador2.getVida() - bala.daño);
-                        bala.impacto = true;
-                        comprobarFinalizacion();
-                    }
-                    if (hanColisionado(contact, bala.idBala, "suelo")) {
-                        bala.impacto = true;
+                    } else {
+                        if (hanColisionado(contact, bala.idBala, "jugador2")) {
+                            jugador2.setVida(jugador2.getVida() - bala.daño);
+                            bala.impacto = true;
+                            comprobarFinalizacion();
+                        } else {
+                            if (hanColisionado(contact, bala.idBala, "suelo")) {
+                                bala.impacto = true;
+                            } else {
+                                if (hanColisionado(contact, bala.idBala, "limiteIzquierda")) {
+                                    bala.impacto = true;
+                                } else {
+                                    if (hanColisionado(contact, bala.idBala, "limiteDerecha")) {
+                                        bala.impacto = true;
+                                    } else {
+                                        for (Bala bala2 : balas) {
+                                            if (!bala.impacto) {
+                                                if (hanColisionado(contact, bala.idBala, bala2.idBala))
+                                                    bala.impacto = true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

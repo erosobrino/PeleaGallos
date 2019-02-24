@@ -84,6 +84,7 @@ public class Jugador extends Actor {
     TextureRegion regionArma;
     TextureRegion regionArmaRe;//cuando mira hacia atras
     float angulo;
+    String tipoBala;
 
     public Jugador(World mundo, Texture[] texturaParado, Texture[] texturaMovimiento, Texture[] texturaSaltando, Texture[] muerto, Vector2 posicion, Texture imgBala, Texture imgArma, JuegoPrincipal juego, boolean turno, Movimiento movimiento, PantallaJuego1 pantallaJuego) {
         this.mundo = mundo;
@@ -103,6 +104,9 @@ public class Jugador extends Actor {
             aspectoArma = imgArma.getWidth() / imgArma.getHeight();
             regionArma = new TextureRegion(imgArma); //nesecario para poder rotar arma
             regionArmaRe = new TextureRegion(espejo(imgArma));
+            tipoBala = "pistola";
+        } else {
+            tipoBala = "canon";
         }
 
         sonidoSalto = juego.manager.get("sonidos/sonidoSalto.mp3", Sound.class);
@@ -208,13 +212,11 @@ public class Jugador extends Actor {
                         batch.draw(regionArma, getX() + juego.PIXEL_METRO_X / 2, getY() + juego.PIXEL_METRO_Y / 3 * 1.3f, 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 45);
                     break;
                 case saltaAdelante:
-                    mundo.clearForces();
                     batch.draw(frameSaltaAV[0], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX * 1.1f, juego.PIXEL_METRO_Y * 2 * tamañoY);
                     if (regionArma != null)
                         batch.draw(regionArma, getX() + juego.PIXEL_METRO_X / 2, getY() + juego.PIXEL_METRO_Y / 3 * 1.3f, 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 45);
                     break;
                 case saltaAtras:
-                    mundo.clearForces();
                     batch.draw(frameSaltaRe[0], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY);
                     if (regionArmaRe != null)
                         batch.draw(regionArmaRe, getX(), getY() + juego.PIXEL_METRO_Y * 0.15f, 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 135);
@@ -236,6 +238,7 @@ public class Jugador extends Actor {
     @Override
     public void act(float delta) {
         if (turno && vivo && !saltando) {
+            mundo.clearForces();
             Vector2 posicionCuerpo = body.getPosition();
             switch (movimiento) {
                 case nada:

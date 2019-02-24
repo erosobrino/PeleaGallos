@@ -70,6 +70,8 @@ class Opciones extends PlantillaEscenas {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 juego.musicaEncendida = !juego.musicaEncendida;
+                juego.preferences.putBoolean("musica",juego.musicaEncendida);
+                juego.preferences.flush();
                 juego.botonPulsado(sonidoClick);
                 actualizaIconos();
                 return true;
@@ -90,6 +92,8 @@ class Opciones extends PlantillaEscenas {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 juego.vibracionEncendida = !juego.vibracionEncendida;
                 juego.botonPulsado(sonidoClick);
+                juego.preferences.putBoolean("vibracion",juego.vibracionEncendida);
+                juego.preferences.flush();
                 actualizaIconos();
                 return true;
             }

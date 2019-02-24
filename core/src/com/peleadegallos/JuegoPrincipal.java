@@ -3,6 +3,7 @@ package com.peleadegallos;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -22,8 +23,8 @@ public class JuegoPrincipal extends Game {
     I18NBundle idiomas;
 
     AssetManager manager;
-    public boolean musicaEncendida = true;
-    public boolean vibracionEncendida = true;
+    public boolean musicaEncendida;
+    public boolean vibracionEncendida;
     public int tiempoVibrar = 50;
     public boolean debug = true;
     float PIXEL_METRO_X;  //Escala para box2s
@@ -48,9 +49,15 @@ public class JuegoPrincipal extends Game {
         }
     }
 
+    Preferences preferences;
 
     @Override
     public void create() {
+        preferences=Gdx.app.getPreferences("PeleaDeGallos");
+        musicaEncendida=preferences.getBoolean("musica",true);
+        vibracionEncendida=preferences.getBoolean("vibracion",true);
+
+
         idiomas = I18NBundle.createBundle(Gdx.files.internal("locale/locale"));
 
         manager = new AssetManager();                         //Carga las imagenes y audio

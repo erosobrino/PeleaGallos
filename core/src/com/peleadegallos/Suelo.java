@@ -17,9 +17,10 @@ public class Suelo extends Actor {
 
     World mundo;
 
-    Body body;
+    Body body, bordeIzq, bordeDer;
 
-    Fixture fixture;
+
+    Fixture fixture, fixtureIzq, fixtureDer;
 
     JuegoPrincipal juego;
 
@@ -48,6 +49,25 @@ public class Suelo extends Actor {
         fixture.setUserData("suelo");
         forma.dispose();
 
+        BodyDef izqDef = new BodyDef();                                 //Evita que al estar pegado al borde de un suelo se pueda saltar si ya esta saltando
+        izqDef.position.set(posicion.x - 1f+tamañoX, posicion.y + 0.5f);
+        izqDef.type = BodyDef.BodyType.StaticBody;
+        bordeIzq = mundo.createBody(izqDef);
+
+        PolygonShape formaBorde = new PolygonShape();
+        formaBorde.setAsBox(0.02f, tamañoY*0.95f);
+        fixtureIzq = bordeIzq.createFixture(formaBorde, 1);
+        fixtureIzq.setUserData("sueloIzq");
+
+        BodyDef derDef = new BodyDef();                                 //Evita que al estar pegado al borde de un suelo se pueda saltar si ya esta saltando
+        derDef.position.set(posicion.x - 1f-1, posicion.y + 0.5f);
+        derDef.type = BodyDef.BodyType.StaticBody;
+        bordeDer = mundo.createBody(derDef);
+
+        fixtureDer = bordeDer.createFixture(formaBorde, 1);
+        fixtureDer.setUserData("sueloDer");
+
+        formaBorde.dispose();
     }
 
     public Suelo(World mundo, Texture textura, Vector2 posicion, JuegoPrincipal juego, int anchoPantalla, int altoPantalla, boolean relleno) {
@@ -72,7 +92,12 @@ public class Suelo extends Actor {
     }
 
     public void elimina() {
+        bordeIzq.destroyFixture(fixtureIzq);
+        bordeDer.destroyFixture(fixtureDer);
         body.destroyFixture(fixture);
+
+        mundo.destroyBody(bordeDer);
+        mundo.destroyBody(bordeIzq);
         mundo.destroyBody(body);
     }
 }
