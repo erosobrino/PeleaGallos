@@ -13,12 +13,16 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.I18NBundle;
 
+import javax.xml.soap.Text;
+
 public class JuegoPrincipal extends Game {
     MenuInicio menuInicio;
     Opciones opciones;
     AcercaDe info;
     PantallaJuego1 pantallaJuego1;
     FinalizacionPartida finalizacionPartida;
+    SelectorPersonajeArma selectorPersonajeArma;
+    SelectorPersonajeArma selectorPersonajeArma2;
 
     I18NBundle idiomas;
 
@@ -78,6 +82,7 @@ public class JuegoPrincipal extends Game {
         manager.load("iconos/volume-mute.png", Texture.class);
         manager.load("iconos/volume-up.png", Texture.class);
         manager.load("iconos/flechaArriba.png", Texture.class);
+        manager.load("iconos/flechaAbajo.png", Texture.class);
         manager.load("iconos/flechaDerecha.png", Texture.class);
         manager.load("iconos/flechaIzquierda.png", Texture.class);
         manager.load("iconos/disparo.png", Texture.class);
@@ -146,6 +151,17 @@ public class JuegoPrincipal extends Game {
         pantallaJuego1 = new PantallaJuego1(this);
         finalizacionPartida = new FinalizacionPartida(this);
 
-        setScreen(menuInicio);                             //Cambia al menu de inicio
+        Personaje[] personajes=new Personaje[2];
+        personajes[0]=new Personaje(manager.get("dino/Idle (1).png",Texture.class),100,2,"dino");
+        personajes[1]=new Personaje(manager.get("dino/Walk (5).png",Texture.class),100,2,"dino2");
+
+        Arma[] armas=new Arma[2];
+        armas[0]=new Arma(manager.get("armas/gun.png",Texture.class),10,4,3,"pistola");
+        armas[1]=new Arma(manager.get("armas/shotgun.png",Texture.class),10,6,2,"uzi");
+
+        selectorPersonajeArma=new SelectorPersonajeArma(this,personajes, armas,1);
+
+
+        setScreen(selectorPersonajeArma);                             //Cambia al menu de inicio
     }
 }

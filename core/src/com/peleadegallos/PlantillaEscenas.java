@@ -8,7 +8,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class PlantillaEscenas implements Screen {
 
@@ -19,8 +22,10 @@ public class PlantillaEscenas implements Screen {
     Music musica;
     Image fondo;
     Sound sonidoClick;
+    Image home;
+    Skin skin;
 
-    public PlantillaEscenas(JuegoPrincipal juego) {
+    public PlantillaEscenas(final JuegoPrincipal juego) {
         this.juego = juego;
 
         fondo = new Image(juego.manager.get("suelo.png", Texture.class));     //Coge imagen del assetmanager
@@ -34,6 +39,20 @@ public class PlantillaEscenas implements Screen {
         musica.setVolume(0.5f);
 
         sonidoClick = juego.manager.get("sonidos/sonidoClick.mp3", Sound.class);
+
+        home = new Image(juego.manager.get("iconos/home.png", Texture.class));
+        home.setSize(altoPantalla / 7, altoPantalla / 7);
+        home.setPosition(5, altoPantalla - altoPantalla / 7);
+        home.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                juego.botonPulsado(sonidoClick);
+                juego.setScreen(juego.menuInicio);
+                return true;
+            }
+        });
+
+        skin = new Skin(Gdx.files.internal("skin/flat-earth-ui.json"));         //Skin para botones y fuente (creada con hierro v5)
     }
 
     @Override

@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class AcercaDe extends PlantillaEscenas {
 
-    Image home;
     Stage escenario;
     SpriteBatch batch;
     int posX;
@@ -23,18 +22,6 @@ public class AcercaDe extends PlantillaEscenas {
         posX = anchoPantalla / 7;
         escenario = new Stage();
         escenario.setDebugAll(juego.debug);
-
-        home = new Image(juego.manager.get("iconos/home.png", Texture.class));
-        home.setSize(altoPantalla / 7, altoPantalla / 7);
-        home.setPosition(5, altoPantalla - altoPantalla / 7);
-        home.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-               juego.botonPulsado(sonidoClick);
-                juego.setScreen(juego.menuInicio);
-                return true;
-            }
-        });
 
         batch = new SpriteBatch();
     }

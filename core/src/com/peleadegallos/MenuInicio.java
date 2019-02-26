@@ -23,7 +23,6 @@ public class MenuInicio extends PlantillaEscenas {
     TextButton jugar, opciones, logros, ayuda;
 
     int alto, ancho;
-    Skin skin;
     ArrayList<Nube> nubes;
     ArrayList<Texture> nubesTextura;
     Image imgInfo;
@@ -47,8 +46,6 @@ public class MenuInicio extends PlantillaEscenas {
         nubesTextura = new ArrayList<Texture>();
 
         anadeNubes(1);
-
-        skin = new Skin(Gdx.files.internal("skin/flat-earth-ui.json"));         //Skin para botones y fuente (creada con hierro v5)
 
         jugar = new TextButton(juego.idiomas.get("jugar"), skin);
         jugar.setSize(ancho * 5, alto * 12 / 10);

@@ -56,7 +56,6 @@ public class Bala extends Actor {
 //        daño
 //        fuerza
 
-        //TODO colocar bala en position inicio dependiendo de angulo, y cambiar imagen espejo
         switch (jugador.tipoBala) {
             case "pistola":
                 sonidoCanon = juego.manager.get("sonidos/sonidoCanon.mp3", Sound.class);
