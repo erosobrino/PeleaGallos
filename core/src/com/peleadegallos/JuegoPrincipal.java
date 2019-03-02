@@ -13,6 +13,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.I18NBundle;
 
+import java.awt.Image;
+
 import javax.xml.soap.Text;
 
 public class JuegoPrincipal extends Game {
@@ -23,6 +25,7 @@ public class JuegoPrincipal extends Game {
     FinalizacionPartida finalizacionPartida;
     SelectorPersonajeArma selectorPersonajeArma;
     SelectorPersonajeArma selectorPersonajeArma2;
+    SelectorMapa selectorMapa;
 
     I18NBundle idiomas;
 
@@ -142,6 +145,9 @@ public class JuegoPrincipal extends Game {
         manager.load("armas/shotgun.png", Texture.class);
         manager.load("armas/bomb.png", Texture.class);
 
+
+        manager.load("mapas/mapa1.png", Texture.class);
+
         manager.load("skin/fuente200.fnt", BitmapFont.class);    //Fuente
         manager.finishLoading();                             //Espera a que acabe de cargar
 
@@ -155,13 +161,19 @@ public class JuegoPrincipal extends Game {
         personajes[0]=new Personaje(manager.get("dino/Idle (1).png",Texture.class),100,2,"dino");
         personajes[1]=new Personaje(manager.get("dino/Walk (5).png",Texture.class),100,2,"dino2");
 
-        Arma[] armas=new Arma[2];
+        Arma[] armas=new Arma[3];
         armas[0]=new Arma(manager.get("armas/gun.png",Texture.class),10,4,3,"pistola");
         armas[1]=new Arma(manager.get("armas/shotgun.png",Texture.class),10,6,2,"uzi");
+        armas[2]=new Arma(manager.get("armas/bomb.png",Texture.class),2,1,10,"canon");
+
+        Texture[] mapas=new Texture[1];
+        mapas[0]=manager.get("mapas/mapa1.png",Texture.class);
 
         selectorPersonajeArma=new SelectorPersonajeArma(this,personajes, armas,1);
+        selectorPersonajeArma2=new SelectorPersonajeArma(this,personajes, armas,2);
+        selectorMapa=new SelectorMapa(this,mapas,3);
 
 
-        setScreen(selectorPersonajeArma);                             //Cambia al menu de inicio
+        setScreen(menuInicio);                             //Cambia al menu de inicio
     }
 }

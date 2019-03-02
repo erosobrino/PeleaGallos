@@ -85,8 +85,10 @@ public class Jugador extends Actor {
     TextureRegion regionArmaRe;//cuando mira hacia atras
     float angulo;
     String tipoBala;
+    int cantidadBalas;
+    int balasRestantes;
 
-    public Jugador(World mundo, Texture[] texturaParado, Texture[] texturaMovimiento, Texture[] texturaSaltando, Texture[] muerto, Vector2 posicion, Texture imgBala, Texture imgArma, JuegoPrincipal juego, boolean turno, Movimiento movimiento, PantallaJuego1 pantallaJuego) {
+    public Jugador(World mundo, Texture[] texturaParado, Texture[] texturaMovimiento, Texture[] texturaSaltando, Texture[] muerto, Vector2 posicion, Texture imgBala, Texture imgArma, JuegoPrincipal juego, boolean turno, Movimiento movimiento, PantallaJuego1 pantallaJuego, String tipoBala, int cantidadBalas) {
         this.mundo = mundo;
         this.frameParadoAv = texturaParado;
         this.frameMovimientoAv = texturaMovimiento;
@@ -99,14 +101,14 @@ public class Jugador extends Actor {
         this.imgArma = imgArma;
         this.pantallaJuego = pantallaJuego;
         this.angulo = 45;
+        this.tipoBala = tipoBala;
+        this.cantidadBalas = cantidadBalas;
+        this.balasRestantes=cantidadBalas;
 
         if (imgArma != null) {
             aspectoArma = imgArma.getWidth() / imgArma.getHeight();
             regionArma = new TextureRegion(imgArma); //nesecario para poder rotar arma
             regionArmaRe = new TextureRegion(espejo(imgArma));
-            tipoBala = "pistola";
-        } else {
-            tipoBala = "canon";
         }
 
         sonidoSalto = juego.manager.get("sonidos/sonidoSalto.mp3", Sound.class);
@@ -238,7 +240,6 @@ public class Jugador extends Actor {
     @Override
     public void act(float delta) {
         if (turno && vivo && !saltando) {
-            mundo.clearForces();
             Vector2 posicionCuerpo = body.getPosition();
             switch (movimiento) {
                 case nada:

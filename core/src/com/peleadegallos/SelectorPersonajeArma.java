@@ -13,25 +13,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-public class SelectorPersonajeArma extends PlantillaEscenas {
+public class SelectorPersonajeArma extends SelectorPlantilla {
 
     Personaje[] personajes;
     Arma[] armas;
     Image imgPersonaje, imgArmas;
     Image btadelantePer, btatrasPer, btadelanteArm, btatrasArm;
-    Stage escenario;
+
     int indicePersonaje = 0, indiceArma = 0;
-    SpriteBatch spriteBatch;
-    int idJugador;
-    TextButton continuar;
 
     public SelectorPersonajeArma(final JuegoPrincipal juego, final Personaje[] personajes, final Arma[] armas, final int idJugador) {
-        super(juego);
+        super(juego,idJugador);
         this.personajes = personajes;
         this.armas = armas;
-        this.idJugador = idJugador;
-
-        escenario = new Stage();
 
         btadelantePer = new Image(juego.manager.get("iconos/flechaArriba.png", Texture.class));
         btadelantePer.setSize(altoPantalla / 7, altoPantalla / 7);
@@ -92,29 +86,6 @@ public class SelectorPersonajeArma extends PlantillaEscenas {
                 return true;
             }
         });
-
-        continuar = new TextButton(juego.idiomas.get("jugar"), skin);
-        continuar.setSize(anchoPantalla / 7 * 5, altoPantalla / 5 * 12 / 10);
-        continuar.setPosition(anchoPantalla-anchoPantalla / 7, altoPantalla / 5 * 3);
-        continuar.scaleBy(2);
-        continuar.getLabel().setPosition(2, 2);
-        continuar.getLabel().setFontScale(0.75f);
-        continuar.getLabel().setColor(Color.BLACK);
-        continuar.addCaptureListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                juego.botonPulsado(sonidoClick);
-                if (idJugador>1)
-                    juego.setScreen(juego.pantallaJuego1);
-                else
-                    juego.setScreen(juego.selectorPersonajeArma2);
-            }
-        });
-
-        actualizaImagenArma(indiceArma);
-        actualizaImagenPersonaje(indicePersonaje);
-
-        spriteBatch = new SpriteBatch();
     }
 
 
@@ -141,24 +112,18 @@ public class SelectorPersonajeArma extends PlantillaEscenas {
     public void show() {
         super.show();
 
-        escenario.addActor(fondo);
         escenario.addActor(btatrasPer);
         escenario.addActor(btatrasArm);
         escenario.addActor(btadelantePer);
         escenario.addActor(btadelanteArm);
-        escenario.addActor(home);
 
-        Gdx.input.setInputProcessor(escenario);
-
-        fuente.getData().setScale(0.25f);
+        actualizaImagenArma(indiceArma);
+        actualizaImagenPersonaje(indicePersonaje);
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
-
-        escenario.act();
-        escenario.draw();
 
         spriteBatch.begin();
         fuente.getData().setScale(0.35f);
@@ -168,9 +133,9 @@ public class SelectorPersonajeArma extends PlantillaEscenas {
         fuente.draw(spriteBatch, juego.idiomas.get("vida") + ": " + personajes[indicePersonaje].getVida(), anchoPantalla / 4 * 1.1f, altoPantalla - altoPantalla / 6 * 2 * 1.25f);
         fuente.draw(spriteBatch, juego.idiomas.get("velocidadPer") + ": " + personajes[indicePersonaje].getVelocidad(), anchoPantalla / 4 * 1.1f, altoPantalla - altoPantalla / 6 * 4 * 0.75f);
 
-        fuente.draw(spriteBatch, juego.idiomas.get("alcance") + ": " + armas[indiceArma].getAlcance(), anchoPantalla / 2 * 1.25f, altoPantalla - altoPantalla / 3*0.65f);
-        fuente.draw(spriteBatch, juego.idiomas.get("balasTotales") + ": " + armas[indiceArma].getBalas(), anchoPantalla / 2 * 1.25f, altoPantalla - altoPantalla / 3*0.95f);
-        fuente.draw(spriteBatch, juego.idiomas.get("daño") + ": " + armas[indiceArma].getDaño(), anchoPantalla / 2 * 1.25f, altoPantalla - altoPantalla / 3*1.15f);
+        fuente.draw(spriteBatch, juego.idiomas.get("alcance") + ": " + armas[indiceArma].getAlcance(), anchoPantalla / 2 * 1.25f, altoPantalla - altoPantalla / 3*1.15f);
+        fuente.draw(spriteBatch, juego.idiomas.get("balasTotales") + ": " + armas[indiceArma].getBalas(), anchoPantalla / 2 * 1.25f, altoPantalla - altoPantalla / 3*1.35f);
+        fuente.draw(spriteBatch, juego.idiomas.get("daño") + ": " + armas[indiceArma].getDaño(), anchoPantalla / 2 * 1.25f, altoPantalla - altoPantalla / 3*1.55f);
         spriteBatch.end();
     }
 
@@ -178,13 +143,14 @@ public class SelectorPersonajeArma extends PlantillaEscenas {
     public void hide() {
         super.hide();
 
-        home.remove();
-        fondo.remove();
+        if (imgArmas != null)
+            imgArmas.remove();
+        if (imgPersonaje != null)
+            imgPersonaje.remove();
+
         btatrasPer.remove();
         btatrasArm.remove();
         btadelantePer.remove();
         btadelanteArm.remove();
-
-        Gdx.input.setInputProcessor(null);
     }
 }

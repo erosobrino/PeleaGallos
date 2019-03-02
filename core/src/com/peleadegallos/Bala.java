@@ -51,12 +51,26 @@ public class Bala extends Actor {
             this.sprite = espejo(jugador.imgBala);
         cantidadBalas++;
         idBala = cantidadBalas;
-        this.jugador=jugador;
+        this.jugador = jugador;
+
 //        radio
 //        daño
 //        fuerza
 
+        Vector2 centroJugador;
         switch (jugador.tipoBala) {
+            case "uzi":
+                sonidoCanon = juego.manager.get("sonidos/sonidoCanon.mp3", Sound.class);
+                juego.botonPulsado(sonidoCanon);
+                radio = 0.15f;
+                daño = 2;
+                fuerza = 0.75f;
+                offsetX = 0.8f;
+                offsetY = 0.2f;
+                centroJugador = new Vector2(jugador.getX() + jugador.tamañoX * juego.PIXEL_METRO_X, jugador.getY() + jugador.tamañoY * juego.PIXEL_METRO_Y);
+                posicion.x = centroJugador.x / juego.PIXEL_METRO_X - 2 + jugador.tamañoX * (float) Math.cos(angulo) * 1.5f;
+                posicion.y = centroJugador.y / juego.PIXEL_METRO_Y - 0.5f + jugador.tamañoY * (float) Math.sin(angulo) * 1.3f;
+                break;
             case "pistola":
                 sonidoCanon = juego.manager.get("sonidos/sonidoCanon.mp3", Sound.class);
                 juego.botonPulsado(sonidoCanon);
@@ -65,7 +79,7 @@ public class Bala extends Actor {
                 fuerza = 0.75f;
                 offsetX = 0.8f;
                 offsetY = 0.2f;
-                Vector2 centroJugador = new Vector2(jugador.getX() + jugador.tamañoX * juego.PIXEL_METRO_X, jugador.getY() + jugador.tamañoY * juego.PIXEL_METRO_Y);
+                centroJugador = new Vector2(jugador.getX() + jugador.tamañoX * juego.PIXEL_METRO_X, jugador.getY() + jugador.tamañoY * juego.PIXEL_METRO_Y);
                 posicion.x = centroJugador.x / juego.PIXEL_METRO_X - 2 + jugador.tamañoX * (float) Math.cos(angulo) * 1.5f;
                 posicion.y = centroJugador.y / juego.PIXEL_METRO_Y - 0.5f + jugador.tamañoY * (float) Math.sin(angulo) * 1.3f;
                 break;

@@ -58,7 +58,7 @@ public class MenuInicio extends PlantillaEscenas {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 juego.botonPulsado(sonidoClick);
-                juego.setScreen(juego.pantallaJuego1);
+                juego.setScreen(juego.selectorPersonajeArma);
             }
         });
 
