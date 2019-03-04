@@ -19,7 +19,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 class Opciones extends PlantillaEscenas {
 
-    Stage escenario;
     Image imgVolumen;
     Image imgVibrar;
     SpriteBatch batch;
@@ -28,9 +27,6 @@ class Opciones extends PlantillaEscenas {
     public Opciones(final JuegoPrincipal juego) {
         super(juego);
         posX = anchoPantalla / 7;
-
-        escenario = new Stage();
-        escenario.setDebugAll(juego.debug);
 
         actualizaIconos();
 
@@ -92,7 +88,7 @@ class Opciones extends PlantillaEscenas {
     public void show() {
         super.show();
 
-        fuente.getData().setScale(0.75f);
+        fuente.getData().setScale(escalado075);
 
         escenario.addActor(fondo);
         escenario.addActor(home);

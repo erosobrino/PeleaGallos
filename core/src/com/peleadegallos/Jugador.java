@@ -11,7 +11,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
@@ -68,6 +67,8 @@ public class Jugador extends Actor {
 
     float aspectoArma;
 
+    int indiceAux;
+
     public int getVida() {
         return vida;
     }
@@ -80,7 +81,7 @@ public class Jugador extends Actor {
         this.vida = vida;
     }
 
-    PantallaJuego1 pantallaJuego;
+    PantallaJuego pantallaJuego;
     TextureRegion regionArma;
     TextureRegion regionArmaRe;//cuando mira hacia atras
     float angulo;
@@ -88,7 +89,11 @@ public class Jugador extends Actor {
     int cantidadBalas;
     int balasRestantes;
 
-    public Jugador(World mundo, Texture[] texturaParado, Texture[] texturaMovimiento, Texture[] texturaSaltando, Texture[] muerto, Vector2 posicion, Texture imgBala, Texture imgArma, JuegoPrincipal juego, boolean turno, Movimiento movimiento, PantallaJuego1 pantallaJuego, String tipoBala, int cantidadBalas) {
+    long tiempoFrameSalto;
+
+    String nombre, arma;
+
+    public Jugador(World mundo, Texture[] texturaParado, Texture[] texturaMovimiento, Texture[] texturaSaltando, Texture[] muerto, Vector2 posicion, Texture imgBala, Texture imgArma, JuegoPrincipal juego, boolean turno, Movimiento movimiento, PantallaJuego pantallaJuego, String tipoBala, int cantidadBalas) {
         this.mundo = mundo;
         this.frameParadoAv = texturaParado;
         this.frameMovimientoAv = texturaMovimiento;
@@ -103,7 +108,7 @@ public class Jugador extends Actor {
         this.angulo = 45;
         this.tipoBala = tipoBala;
         this.cantidadBalas = cantidadBalas;
-        this.balasRestantes=cantidadBalas;
+        this.balasRestantes = cantidadBalas;
 
         if (imgArma != null) {
             aspectoArma = imgArma.getWidth() / imgArma.getHeight();
@@ -163,6 +168,16 @@ public class Jugador extends Actor {
             indice = 1;
     }
 
+    private void cambiaFrameAux() {//frame salto que cambia
+        if ((System.currentTimeMillis() - tiempoFrameSalto) > 150) {
+            indiceAux++;
+            if (indiceAux > 7) {
+                indiceAux = 7;
+            }
+            tiempoFrameSalto = System.currentTimeMillis();
+        }
+    }
+
     @Override
     public void draw(Batch batch, float parentAlpha) {
         setPosition(body.getPosition().x * juego.PIXEL_METRO_X + 1.5f * juego.PIXEL_METRO_X, body.getPosition().y * juego.PIXEL_METRO_Y);
@@ -171,10 +186,7 @@ public class Jugador extends Actor {
                 case nada:
                     if (avanza) {
                         if (saltando) {
-                            int indiceAux = indice + 1;
-                            if (indiceAux > 7) {
-                                indiceAux = 7;
-                            }
+                            cambiaFrameAux();
                             batch.draw(frameSaltaAV[indiceAux], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY);
                         } else {
                             batch.draw(frameParadoAv[indice], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY);
@@ -184,13 +196,10 @@ public class Jugador extends Actor {
                             batch.draw(frameSaltaAV[frameSaltaAV.length - 1], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY);
                         }
                         if (regionArma != null)
-                            batch.draw(regionArma, getX() + juego.PIXEL_METRO_X / 2, getY() + juego.PIXEL_METRO_Y / 3 * 1.3f, 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 45);
+                            batch.draw(regionArma, getX() + juego.PIXEL_METRO_X / 2, getY() + juego.PIXEL_METRO_Y / 3 * 1.2f, 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 45);
                     } else {
                         if (saltando) {
-                            int indiceAux = indice + 1;
-                            if (indiceAux > 7) {
-                                indiceAux = 7;
-                            }
+                            cambiaFrameAux();
                             batch.draw(frameSaltaRe[indiceAux], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY);
                         } else {
                             batch.draw(frameParadoRe[indice], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY);
@@ -199,29 +208,43 @@ public class Jugador extends Actor {
                             tocaSuelo = false;
                             batch.draw(frameSaltaAV[frameSaltaAV.length - 1], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY);
                         }
-                        if (regionArmaRe != null)
-                            batch.draw(regionArmaRe, getX(), getY() + juego.PIXEL_METRO_Y * 0.15f, 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 135);
+                        if (regionArmaRe != null) {
+                            if (angulo < 181 && angulo > 0)
+                                batch.draw(regionArmaRe, getX() + juego.PIXEL_METRO_X / Math.abs(angulo) * angulo / 10, getY() + juego.PIXEL_METRO_Y * 0.15f + (float) (juego.PIXEL_METRO_Y * Math.sin(Math.toRadians(angulo)) * 0.3), 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 135);
+                            else
+                                batch.draw(regionArmaRe, getX() + juego.PIXEL_METRO_X * 0.1f + juego.PIXEL_METRO_X / Math.abs(angulo) * 40, getY() + juego.PIXEL_METRO_Y * 0.15f, 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 135);
+                        }
                     }
                     break;
                 case atras:
                     batch.draw(frameMovimientoRe[indice], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY * 1.07f);
-                    if (regionArmaRe != null)
-                        batch.draw(regionArmaRe, getX(), getY() + juego.PIXEL_METRO_Y * 0.15f, 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 135);
+                    if (regionArmaRe != null) {
+                        if (angulo < 181 && angulo > 0)
+                            batch.draw(regionArmaRe, getX() + juego.PIXEL_METRO_X / Math.abs(angulo) * angulo / 10, getY() + juego.PIXEL_METRO_Y * 0.15f + (float) (juego.PIXEL_METRO_Y * Math.sin(Math.toRadians(angulo)) * 0.3), 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 135);
+                        else
+                            batch.draw(regionArmaRe, getX() + juego.PIXEL_METRO_X * 0.1f + juego.PIXEL_METRO_X / Math.abs(angulo) * 40, getY() + juego.PIXEL_METRO_Y * 0.15f, 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 135);
+                    }
                     break;
                 case adelante:
                     batch.draw(frameMovimientoAv[indice], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY);
                     if (regionArma != null)
-                        batch.draw(regionArma, getX() + juego.PIXEL_METRO_X / 2, getY() + juego.PIXEL_METRO_Y / 3 * 1.3f, 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 45);
+                        batch.draw(regionArma, getX() + juego.PIXEL_METRO_X / 2, getY() + juego.PIXEL_METRO_Y / 3 * 1.2f, 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 45);
                     break;
                 case saltaAdelante:
-                    batch.draw(frameSaltaAV[0], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX * 1.1f, juego.PIXEL_METRO_Y * 2 * tamañoY);
+                    cambiaFrameAux();
+                    batch.draw(frameSaltaAV[indiceAux], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX * 1.1f, juego.PIXEL_METRO_Y * 2 * tamañoY);
                     if (regionArma != null)
-                        batch.draw(regionArma, getX() + juego.PIXEL_METRO_X / 2, getY() + juego.PIXEL_METRO_Y / 3 * 1.3f, 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 45);
+                        batch.draw(regionArma, getX() + juego.PIXEL_METRO_X / 2, getY() + juego.PIXEL_METRO_Y / 3 * 1.2f, 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 45);
                     break;
                 case saltaAtras:
-                    batch.draw(frameSaltaRe[0], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY);
-                    if (regionArmaRe != null)
-                        batch.draw(regionArmaRe, getX(), getY() + juego.PIXEL_METRO_Y * 0.15f, 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 135);
+                    cambiaFrameAux();
+                    batch.draw(frameSaltaRe[indiceAux], getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY);
+                    if (regionArmaRe != null) {
+                        if (angulo < 181 && angulo > 0)
+                            batch.draw(regionArmaRe, getX() + juego.PIXEL_METRO_X / Math.abs(angulo) * angulo / 10, getY() + juego.PIXEL_METRO_Y * 0.15f + (float) (juego.PIXEL_METRO_Y * Math.sin(Math.toRadians(angulo)) * 0.3), 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 135);
+                        else
+                            batch.draw(regionArmaRe, getX() + juego.PIXEL_METRO_X * 0.1f + juego.PIXEL_METRO_X / Math.abs(angulo) * 40, getY() + juego.PIXEL_METRO_Y * 0.15f, 0, 0, juego.PIXEL_METRO_X / 2, juego.PIXEL_METRO_Y / 2 * aspectoArma, 1, 1, angulo - 135);
+                    }
                     break;
             }
         } else {
@@ -254,11 +277,15 @@ public class Jugador extends Actor {
                     break;
                 case saltaAtras:
                     avanza = false;
+                    indiceAux = 0;
+                    tiempoFrameSalto = System.currentTimeMillis();
                     body.applyLinearImpulse(-5, 10, posicionCuerpo.x, posicionCuerpo.y, true);
                     saltando = true;
                     break;
                 case saltaAdelante:
                     avanza = true;
+                    indiceAux = 0;
+                    tiempoFrameSalto = System.currentTimeMillis();
                     body.applyLinearImpulse(5, 10, posicionCuerpo.x, posicionCuerpo.y, true);
                     saltando = true;
                     break;

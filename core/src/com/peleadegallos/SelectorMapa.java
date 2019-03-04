@@ -8,12 +8,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class SelectorMapa extends SelectorPlantilla {
 
-    Texture[] mapas;
+    Mapa[] mapas;
     Image btadelante, btatras;
     Image mapaSeleccionado;
     int indiceMapa = 0;
 
-    public SelectorMapa(final JuegoPrincipal juego, final Texture[] mapas, int idJugador) {
+    public SelectorMapa(final JuegoPrincipal juego, final Mapa[] mapas, int idJugador) {
         super(juego, idJugador);
         this.mapas = mapas;
 
@@ -51,9 +51,9 @@ public class SelectorMapa extends SelectorPlantilla {
     private void actualizaMapa(int indice) {
         if (mapaSeleccionado != null)
             mapaSeleccionado.remove();
-        mapaSeleccionado = new Image(mapas[indice]);
+        mapaSeleccionado = new Image(mapas[indice].mapa);
         mapaSeleccionado.setPosition(anchoPantalla / 5, altoPantalla/2 - altoPantalla / 7*0.8f);
-        mapaSeleccionado.setSize(anchoPantalla/2, altoPantalla/2);
+        mapaSeleccionado.setSize(anchoPantalla/2, altoPantalla/4);
         escenario.addActor(mapaSeleccionado);
     }
 

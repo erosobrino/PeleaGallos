@@ -18,20 +18,16 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import java.util.ArrayList;
 
-public class PantallaJuego1 extends PlantillaEscenas {
-
-    Stage escenario;
+public class PantallaJuego extends PlantillaEscenas {
 
     World mundo;
 
@@ -77,7 +73,11 @@ public class PantallaJuego1 extends PlantillaEscenas {
     double angulo;
     GestorGestos gestorGestos;
 
-    public PantallaJuego1(final JuegoPrincipal juego) {
+    String mapa;
+
+    int idActual = 1;
+
+    public PantallaJuego(final JuegoPrincipal juego) {
         super(juego);
 
         mundo = new World(new Vector2(0, -10), true);
@@ -85,8 +85,8 @@ public class PantallaJuego1 extends PlantillaEscenas {
 
         camera = new OrthographicCamera(juego.metrosX, juego.metrosY);
         renderer = new Box2DDebugRenderer();
-        escenario = new Stage(new FitViewport(anchoPantalla, altoPantalla));
-        escenario.setDebugAll(true);
+//        escenario = new Stage(new FitViewport(anchoPantalla, altoPantalla));
+//        escenario.setDebugAll(true);
         camera.translate(6, 4);
 
         btAdelante = new Image(juego.manager.get("iconos/flechaDerecha.png", Texture.class));
@@ -205,7 +205,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
         btCambioPersonaje = new TextButton(juego.idiomas.get("cambioPersonaje"), skin);
         btCambioPersonaje.setSize(anchoPantalla / 5, altoPantalla / 7);
         btCambioPersonaje.setPosition(anchoPantalla / 2 - btCambioPersonaje.getWidth() / 2, 0);
-        btCambioPersonaje.getLabel().setFontScale(0.5f);
+        btCambioPersonaje.getLabel().setFontScale(escalado05);
         btCambioPersonaje.getLabel().setColor(Color.BLACK);
         btCambioPersonaje.addCaptureListener(new ChangeListener() {
             @Override
@@ -217,6 +217,10 @@ public class PantallaJuego1 extends PlantillaEscenas {
                         jugadorActual = jugador.fixture.getUserData().toString();
                         jugActual = jugador;
                         gestorGestos.jugadorActual = jugador;
+                        if (jugador.fixture.getUserData().equals("jugador1"))
+                            idActual = 1;
+                        else
+                            idActual = 2;
                     } else
                         jugador.movimiento = Jugador.Movimiento.nada;
                     jugador.balasRestantes = jugador.cantidadBalas;
@@ -249,15 +253,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
         partidaAcabada = false;
         visible = true;
         //Limites  visible 0-8x 0-15y
-        suelos = new ArrayList<Suelo>();
-        suelos.add(new Suelo(mundo, juego.manager.get("2.png", Texture.class), new Vector2(0, 0), juego, anchoPantalla, altoPantalla, false));
-        suelos.add(new Suelo(mundo, juego.manager.get("2.png", Texture.class), new Vector2(2, 0), juego, anchoPantalla, altoPantalla, false));
-        suelos.add(new Suelo(mundo, juego.manager.get("2.png", Texture.class), new Vector2(4, 0.5f), juego, anchoPantalla, altoPantalla, true));
-        suelos.add(new Suelo(mundo, juego.manager.get("2.png", Texture.class), new Vector2(6, 0.75f), juego, anchoPantalla, altoPantalla, true));
-        suelos.add(new Suelo(mundo, juego.manager.get("2.png", Texture.class), new Vector2(8, 0.75f), juego, anchoPantalla, altoPantalla, true));
-        suelos.add(new Suelo(mundo, juego.manager.get("2.png", Texture.class), new Vector2(10, 0.5f), juego, anchoPantalla, altoPantalla, true));
-        suelos.add(new Suelo(mundo, juego.manager.get("2.png", Texture.class), new Vector2(12, 0), juego, anchoPantalla, altoPantalla, false));
-        suelos.add(new Suelo(mundo, juego.manager.get("2.png", Texture.class), new Vector2(14, 0), juego, anchoPantalla, altoPantalla, false));
+        suelos = cargaSuelos(juego.selectorMapa.indiceMapa);
 
         jugador1 = cargaJugadore(juego.selectorPersonajeArma, true, new Vector2(0, 3));
         jugador2 = cargaJugadore(juego.selectorPersonajeArma2, false, new Vector2(15, 3));
@@ -274,10 +270,6 @@ public class PantallaJuego1 extends PlantillaEscenas {
 
         jugActual = jugador1;
 
-        for (Suelo suelo : suelos) {
-            escenario.addActor(suelo);
-            suelo.fixture.setFriction(0.7f);
-        }
 
         limiteMapa = new ActorLimiteMapa(mundo, juego, altoPantalla, anchoPantalla);
         escenario.addActor(limiteMapa);
@@ -305,6 +297,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
             @Override
             public void beginContact(Contact contact) {
                 if (hanColisionado(contact, "jugador1", "suelo")) {
+                    jugador1.indiceAux = 0;
                     if (jugador1.saltando) {
                         jugador1.saltando = false;
                         jugador1.tocaSuelo = true;
@@ -313,6 +306,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
                     }
                 }
                 if (hanColisionado(contact, "jugador2", "suelo")) {
+                    jugador2.indiceAux = 0;
                     if (jugador2.saltando) {
                         jugador2.saltando = false;
                         jugador2.tocaSuelo = true;
@@ -324,12 +318,14 @@ public class PantallaJuego1 extends PlantillaEscenas {
                     if (jugador1.saltando) {
                         jugador1.saltando = false;
                         jugador1.tocaSuelo = true;
+                        jugador1.indiceAux = 0;
                         if (debeSaltar)
                             juego.botonPulsado(jugador1.sonidoSalto);
                     }
                     if (jugador2.saltando) {
                         jugador2.saltando = false;
                         jugador2.tocaSuelo = true;
+                        jugador2.indiceAux = 0;
                         if (debeSaltar)
                             juego.botonPulsado(jugador2.sonidoSalto);
                     }
@@ -386,10 +382,26 @@ public class PantallaJuego1 extends PlantillaEscenas {
         gestorGestos.jugadorActual = jugador1;
         Gdx.input.setInputProcessor(gestorGestos);//Poder usar gestos y que funcionen botones del escenario
 
-        fuente.getData().setScale(0.4f);
+        fuente.getData().setScale(escalado04);
 
         tiempo = tiempoTurno;
         tiempoString = tiempo + "";
+    }
+
+    private ArrayList<Suelo> cargaSuelos(int indice) {
+        ArrayList<Suelo> suelos = new ArrayList<Suelo>();
+        boolean relleno = false;
+        for (Vector2 punto : juego.mapas[indice].puntos) {
+            mapa = juego.mapas[indice].nombre;
+            relleno = false;
+            if (punto.y > 0)
+                relleno = true;
+            Suelo suelo = new Suelo(mundo, juego.mapas[indice].cuadradoMapa, punto, juego, anchoPantalla, altoPantalla, relleno);
+            suelo.fixture.setFriction(juego.mapas[indice].rozamiento);
+            suelos.add(suelo);
+            escenario.addActor(suelo);
+        }
+        return suelos;
     }
 
     private Jugador cargaJugadore(SelectorPersonajeArma selector, boolean turno, Vector2 posicion) {
@@ -403,7 +415,7 @@ public class PantallaJuego1 extends PlantillaEscenas {
                 nombreJug = "dino";
                 break;
             case 1:
-                nombreJug = "dino";
+                nombreJug = "dog";
                 break;
         }
 
@@ -428,16 +440,25 @@ public class PantallaJuego1 extends PlantillaEscenas {
                 break;
         }
 
-        Texture texturaArma=null; //Para poder cargar un jugador sin arma
+        Texture texturaArma = null; //Para poder cargar un jugador sin arma
         try {
             texturaArma = juego.manager.get(arma, Texture.class);
-        }catch (NullPointerException e){}
+        } catch (NullPointerException e) {
+        }
 
         TexturasJugador texturas = cargaTexturas(nombreJug);
         Jugador jugador = new Jugador(mundo, texturas.parado, texturas.mov, texturas.salto, texturas.muerto, posicion,
                 juego.manager.get(bala, Texture.class),
                 texturaArma,
-                juego, turno, Jugador.Movimiento.nada, juego.pantallaJuego1, tipoBala, cantidadBalasJugador);
+                juego, turno, Jugador.Movimiento.nada, juego.pantallaJuego, tipoBala, cantidadBalasJugador);
+        jugador.setVida(selector.personajes[selector.indicePersonaje].getVida());
+        jugador.nombre = nombreJug;
+        jugador.arma = arma;
+        if (jugador.arma != null) {
+            jugador.arma = jugador.arma.substring(jugador.arma.indexOf("/") + 1);
+            jugador.arma = jugador.arma.substring(0, jugador.arma.indexOf(".png"));
+        } else
+            jugador.arma = "bomba";
         return jugador;
     }
 
@@ -502,15 +523,17 @@ public class PantallaJuego1 extends PlantillaEscenas {
                     escenario.addAction(Actions.sequence(Actions.delay(2), Actions.run(new Runnable() {
                         @Override
                         public void run() {
-                            juego.finalizacionPartida.pantallaAnterior = juego.pantallaJuego1;
+                            juego.finalizacionPartida.pantallaAnterior = juego.pantallaJuego;
                             juego.finalizacionPartida.ganador = idGanador;
                             juego.finalizacionPartida.setTiempo(segundosPartida);
                             juego.finalizacionPartida.balas = balasUtilizadas;
+                            juego.finalizacionPartida.jugadores = jugadores;
+                            juego.finalizacionPartida.mapa=mapa;
                             if (jugadorActual.equals("jugador1"))
                                 juego.finalizacionPartida.framesGanador = jugador1.frameParadoAv;
                             else
                                 juego.finalizacionPartida.framesGanador = jugador2.frameParadoAv;
-                            juego.pantallaJuego1 = new PantallaJuego1(juego);
+                            juego.pantallaJuego = new PantallaJuego(juego);
                             juego.setScreen(juego.finalizacionPartida);
                         }
                     })));
@@ -550,14 +573,6 @@ public class PantallaJuego1 extends PlantillaEscenas {
             juego.setScreen(juego.menuInicio);
         }
 
-        batchTexto.begin();
-        fuente.draw(batchTexto, jugadorActual, anchoPantalla / 3, altoPantalla - altoPantalla / 10);
-        fuente.draw(batchTexto, tiempoString + "s", anchoPantalla / 3 * 2, altoPantalla - altoPantalla / 10);
-        fuente.draw(batchTexto, jugador1.getVida() + "", anchoPantalla / 18, altoPantalla - altoPantalla / 10);
-        fuente.draw(batchTexto, jugador2.getVida() + "", anchoPantalla - anchoPantalla / 12, altoPantalla - altoPantalla / 10);
-        fuente.draw(batchTexto, juego.idiomas.get("balasRestantes") + ": "+jugActual.balasRestantes, anchoPantalla/18, altoPantalla - altoPantalla / 10*2);
-        batchTexto.end();
-
         if (fling.size() > 1) {
             formas.begin(ShapeRenderer.ShapeType.Line);
             formas.setColor(Color.BLACK);
@@ -591,6 +606,14 @@ public class PantallaJuego1 extends PlantillaEscenas {
                 balas.remove(i);
             }
         }
+
+        batchTexto.begin();
+        fuente.draw(batchTexto, juego.idiomas.get("jugador") + ": " + idActual, anchoPantalla / 3, altoPantalla - altoPantalla / 10);
+        fuente.draw(batchTexto, tiempoString + "s", anchoPantalla / 3 * 2, altoPantalla - altoPantalla / 10);
+        fuente.draw(batchTexto, jugador1.getVida() + "", anchoPantalla / 18, altoPantalla - altoPantalla / 10);
+        fuente.draw(batchTexto, jugador2.getVida() + "", anchoPantalla - anchoPantalla / 12, altoPantalla - altoPantalla / 10);
+        fuente.draw(batchTexto, juego.idiomas.get("balasRestantes") + ": " + jugActual.balasRestantes, anchoPantalla / 18, altoPantalla - altoPantalla / 10 * 2);
+        batchTexto.end();
     }
 
     @Override

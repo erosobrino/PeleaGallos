@@ -126,10 +126,10 @@ public class SelectorPersonajeArma extends SelectorPlantilla {
         super.render(delta);
 
         spriteBatch.begin();
-        fuente.getData().setScale(0.35f);
+        fuente.getData().setScale(escalado035);
         fuente.draw(spriteBatch, juego.idiomas.get("jugador") + ": " + idJugador, anchoPantalla / 4 * 1.1f, altoPantalla - altoPantalla / 10);
 
-        fuente.getData().setScale(0.25f);
+        fuente.getData().setScale(escalado025);
         fuente.draw(spriteBatch, juego.idiomas.get("vida") + ": " + personajes[indicePersonaje].getVida(), anchoPantalla / 4 * 1.1f, altoPantalla - altoPantalla / 6 * 2 * 1.25f);
         fuente.draw(spriteBatch, juego.idiomas.get("velocidadPer") + ": " + personajes[indicePersonaje].getVelocidad(), anchoPantalla / 4 * 1.1f, altoPantalla - altoPantalla / 6 * 4 * 0.75f);
 

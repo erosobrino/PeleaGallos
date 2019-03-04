@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class AcercaDe extends PlantillaEscenas {
 
-    Stage escenario;
     SpriteBatch batch;
     int posX;
 
@@ -20,8 +19,6 @@ public class AcercaDe extends PlantillaEscenas {
         super(juego);
 
         posX = anchoPantalla / 7;
-        escenario = new Stage();
-        escenario.setDebugAll(juego.debug);
 
         batch = new SpriteBatch();
     }
@@ -30,7 +27,7 @@ public class AcercaDe extends PlantillaEscenas {
     public void show() {
         super.show();
 
-        fuente.getData().setScale(0.4f);
+        fuente.getData().setScale(escalado04);
 
         escenario.addActor(fondo);
         escenario.addActor(home);

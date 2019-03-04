@@ -1,16 +1,16 @@
 package com.peleadegallos;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class SelectorPlantilla extends PlantillaEscenas {
 
-    Stage escenario;
     TextButton continuar, anterior;
     int idJugador;
     SpriteBatch spriteBatch;
@@ -19,14 +19,12 @@ public class SelectorPlantilla extends PlantillaEscenas {
         super(juego);
         this.idJugador = idJugador;
 
-        escenario = new Stage();
-
         continuar = new TextButton(juego.idiomas.get("continuar"), skin);
         continuar.setSize(anchoPantalla / 7 * 2, altoPantalla / 5);
         continuar.setPosition(anchoPantalla - anchoPantalla / 7 * 2 * 1.05f, altoPantalla * 0.05f);
         continuar.scaleBy(2);
         continuar.getLabel().setPosition(2, 2);
-        continuar.getLabel().setFontScale(0.5f);
+        continuar.getLabel().setFontScale(escalado05);
         continuar.getLabel().setColor(Color.BLACK);
         continuar.addCaptureListener(new ChangeListener() {
             @Override
@@ -40,7 +38,7 @@ public class SelectorPlantilla extends PlantillaEscenas {
                         juego.setScreen(juego.selectorMapa);
                         break;
                     case 3:
-                        juego.setScreen(juego.pantallaJuego1);
+                        juego.setScreen(juego.pantallaJuego);
                         break;
                 }
             }
@@ -51,7 +49,7 @@ public class SelectorPlantilla extends PlantillaEscenas {
         anterior.setPosition(anchoPantalla - anchoPantalla / 7 * 2 * 1.05f, altoPantalla * 0.95f - altoPantalla / 5);
         anterior.scaleBy(2);
         anterior.getLabel().setPosition(2, 2);
-        anterior.getLabel().setFontScale(0.5f);
+        anterior.getLabel().setFontScale(escalado05);
         anterior.getLabel().setColor(Color.BLACK);
         anterior.addCaptureListener(new ChangeListener() {
             @Override
@@ -84,12 +82,21 @@ public class SelectorPlantilla extends PlantillaEscenas {
 
         Gdx.input.setInputProcessor(escenario);
 
-        fuente.getData().setScale(0.25f);
+        fuente.getData().setScale(escalado025);
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
+            InputEvent evento = new InputEvent();
+            evento.setType(InputEvent.Type.touchDown);
+            anterior.fire(evento);
+            evento.setType(InputEvent.Type.touchUp);
+            anterior.fire(evento);
+        }
+
         escenario.act();
         escenario.draw();
     }
