@@ -2,10 +2,10 @@ package com.peleadegallos;
 
 public class Record {
 
-    String jugador1, jugador2, mapa, arma1, arma2,tiempo;
-    int  balas, idGanador;
+    String jugador1, jugador2, mapa, arma1, arma2;
+    int  balas, idGanador,tiempo;
 
-    public Record(String jugador1, String jugador2, String mapa, String arma1, String arma2, String tiempo, int balas,int idGanador) {
+    public Record(String jugador1, String jugador2, String mapa, String arma1, String arma2, int tiempo, int balas,int idGanador) {
         this.jugador1 = jugador1;
         this.jugador2 = jugador2;
         this.mapa = mapa;
@@ -14,5 +14,9 @@ public class Record {
         this.tiempo = tiempo;
         this.balas = balas;
         this.idGanador=idGanador;
+    }
+
+    public Record(){
+
     }
 }

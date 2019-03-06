@@ -10,8 +10,15 @@ public class AndroidLauncher extends AndroidApplication {
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		AdaptadorAndroid notificacionesAndroid=new AdaptadorAndroid(this);
+
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new JuegoPrincipal(), config);
+
+		JuegoPrincipal juegoPrincipal=new JuegoPrincipal();
+		juegoPrincipal.setAdaptadorNotificaciones(notificacionesAndroid);
+
+		initialize(juegoPrincipal, config);
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}

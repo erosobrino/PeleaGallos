@@ -2,18 +2,14 @@ package com.peleadegallos;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-import java.util.ArrayList;
-import java.util.Random;
 
 public class MenuInicio extends PlantillaEscenas {
 
@@ -66,7 +62,7 @@ public class MenuInicio extends PlantillaEscenas {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 juego.botonPulsado(sonidoClick);
-                juego.setScreen(juego.logros);
+                juego.setScreen(juego.logros=new PantallaLogros(juego));
             }
         });
 

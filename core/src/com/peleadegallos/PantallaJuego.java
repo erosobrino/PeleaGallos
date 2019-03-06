@@ -19,8 +19,11 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Timer;
@@ -76,6 +79,8 @@ public class PantallaJuego extends PlantillaEscenas {
     String mapa;
 
     int idActual = 1;
+
+    Timer.Task timer;
 
     public PantallaJuego(final JuegoPrincipal juego) {
         super(juego);
@@ -233,15 +238,61 @@ public class PantallaJuego extends PlantillaEscenas {
 
         formas = new ShapeRenderer();
         batchTexto = new SpriteBatch();
+    }
 
-        Timer.Task t = Timer.schedule(new Timer.Task() {
-                                          @Override
-                                          public void run() {
-                                              timer();
-                                          }
-                                      }
-                , 0, 0.200f
-        );
+    private void confirmacion() {
+        final Dialog dialogo = new Dialog("", skin);
+        dialogo.setModal(true);
+        dialogo.setMovable(false);
+        dialogo.setResizable(false);
+
+        Label.LabelStyle estilo = new Label.LabelStyle(fuente, Color.BLACK);
+        Label texto = new Label(juego.idiomas.get("estasSeguro"), estilo);
+
+        TextButton btSi = new TextButton(juego.idiomas.get("si"), skin);
+        btSi.getLabel().setColor(Color.BLACK);
+        btSi.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                dialogo.hide();
+                dialogo.cancel();
+                dialogo.remove();
+                juego.setScreen(juego.menuInicio);
+                return true;
+            }
+
+        });
+
+        TextButton btNo = new TextButton(juego.idiomas.get("no"), skin);
+        btNo.getLabel().setColor(Color.BLACK);
+        btNo.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                dialogo.hide();
+                dialogo.cancel();
+                dialogo.remove();
+                timer = Timer.schedule(new Timer.Task() {
+                                           @Override
+                                           public void run() {
+                                               timer();
+                                           }
+                                       }
+                        , 0, 0.200f
+                );
+                return true;
+            }
+
+        });
+        int pad = altoPantalla / 80;
+        dialogo.getContentTable().add(texto).pad(pad);
+
+        Table tabla = new Table();
+        tabla.add(btSi).pad(pad).width(anchoPantalla / 7 * 2);
+        tabla.add(btNo).pad(pad).width(anchoPantalla / 7 * 2);
+        dialogo.getButtonTable().add(tabla).center().padBottom(pad);
+
+        dialogo.show(escenario);
+        escenario.addActor(dialogo);
     }
 
     @Override
@@ -386,6 +437,15 @@ public class PantallaJuego extends PlantillaEscenas {
 
         tiempo = tiempoTurno;
         tiempoString = tiempo + "";
+
+        timer = Timer.schedule(new Timer.Task() {
+                                   @Override
+                                   public void run() {
+                                       timer();
+                                   }
+                               }
+                , 0, 0.200f
+        );
     }
 
     private ArrayList<Suelo> cargaSuelos(int indice) {
@@ -528,7 +588,7 @@ public class PantallaJuego extends PlantillaEscenas {
                             juego.finalizacionPartida.setTiempo(segundosPartida);
                             juego.finalizacionPartida.balas = balasUtilizadas;
                             juego.finalizacionPartida.jugadores = jugadores;
-                            juego.finalizacionPartida.mapa=mapa;
+                            juego.finalizacionPartida.mapa = mapa;
                             if (jugadorActual.equals("jugador1"))
                                 juego.finalizacionPartida.framesGanador = jugador1.frameParadoAv;
                             else
@@ -570,7 +630,8 @@ public class PantallaJuego extends PlantillaEscenas {
         super.render(delta);
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
-            juego.setScreen(juego.menuInicio);
+            timer.cancel();
+            confirmacion();
         }
 
         if (fling.size() > 1) {
@@ -596,7 +657,8 @@ public class PantallaJuego extends PlantillaEscenas {
         escenario.act();
         mundo.step(delta, 6, 2);
         camera.update();
-        renderer.render(mundo, camera.combined);
+        if (juego.debug)
+            renderer.render(mundo, camera.combined);
         escenario.draw();
 
         for (int i = balas.size() - 1; i >= 0; i--) {

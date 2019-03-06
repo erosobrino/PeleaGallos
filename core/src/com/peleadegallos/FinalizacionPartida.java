@@ -1,6 +1,7 @@
 package com.peleadegallos;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonWriter;
 
 import java.util.ArrayList;
 
@@ -94,9 +97,10 @@ public class FinalizacionPartida extends PlantillaEscenas {
         escenario.addActor(btReiniciar);
         escenario.addActor(btMenuPrincipal);
 
-        String tiempoGuardar=String.format("%02d:%02d", tiempo / 60, tiempo % 60);
-        juego.records.add(new Record(jugadores.get(0).nombre, jugadores.get(1).nombre, mapa,jugadores.get(0).arma, jugadores.get(1).arma, tiempoGuardar, balas,ganador));
 
+        juego.datosGuardados.addRecord(new Record(jugadores.get(0).nombre, jugadores.get(1).nombre, mapa, jugadores.get(0).arma, jugadores.get(1).arma, tiempo, balas, ganador));
+
+        juego.guardaDatos();
 
         Gdx.input.setInputProcessor(escenario);
     }

@@ -6,12 +6,13 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.I18NBundle;
+import com.badlogic.gdx.utils.Json;
 
-import java.util.ArrayList;
 
 public class JuegoPrincipal extends Game {
     MenuInicio menuInicio;
@@ -23,12 +24,12 @@ public class JuegoPrincipal extends Game {
     SelectorPersonajeArma selectorPersonajeArma2;
     SelectorMapa selectorMapa;
     PantallaLogros logros;
+    ObjetoGuardado datosGuardados = new ObjetoGuardado();
 
     String[] animales = new String[]{"dino", "dog"};
     String[] acciones = new String[]{"Idle", "Walk", "Jump", "Dead"};
     int[] cantidadAcciones = new int[]{10, 10, 12, 8};
     Mapa[] mapas = new Mapa[2];
-    ArrayList<Record> records=new ArrayList<>();
 
     I18NBundle idiomas;
 
@@ -37,6 +38,7 @@ public class JuegoPrincipal extends Game {
     public boolean vibracionEncendida;
     public int tiempoVibrar = 50;
     public boolean debug = true;
+    public boolean modoDesarrollo = true;
     float PIXEL_METRO_X;  //Escala para box2s
     float PIXEL_METRO_Y;  //Escala para box2s
     float metrosX = 16;
@@ -60,13 +62,19 @@ public class JuegoPrincipal extends Game {
     }
 
     Preferences preferences;
+    AdaptadorCodigoAndroid adaptadorCodigoAndroid;
+
+    public void setAdaptadorNotificaciones(AdaptadorCodigoAndroid handler) {
+        this.adaptadorCodigoAndroid = handler;
+    }
 
     @Override
     public void create() {
         preferences = Gdx.app.getPreferences("PeleaDeGallos");
         musicaEncendida = preferences.getBoolean("musica", true);
         vibracionEncendida = preferences.getBoolean("vibracion", true);
-
+        modoDesarrollo = preferences.getBoolean("desarrollo", true);
+        cargaDatos();
 
         idiomas = I18NBundle.createBundle(Gdx.files.internal("locale/locale"));
 
@@ -90,6 +98,8 @@ public class JuegoPrincipal extends Game {
         manager.load("iconos/flechaDerecha.png", Texture.class);
         manager.load("iconos/flechaIzquierda.png", Texture.class);
         manager.load("iconos/disparo.png", Texture.class);
+        manager.load("iconos/developer.png", Texture.class);
+        manager.load("iconos/developerNo.png", Texture.class);
 
         for (int i = 0; i < animales.length; i++) {
             for (int j = 0; j < acciones.length; j++) {
@@ -131,33 +141,33 @@ public class JuegoPrincipal extends Game {
         armas[1] = new Arma(manager.get("armas/shotgun.png", Texture.class), 10, 6, 2, "uzi");
         armas[2] = new Arma(manager.get("armas/bomb.png", Texture.class), 2, 1, 10, "canon");
 
-        mapas[0]=new Mapa();
+        mapas[0] = new Mapa();
         mapas[0].mapa = manager.get("mapas/mapa1.png", Texture.class);
-        mapas[0].cuadradoMapa=manager.get("mapas/mapaCuadrado1.png", Texture.class);
-        mapas[0].puntos[0]=new Vector2(0,0);
-        mapas[0].puntos[1]=new Vector2(2,0);
-        mapas[0].puntos[2]=new Vector2(4,0.5f);
-        mapas[0].puntos[3]=new Vector2(6,0.75f);
-        mapas[0].puntos[4]=new Vector2(8,0.75f);
-        mapas[0].puntos[5]=new Vector2(10,0.5f);
-        mapas[0].puntos[6]=new Vector2(12,0);
-        mapas[0].puntos[7]=new Vector2(14,0);
-        mapas[0].rozamiento=0.7f;
-        mapas[0].nombre="tierra";
+        mapas[0].cuadradoMapa = manager.get("mapas/mapaCuadrado1.png", Texture.class);
+        mapas[0].puntos[0] = new Vector2(0, 0);
+        mapas[0].puntos[1] = new Vector2(2, 0);
+        mapas[0].puntos[2] = new Vector2(4, 0.5f);
+        mapas[0].puntos[3] = new Vector2(6, 0.75f);
+        mapas[0].puntos[4] = new Vector2(8, 0.75f);
+        mapas[0].puntos[5] = new Vector2(10, 0.5f);
+        mapas[0].puntos[6] = new Vector2(12, 0);
+        mapas[0].puntos[7] = new Vector2(14, 0);
+        mapas[0].rozamiento = 0.7f;
+        mapas[0].nombre = "tierra";
 
-        mapas[1]=new Mapa();
+        mapas[1] = new Mapa();
         mapas[1].mapa = manager.get("mapas/mapa2.png", Texture.class);
-        mapas[1].cuadradoMapa=manager.get("mapas/mapaCuadrado2.png", Texture.class);
-        mapas[1].puntos[0]=new Vector2(0,0);
-        mapas[1].puntos[1]=new Vector2(2,0.65f);
-        mapas[1].puntos[2]=new Vector2(4,0);
-        mapas[1].puntos[3]=new Vector2(6,-0.5f);
-        mapas[1].puntos[4]=new Vector2(8,-0.5f);
-        mapas[1].puntos[5]=new Vector2(10,0f);
-        mapas[1].puntos[6]=new Vector2(12,0.65f);
-        mapas[1].puntos[7]=new Vector2(14,0);
-        mapas[1].rozamiento=0.5f;
-        mapas[0].nombre="nieve";
+        mapas[1].cuadradoMapa = manager.get("mapas/mapaCuadrado2.png", Texture.class);
+        mapas[1].puntos[0] = new Vector2(0, 0);
+        mapas[1].puntos[1] = new Vector2(2, 0.65f);
+        mapas[1].puntos[2] = new Vector2(4, 0);
+        mapas[1].puntos[3] = new Vector2(6, -0.5f);
+        mapas[1].puntos[4] = new Vector2(8, -0.5f);
+        mapas[1].puntos[5] = new Vector2(10, 0f);
+        mapas[1].puntos[6] = new Vector2(12, 0.65f);
+        mapas[1].puntos[7] = new Vector2(14, 0);
+        mapas[1].rozamiento = 0.5f;
+        mapas[0].nombre = "nieve";
 
         menuInicio = new MenuInicio(this);
         opciones = new Opciones(this);
@@ -165,14 +175,69 @@ public class JuegoPrincipal extends Game {
         pantallaJuego = new PantallaJuego(this);
         finalizacionPartida = new FinalizacionPartida(this);
 
-        records.add(new Record("dino","dog","nieve","uzi", "gun", 20+"",60,1));
+        datosGuardados.addRecord(new Record("dino", "dog", "nieve", "uzi", "gun", 20, 60, 1));
+        datosGuardados.addRecord(new Record("dino", "dog", "nieve", "uzi", "gun", 20, 60, 1));
+        datosGuardados.addRecord(new Record("dino", "dog", "nieve", "uzi", "gun", 20, 60, 1));
+        datosGuardados.addRecord(new Record("dino", "dog", "nieve", "uzi", "gun", 20, 60, 1));
+        datosGuardados.addRecord(new Record("dino", "dog", "nieve", "uzi", "gun", 20, 60, 1));
 
-        logros=new PantallaLogros(this);
+        guardaDatos();
+//        borraDatos();
+
         selectorPersonajeArma = new SelectorPersonajeArma(this, personajes, armas, 1);
         selectorPersonajeArma2 = new SelectorPersonajeArma(this, personajes, armas, 2);
         selectorMapa = new SelectorMapa(this, mapas, 3);
-
-
         setScreen(menuInicio);                             //Cambia al menu de inicio
+    }
+
+    private void cargaDatos() {
+        try {
+            if (Gdx.files.local("records.json").exists()) {
+                FileHandle in = Gdx.files.local("records.json");
+                Json json = new Json();
+                datosGuardados = json.fromJson(ObjetoGuardado.class, in.readString());
+            } else
+                datosGuardados = new ObjetoGuardado();
+        } catch (RuntimeException e) {
+        }
+    }
+
+    public void guardaDatos() {
+        try {
+            Json json = new Json();
+            FileHandle out = Gdx.files.local("records.json");
+            out.writeString(json.toJson(datosGuardados), false);
+            notificacion();
+        } catch (RuntimeException e) {
+        }
+    }
+
+    public void borraDatos() {
+        if (Gdx.files.local("records.json").exists()) {
+            try {
+                Gdx.files.local("records.json").delete();
+                cargaDatos();
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    private void notificacion() {
+        System.out.println("adfsadgafegasd");
+        if (datosGuardados.getBalas() > 80 && datosGuardados.getBalas() < 180)
+            adaptadorCodigoAndroid.nuevaNotificacion("Pelea de Gallos", idiomas.get("balas") + ": " + datosGuardados.getBalas());
+        if (datosGuardados.getTiempo() > 60 && datosGuardados.getTiempo() < 120)
+            adaptadorCodigoAndroid.nuevaNotificacion("Pelea de Gallos", idiomas.get("tiempoTotal") + ": " + String.format("%02d:%02d", datosGuardados.getTiempo()/ 60, datosGuardados.getTiempo()% 60));
+        if (datosGuardados.getRecords().size() == 1) {
+            adaptadorCodigoAndroid.nuevaNotificacion("Pelea de Gallos", idiomas.get("partidas") + ": " + datosGuardados.getRecords().size());
+        } else {
+            if (datosGuardados.getRecords().size() ==10) {
+                adaptadorCodigoAndroid.nuevaNotificacion("Pelea de Gallos", idiomas.get("partidas") + ": " + datosGuardados.getRecords().size());
+            } else {
+                if (datosGuardados.getRecords().size() % 100 == 0) {
+                    adaptadorCodigoAndroid.nuevaNotificacion("Pelea de Gallos", idiomas.get("partidas") + ": " + datosGuardados.getRecords().size());
+                }
+            }
+        }
     }
 }

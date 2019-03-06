@@ -2,35 +2,105 @@ package com.peleadegallos;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 class Opciones extends PlantillaEscenas {
 
     Image imgVolumen;
     Image imgVibrar;
+    Image imgDesarrollo;
     SpriteBatch batch;
+    TextButton btBorrar;
     int posX;
+    boolean muestraTexto;
 
     public Opciones(final JuegoPrincipal juego) {
         super(juego);
         posX = anchoPantalla / 7;
 
-        actualizaIconos();
 
+        btBorrar = new TextButton(juego.idiomas.get("borrar"), skin);
+        btBorrar.setSize(anchoPantalla / 7 * 2, altoPantalla / 5);
+        btBorrar.setPosition(anchoPantalla / 7 * 2, altoPantalla / 5 * 0.75f);
+        btBorrar.getLabel().setFontScale(escalado03);
+        btBorrar.getLabel().setColor(Color.BLACK);
+        btBorrar.addCaptureListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                juego.botonPulsado(sonidoClick);
+                fondo.remove();
+                home.remove();
+                imgVolumen.remove();
+                imgVibrar.remove();
+                imgDesarrollo.remove();
+                btBorrar.remove();
+                muestraTexto = false;
+                confirmacion();
+            }
+        });
+
+        actualizaIconos();
         batch = new SpriteBatch();
+    }
+
+    private void confirmacion() {
+        final Dialog dialogo = new Dialog("", skin);
+        dialogo.setModal(true);
+        dialogo.setMovable(false);
+        dialogo.setResizable(false);
+
+        Label.LabelStyle estilo = new Label.LabelStyle(fuente, Color.BLACK);
+        Label texto = new Label(juego.idiomas.get("estasSeguro"), estilo);
+
+        TextButton btSi = new TextButton(juego.idiomas.get("si"), skin);
+        btSi.getLabel().setColor(Color.BLACK);
+        btSi.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                dialogo.hide();
+                dialogo.cancel();
+                dialogo.remove();
+                juego.borraDatos();
+                show();
+                return true;
+            }
+
+        });
+
+        TextButton btNo = new TextButton(juego.idiomas.get("no"), skin);
+        btNo.getLabel().setColor(Color.BLACK);
+        btNo.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                dialogo.hide();
+                dialogo.cancel();
+                dialogo.remove();
+                show();
+                return true;
+            }
+
+        });
+        int pad = altoPantalla / 80;
+        dialogo.getContentTable().add(texto).pad(pad);
+
+        Table tabla = new Table();
+        tabla.add(btSi).pad(pad).width(anchoPantalla/7*2);
+        tabla.add(btNo).pad(pad).width(anchoPantalla/7*2);
+        dialogo.getButtonTable().add(tabla).center().padBottom(pad);
+
+        dialogo.show(escenario);
+        escenario.addActor(dialogo);
     }
 
 
@@ -39,6 +109,8 @@ class Opciones extends PlantillaEscenas {
             imgVibrar.remove();
         if (imgVolumen != null)
             imgVolumen.remove();
+        if (imgDesarrollo != null)
+            imgDesarrollo.remove();
 
         if (juego.musicaEncendida) {
             imgVolumen = new Image(juego.manager.get("iconos/volume-up.png", Texture.class));
@@ -81,6 +153,26 @@ class Opciones extends PlantillaEscenas {
                 return true;
             }
         });
+
+
+        if (juego.modoDesarrollo)
+            imgDesarrollo = new Image(juego.manager.get("iconos/developer.png", Texture.class));
+        else
+            imgDesarrollo = new Image(juego.manager.get("iconos/developerNo.png", Texture.class));
+        imgDesarrollo.setSize(altoPantalla / 7, altoPantalla / 7);
+        imgDesarrollo.setPosition(anchoPantalla / 7 * 4, altoPantalla / 10 * 3.5f * 1.07f);
+        imgDesarrollo.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                juego.modoDesarrollo = !juego.modoDesarrollo;
+                juego.preferences.putBoolean("desarrollo", juego.modoDesarrollo);
+                juego.preferences.flush();
+                juego.botonPulsado(sonidoClick);
+                actualizaIconos();
+                return true;
+            }
+        });
+
         show();
     }
 
@@ -90,10 +182,14 @@ class Opciones extends PlantillaEscenas {
 
         fuente.getData().setScale(escalado075);
 
+        muestraTexto = true;
+
         escenario.addActor(fondo);
         escenario.addActor(home);
         escenario.addActor(imgVibrar);
         escenario.addActor(imgVolumen);
+        escenario.addActor(imgDesarrollo);
+        escenario.addActor(btBorrar);
 
         Gdx.input.setInputProcessor(escenario);  //Pone como listener al escenario, asi funcionan botones
         Gdx.input.setCatchBackKey(true);
@@ -109,10 +205,13 @@ class Opciones extends PlantillaEscenas {
         escenario.act();
         escenario.draw();
 
-        batch.begin();
-        fuente.draw(batch, juego.idiomas.get("volumen"), posX, altoPantalla / 10 * 9);
-        fuente.draw(batch, juego.idiomas.get("vibrar"), posX, altoPantalla / 10 * 7);
-        batch.end();
+        if (muestraTexto) {
+            batch.begin();
+            fuente.draw(batch, juego.idiomas.get("volumen"), posX, altoPantalla / 10 * 9);
+            fuente.draw(batch, juego.idiomas.get("vibrar"), posX, altoPantalla / 10 * 7);
+            fuente.draw(batch, juego.idiomas.get("desarrollo"), posX, altoPantalla / 10 * 5 * 1.05f);
+            batch.end();
+        }
     }
 
     @Override
@@ -121,6 +220,8 @@ class Opciones extends PlantillaEscenas {
         home.remove();
         imgVolumen.remove();
         imgVibrar.remove();
+        imgDesarrollo.remove();
+        btBorrar.remove();
         Gdx.input.setInputProcessor(null);
     }
 }

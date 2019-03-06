@@ -33,12 +33,12 @@ public class PlantillaEscenas implements Screen {
     Random rand;
     Stage escenario;
 
-    float escalado03=anchoPantalla/6400f;
-    float escalado075=anchoPantalla/2560f;
-    float escalado04=anchoPantalla/4800f;
-    float escalado035=anchoPantalla/5486f;
-    float escalado025=anchoPantalla/7680f;
-    float escalado05=anchoPantalla/3840f;
+    float escalado03 = anchoPantalla / 6400f;
+    float escalado075 = anchoPantalla / 2560f;
+    float escalado04 = anchoPantalla / 4800f;
+    float escalado035 = anchoPantalla / 5486f;
+    float escalado025 = anchoPantalla / 7680f;
+    float escalado05 = anchoPantalla / 3840f;
 
     public PlantillaEscenas(final JuegoPrincipal juego) {
         this.juego = juego;
@@ -107,6 +107,14 @@ public class PlantillaEscenas implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);    //Vacia memoria video grafica
+
+        if (juego.adaptadorCodigoAndroid.getCurrentLux() < 10 && juego.modoDesarrollo) {
+            juego.debug = true;
+            escenario.setDebugAll(juego.debug);
+        } else {
+            juego.debug = false;
+            escenario.setDebugAll(juego.debug);
+        }
     }
 
     @Override

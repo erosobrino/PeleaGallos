@@ -10,8 +10,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-import sun.rmi.runtime.Log;
-
 public class Suelo extends Actor {
     Texture textura;
 
