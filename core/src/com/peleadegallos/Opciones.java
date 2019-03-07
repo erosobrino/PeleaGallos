@@ -15,16 +15,45 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+/**
+ * The type Opciones.
+ */
 class Opciones extends PlantillaEscenas {
 
+    /**
+     * The Img volumen.
+     */
     Image imgVolumen;
+    /**
+     * The Img vibrar.
+     */
     Image imgVibrar;
+    /**
+     * The Img desarrollo.
+     */
     Image imgDesarrollo;
+    /**
+     * The Batch.
+     */
     SpriteBatch batch;
+    /**
+     * The Bt borrar.
+     */
     TextButton btBorrar;
+    /**
+     * The Pos x.
+     */
     int posX;
+    /**
+     * The Muestra texto.
+     */
     boolean muestraTexto;
 
+    /**
+     * Instantiates a new Opciones.
+     *
+     * @param juego the juego
+     */
     public Opciones(final JuegoPrincipal juego) {
         super(juego);
         posX = anchoPantalla / 7;

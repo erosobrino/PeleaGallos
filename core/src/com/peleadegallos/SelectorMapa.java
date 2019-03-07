@@ -6,13 +6,38 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
+/**
+ * The type Selector mapa.
+ */
 public class SelectorMapa extends SelectorPlantilla {
 
+    /**
+     * The Mapas.
+     */
     Mapa[] mapas;
-    Image btadelante, btatras;
+    /**
+     * The Btadelante.
+     */
+    Image btadelante, /**
+     * The Btatras.
+     */
+    btatras;
+    /**
+     * The Mapa seleccionado.
+     */
     Image mapaSeleccionado;
+    /**
+     * The Indice mapa.
+     */
     int indiceMapa = 0;
 
+    /**
+     * Instantiates a new Selector mapa.
+     *
+     * @param juego     the juego
+     * @param mapas     the mapas
+     * @param idJugador the id jugador
+     */
     public SelectorMapa(final JuegoPrincipal juego, final Mapa[] mapas, int idJugador) {
         super(juego, idJugador);
         this.mapas = mapas;
@@ -64,7 +89,9 @@ public class SelectorMapa extends SelectorPlantilla {
         escenario.addActor(btadelante);
         escenario.addActor(btatras);
 
-        actualizaMapa(0);
+        indiceMapa=0;
+
+        actualizaMapa(indiceMapa);
     }
 
     @Override
@@ -80,6 +107,6 @@ public class SelectorMapa extends SelectorPlantilla {
             mapaSeleccionado.remove();
 
         btadelante.remove();
-        btadelante.remove();
+        btatras.remove();
     }
 }

@@ -6,12 +6,23 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import java.util.ArrayList;
 
+/**
+ * The type Gestos scroll records.
+ */
 public class GestosScrollRecords extends GestureDetector {
     private Stage escenario;
     private int altoPantalla;
     private Vector2 pInicio;
     private PantallaLogros logros;
 
+    /**
+     * Instantiates a new Gestos scroll records.
+     *
+     * @param listener     the listener
+     * @param escenario    the escenario
+     * @param altoPantalla the alto pantalla
+     * @param logros       the logros
+     */
     public GestosScrollRecords(GestureDetector.GestureListener listener, Stage escenario, int altoPantalla, PantallaLogros logros) {
         super(listener);
         this.escenario = escenario;

@@ -9,12 +9,33 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+/**
+ * The type Selector plantilla.
+ */
 public class SelectorPlantilla extends PlantillaEscenas {
 
-    TextButton continuar, anterior;
+    /**
+     * The Continuar.
+     */
+    TextButton continuar, /**
+     * The Anterior.
+     */
+    anterior;
+    /**
+     * The Id jugador.
+     */
     int idJugador;
+    /**
+     * The Sprite batch.
+     */
     SpriteBatch spriteBatch;
 
+    /**
+     * Instantiates a new Selector plantilla.
+     *
+     * @param juego     the juego
+     * @param idJugador the id jugador
+     */
     public SelectorPlantilla(final JuegoPrincipal juego, final int idJugador) {
         super(juego);
         this.idJugador = idJugador;

@@ -6,10 +6,24 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 
+/**
+ * The type Pantalla logros.
+ */
 public class PantallaLogros extends PlantillaEscenas {
+    /**
+     * The Texto.
+     */
     SpriteBatch texto;
+    /**
+     * The Pos dedo.
+     */
     int posDedo;
 
+    /**
+     * Instantiates a new Pantalla logros.
+     *
+     * @param juego the juego
+     */
     public PantallaLogros(JuegoPrincipal juego) {
         super(juego);
 

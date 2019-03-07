@@ -17,29 +17,94 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * The type Plantilla escenas.
+ */
 public class PlantillaEscenas implements Screen {
 
+    /**
+     * The Juego.
+     */
     public JuegoPrincipal juego;
+    /**
+     * The Ancho pantalla.
+     */
     int anchoPantalla = Gdx.graphics.getWidth();
+    /**
+     * The Alto pantalla.
+     */
     int altoPantalla = Gdx.graphics.getHeight();
+    /**
+     * The Fuente.
+     */
     BitmapFont fuente;
+    /**
+     * The Musica.
+     */
     Music musica;
+    /**
+     * The Fondo.
+     */
     Image fondo;
+    /**
+     * The Sonido click.
+     */
     Sound sonidoClick;
+    /**
+     * The Home.
+     */
     Image home;
+    /**
+     * The Skin.
+     */
     Skin skin;
+    /**
+     * The Nubes.
+     */
     ArrayList<Nube> nubes;
+    /**
+     * The Nubes textura.
+     */
     ArrayList<Texture> nubesTextura;
+    /**
+     * The Rand.
+     */
     Random rand;
+    /**
+     * The Escenario.
+     */
     Stage escenario;
 
+    /**
+     * The Escalado 03.
+     */
     float escalado03 = anchoPantalla / 6400f;
+    /**
+     * The Escalado 075.
+     */
     float escalado075 = anchoPantalla / 2560f;
+    /**
+     * The Escalado 04.
+     */
     float escalado04 = anchoPantalla / 4800f;
+    /**
+     * The Escalado 035.
+     */
     float escalado035 = anchoPantalla / 5486f;
+    /**
+     * The Escalado 025.
+     */
     float escalado025 = anchoPantalla / 7680f;
+    /**
+     * The Escalado 05.
+     */
     float escalado05 = anchoPantalla / 3840f;
 
+    /**
+     * Instantiates a new Plantilla escenas.
+     *
+     * @param juego the juego
+     */
     public PlantillaEscenas(final JuegoPrincipal juego) {
         this.juego = juego;
 

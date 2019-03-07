@@ -13,34 +13,102 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+/**
+ * The type Bala.
+ */
 public class Bala extends Actor {
 
+    /**
+     * The constant cantidadBalas.
+     */
     public static int cantidadBalas = 0;
+    /**
+     * The Sprite.
+     */
     Sprite sprite;
 
+    /**
+     * The Mundo.
+     */
     World mundo;
 
+    /**
+     * The Body.
+     */
     Body body;
 
+    /**
+     * The Fixture.
+     */
     Fixture fixture;
 
+    /**
+     * The Juego.
+     */
     JuegoPrincipal juego;
 
-    int anchoPantalla, altoPantalla;
+    /**
+     * The Ancho pantalla.
+     */
+    int anchoPantalla, /**
+     * The Alto pantalla.
+     */
+    altoPantalla;
+    /**
+     * The Radio.
+     */
     float radio;//Son la mitad del real
 
+    /**
+     * The Impacto.
+     */
     boolean impacto = false;
 
+    /**
+     * The Daño.
+     */
     int daño;
+    /**
+     * The Cont.
+     */
     int cont = 0;
 
+    /**
+     * The Fuerza.
+     */
     float fuerza;
+    /**
+     * The Angulo.
+     */
     float angulo;
+    /**
+     * The Id bala.
+     */
     int idBala;
+    /**
+     * The Sonido canon.
+     */
     Sound sonidoCanon;
-    float offsetX, offsetY;
+    /**
+     * The Offset x.
+     */
+    float offsetX, /**
+     * The Offset y.
+     */
+    offsetY;
+    /**
+     * The Jugador.
+     */
     Jugador jugador;
 
+    /**
+     * Instantiates a new Bala.
+     *
+     * @param mundo    the mundo
+     * @param posicion the posicion
+     * @param juego    the juego
+     * @param jugador  the jugador
+     */
     public Bala(World mundo, Vector2 posicion, JuegoPrincipal juego, Jugador jugador) {
         this.mundo = mundo;
         this.juego = juego;
@@ -132,6 +200,9 @@ public class Bala extends Actor {
         }
     }
 
+    /**
+     * Elimina.
+     */
     public void elimina() {
         if (jugador.tipoBala.equals("canon"))
             juego.botonPulsado(sonidoCanon);

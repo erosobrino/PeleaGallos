@@ -6,12 +6,32 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import java.util.ArrayList;
 
+/**
+ * The type Gestor gestos.
+ */
 public class GestorGestos extends GestureDetector {
     private Stage escenario;
+    /**
+     * The Fling.
+     */
     ArrayList<Vector2> fling;
+    /**
+     * The Jugador actual.
+     */
     Jugador jugadorActual;
+    /**
+     * The Juego.
+     */
     JuegoPrincipal juego;
 
+    /**
+     * Instantiates a new Gestor gestos.
+     *
+     * @param listener  the listener
+     * @param escenario the escenario
+     * @param fling     the fling
+     * @param juego     the juego
+     */
     public GestorGestos(GestureListener listener, Stage escenario, ArrayList<Vector2> fling, JuegoPrincipal juego) {
         super(listener);
         this.escenario = escenario;

@@ -14,36 +14,119 @@ import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.Json;
 
 
+/**
+ * The type Juego principal.
+ */
 public class JuegoPrincipal extends Game {
+    /**
+     * The Menu inicio.
+     */
     MenuInicio menuInicio;
+    /**
+     * The Opciones.
+     */
     Opciones opciones;
+    /**
+     * The Info.
+     */
     AcercaDe info;
+    /**
+     * The Pantalla juego.
+     */
     PantallaJuego pantallaJuego;
+    /**
+     * The Finalizacion partida.
+     */
     FinalizacionPartida finalizacionPartida;
+    /**
+     * The Selector personaje arma.
+     */
     SelectorPersonajeArma selectorPersonajeArma;
+    /**
+     * The Selector personaje arma 2.
+     */
     SelectorPersonajeArma selectorPersonajeArma2;
+    /**
+     * The Selector mapa.
+     */
     SelectorMapa selectorMapa;
+    /**
+     * The Logros.
+     */
     PantallaLogros logros;
+    /**
+     * The Datos guardados.
+     */
     ObjetoGuardado datosGuardados = new ObjetoGuardado();
 
+    /**
+     * The Animales.
+     */
     String[] animales = new String[]{"dino", "dog"};
+    /**
+     * The Acciones.
+     */
     String[] acciones = new String[]{"Idle", "Walk", "Jump", "Dead"};
+    /**
+     * The Cantidad acciones.
+     */
     int[] cantidadAcciones = new int[]{10, 10, 12, 8};
+    /**
+     * The Mapas.
+     */
     Mapa[] mapas = new Mapa[2];
 
+    /**
+     * The Idiomas.
+     */
     I18NBundle idiomas;
 
+    /**
+     * The Manager.
+     */
     AssetManager manager;
+    /**
+     * The Musica encendida.
+     */
     public boolean musicaEncendida;
+    /**
+     * The Vibracion encendida.
+     */
     public boolean vibracionEncendida;
+    /**
+     * The Tiempo vibrar.
+     */
     public int tiempoVibrar = 50;
+    /**
+     * The Debug.
+     */
     public boolean debug = true;
+    /**
+     * The Modo desarrollo.
+     */
     public boolean modoDesarrollo = true;
+    /**
+     * The Pixel metro x.
+     */
     float PIXEL_METRO_X;  //Escala para box2s
+    /**
+     * The Pixel metro y.
+     */
     float PIXEL_METRO_Y;  //Escala para box2s
+    /**
+     * The Metros x.
+     */
     float metrosX = 16;
+    /**
+     * The Metros y.
+     */
     float metrosY = 9;
 
+    /**
+     * Boton pulsado.
+     *
+     * @param sonido the sonido
+     */
     public void botonPulsado(Sound sonido) {
         if (vibracionEncendida)
             Gdx.input.vibrate(tiempoVibrar);
@@ -52,6 +135,11 @@ public class JuegoPrincipal extends Game {
         }
     }
 
+    /**
+     * Boton pulsado musica.
+     *
+     * @param musica the musica
+     */
     public void botonPulsadoMusica(Music musica) {
         if (vibracionEncendida)
             Gdx.input.vibrate(tiempoVibrar);
@@ -61,9 +149,20 @@ public class JuegoPrincipal extends Game {
         }
     }
 
+    /**
+     * The Preferences.
+     */
     Preferences preferences;
+    /**
+     * The Adaptador codigo android.
+     */
     AdaptadorCodigoAndroid adaptadorCodigoAndroid;
 
+    /**
+     * Sets adaptador notificaciones.
+     *
+     * @param handler the handler
+     */
     public void setAdaptadorNotificaciones(AdaptadorCodigoAndroid handler) {
         this.adaptadorCodigoAndroid = handler;
     }
@@ -202,6 +301,9 @@ public class JuegoPrincipal extends Game {
         }
     }
 
+    /**
+     * Guarda datos.
+     */
     public void guardaDatos() {
         try {
             Json json = new Json();
@@ -212,6 +314,9 @@ public class JuegoPrincipal extends Game {
         }
     }
 
+    /**
+     * Borra datos.
+     */
     public void borraDatos() {
         if (Gdx.files.local("records.json").exists()) {
             try {

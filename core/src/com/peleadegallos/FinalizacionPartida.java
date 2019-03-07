@@ -18,36 +18,99 @@ import com.badlogic.gdx.utils.JsonWriter;
 
 import java.util.ArrayList;
 
+/**
+ * The type Finalizacion partida.
+ */
 public class FinalizacionPartida extends PlantillaEscenas {
 
+    /**
+     * The Skin.
+     */
     Skin skin;
-    TextButton btReiniciar, btMenuPrincipal;
+    /**
+     * The Bt reiniciar.
+     */
+    TextButton btReiniciar, /**
+     * The Bt menu principal.
+     */
+    btMenuPrincipal;
+    /**
+     * The Pantalla anterior.
+     */
     PlantillaEscenas pantallaAnterior;
 
+    /**
+     * The Batch texto.
+     */
     SpriteBatch batchTexto;
 
+    /**
+     * The Frames ganador.
+     */
     Texture[] framesGanador;
+    /**
+     * The Img ganador.
+     */
     Image imgGanador = null;
+    /**
+     * The Jugadores.
+     */
     ArrayList<Jugador> jugadores;
+    /**
+     * The Mapa.
+     */
     String mapa;
 
     private int tiempo;
-    int balas, ganador;
+    /**
+     * The Balas.
+     */
+    int balas, /**
+     * The Ganador.
+     */
+    ganador;
+    /**
+     * The Str tiempo.
+     */
     String strTiempo;
 
+    /**
+     * The Tiempo f.
+     */
     long tiempoF;
+    /**
+     * The Cont frame.
+     */
     int contFrame = 0;
+    /**
+     * The Tiempo frame.
+     */
     int tiempoFrame = 200;
 
+    /**
+     * Gets tiempo.
+     *
+     * @return the tiempo
+     */
     public int getTiempo() {
         return tiempo;
     }
 
+    /**
+     * Sets tiempo.
+     *
+     * @param tiempo the tiempo
+     */
     public void setTiempo(int tiempo) {
         this.tiempo = tiempo;
         strTiempo = String.format("%s: %02d:%02d", juego.idiomas.get("tiempoPartida"), tiempo / 60, tiempo % 60);
     }
 
+    /**
+     * Instantiates a new Finalizacion partida.
+     *
+     * @param juego the juego
+     */
     public FinalizacionPartida(final JuegoPrincipal juego) {
         super(juego);
 

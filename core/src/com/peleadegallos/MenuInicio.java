@@ -11,12 +11,41 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 
+/**
+ * The type Menu inicio.
+ */
 public class MenuInicio extends PlantillaEscenas {
 
-    TextButton jugar, opciones, logros, ayuda;
-    int alto, ancho;
+    /**
+     * The Jugar.
+     */
+    TextButton jugar, /**
+     * The Opciones.
+     */
+    opciones, /**
+     * The Logros.
+     */
+    logros, /**
+     * The Ayuda.
+     */
+    ayuda;
+    /**
+     * The Alto.
+     */
+    int alto, /**
+     * The Ancho.
+     */
+    ancho;
+    /**
+     * The Img info.
+     */
     Image imgInfo;
 
+    /**
+     * Instantiates a new Menu inicio.
+     *
+     * @param juego the juego
+     */
     public MenuInicio(final JuegoPrincipal juego) {
         super(juego);
         alto = altoPantalla / 5;

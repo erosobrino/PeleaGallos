@@ -1,8 +1,5 @@
 package com.peleadegallos;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -10,14 +7,40 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+/**
+ * The type Actor limite mapa.
+ */
 public class ActorLimiteMapa extends Actor {
 
+    /**
+     * The Mundo.
+     */
     World mundo;
 
-    Body bodyIzq, bodyDer;
+    /**
+     * The Body izq.
+     */
+    Body bodyIzq, /**
+     * The Body der.
+     */
+    bodyDer;
 
-    Fixture fixtureIzq, fixtureDer;
+    /**
+     * The Fixture izq.
+     */
+    Fixture fixtureIzq, /**
+     * The Fixture der.
+     */
+    fixtureDer;
 
+    /**
+     * Instantiates a new Actor limite mapa.
+     *
+     * @param mundo         the mundo
+     * @param juego         the juego
+     * @param altoPantalla  the alto pantalla
+     * @param anchoPantalla the ancho pantalla
+     */
     public ActorLimiteMapa(World mundo, JuegoPrincipal juego, int altoPantalla, int anchoPantalla) {
         this.mundo = mundo;
 
@@ -40,6 +63,9 @@ public class ActorLimiteMapa extends Actor {
         forma.dispose();
     }
 
+    /**
+     * Elimina.
+     */
     public void elimina() {
         bodyIzq.destroyFixture(fixtureIzq);
         bodyDer.destroyFixture(fixtureDer);

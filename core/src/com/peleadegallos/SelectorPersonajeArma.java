@@ -13,15 +13,56 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+/**
+ * The type Selector personaje arma.
+ */
 public class SelectorPersonajeArma extends SelectorPlantilla {
 
+    /**
+     * The Personajes.
+     */
     Personaje[] personajes;
+    /**
+     * The Armas.
+     */
     Arma[] armas;
-    Image imgPersonaje, imgArmas;
-    Image btadelantePer, btatrasPer, btadelanteArm, btatrasArm;
+    /**
+     * The Img personaje.
+     */
+    Image imgPersonaje, /**
+     * The Img armas.
+     */
+    imgArmas;
+    /**
+     * The Btadelante per.
+     */
+    Image btadelantePer, /**
+     * The Btatras per.
+     */
+    btatrasPer, /**
+     * The Btadelante arm.
+     */
+    btadelanteArm, /**
+     * The Btatras arm.
+     */
+    btatrasArm;
 
-    int indicePersonaje = 0, indiceArma = 0;
+    /**
+     * The Indice personaje.
+     */
+    int indicePersonaje = 0, /**
+     * The Indice arma.
+     */
+    indiceArma = 0;
 
+    /**
+     * Instantiates a new Selector personaje arma.
+     *
+     * @param juego      the juego
+     * @param personajes the personajes
+     * @param armas      the armas
+     * @param idJugador  the id jugador
+     */
     public SelectorPersonajeArma(final JuegoPrincipal juego, final Personaje[] personajes, final Arma[] armas, final int idJugador) {
         super(juego,idJugador);
         this.personajes = personajes;
@@ -116,6 +157,9 @@ public class SelectorPersonajeArma extends SelectorPlantilla {
         escenario.addActor(btatrasArm);
         escenario.addActor(btadelantePer);
         escenario.addActor(btadelanteArm);
+
+        indiceArma=0;
+        indicePersonaje=0;
 
         actualizaImagenArma(indiceArma);
         actualizaImagenPersonaje(indicePersonaje);

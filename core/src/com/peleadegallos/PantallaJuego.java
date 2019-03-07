@@ -30,58 +30,177 @@ import com.badlogic.gdx.utils.Timer;
 
 import java.util.ArrayList;
 
+/**
+ * The type Pantalla juego.
+ */
 public class PantallaJuego extends PlantillaEscenas {
 
+    /**
+     * The Mundo.
+     */
     World mundo;
 
+    /**
+     * The Jugador 1.
+     */
     Jugador jugador1;
+    /**
+     * The Jugador 2.
+     */
     Jugador jugador2;
+    /**
+     * The Jug actual.
+     */
     Jugador jugActual;
 
+    /**
+     * The Jugador actual.
+     */
     String jugadorActual = "jugador1";
 
+    /**
+     * The Jugadores.
+     */
     ArrayList<Jugador> jugadores;
+    /**
+     * The Suelos.
+     */
     ArrayList<Suelo> suelos;
 
+    /**
+     * The Bala.
+     */
     Bala bala;
+    /**
+     * The Balas.
+     */
     ArrayList<Bala> balas;
 
-    Image btAdelante, btAtras, btSaltarAdelante, btSaltarAtras, btDisparo;
+    /**
+     * The Bt adelante.
+     */
+    Image btAdelante, /**
+     * The Bt atras.
+     */
+    btAtras, /**
+     * The Bt saltar adelante.
+     */
+    btSaltarAdelante, /**
+     * The Bt saltar atras.
+     */
+    btSaltarAtras, /**
+     * The Bt disparo.
+     */
+    btDisparo;
 
+    /**
+     * The Camera.
+     */
     OrthographicCamera camera;
+    /**
+     * The Renderer.
+     */
     Box2DDebugRenderer renderer;
 
+    /**
+     * The Skin.
+     */
     Skin skin;
+    /**
+     * The Bt cambio personaje.
+     */
     TextButton btCambioPersonaje;
 
+    /**
+     * The Fling.
+     */
     ArrayList<Vector2> fling;
+    /**
+     * The Formas.
+     */
     ShapeRenderer formas;
 
+    /**
+     * The Batch texto.
+     */
     SpriteBatch batchTexto;
 
+    /**
+     * The Limite mapa.
+     */
     ActorLimiteMapa limiteMapa;
 
+    /**
+     * The Tiempo string.
+     */
     String tiempoString = 20 + "";
+    /**
+     * The Tiempo turno.
+     */
     int tiempoTurno = 20;
+    /**
+     * The Tiempo.
+     */
     int tiempo = tiempoTurno;
+    /**
+     * The Cont timer.
+     */
     int contTimer = 0;
+    /**
+     * The Segundos partida.
+     */
     int segundosPartida = 0;
 
+    /**
+     * The Partida acabada.
+     */
     boolean partidaAcabada;
+    /**
+     * The Id ganador.
+     */
     int idGanador;
+    /**
+     * The Visible.
+     */
     boolean visible;
+    /**
+     * The Balas utilizadas.
+     */
     int balasUtilizadas = 0;
+    /**
+     * The Debe saltar.
+     */
     boolean debeSaltar = false; //salto continuo con sonido, contact listener
 
+    /**
+     * The Angulo.
+     */
     double angulo;
+    /**
+     * The Gestor gestos.
+     */
     GestorGestos gestorGestos;
 
+    /**
+     * The Mapa.
+     */
     String mapa;
 
+    /**
+     * The Id actual.
+     */
     int idActual = 1;
 
+    /**
+     * The Timer.
+     */
     Timer.Task timer;
 
+    /**
+     * Instantiates a new Pantalla juego.
+     *
+     * @param juego the juego
+     */
     public PantallaJuego(final JuegoPrincipal juego) {
         super(juego);
 
@@ -100,10 +219,9 @@ public class PantallaJuego extends PlantillaEscenas {
         btAdelante.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                fling.clear();
                 jugActual.movimiento = Jugador.Movimiento.adelante;
                 juego.botonPulsadoMusica(jugActual.sonidoAndar);
-                jugActual.angulo = 45;//predefinido
-                fling.clear();
                 return true;
             }
 
@@ -121,10 +239,9 @@ public class PantallaJuego extends PlantillaEscenas {
         btAtras.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                fling.clear();
                 jugActual.movimiento = Jugador.Movimiento.atras;
                 juego.botonPulsadoMusica(jugActual.sonidoAndar);
-                jugActual.angulo = 135;//predefinido
-                fling.clear();
                 return true;
             }
 
@@ -142,12 +259,11 @@ public class PantallaJuego extends PlantillaEscenas {
         btSaltarAdelante.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                fling.clear();
                 jugActual.movimiento = Jugador.Movimiento.saltaAdelante;
                 if (!jugActual.saltando)
                     juego.botonPulsado(jugActual.sonidoSalto);
-                jugActual.angulo = 45;//predefinido
                 debeSaltar = true;
-                fling.clear();
                 return true;
             }
 
@@ -164,12 +280,11 @@ public class PantallaJuego extends PlantillaEscenas {
         btSaltarAtras.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                fling.clear();
                 jugActual.movimiento = Jugador.Movimiento.saltaAtras;
-                jugActual.angulo = 135;//predefinido
                 if (!jugActual.saltando)
                     juego.botonPulsado(jugActual.sonidoSalto);
                 debeSaltar = true;
-                fling.clear();
                 return true;
             }
 

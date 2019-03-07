@@ -12,12 +12,38 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * The type Nube.
+ */
 public class Nube extends Actor {
 
-    float posX, posY, velocidad;
+    /**
+     * The Pos x.
+     */
+    float posX, /**
+     * The Pos y.
+     */
+    posY, /**
+     * The Velocidad.
+     */
+    velocidad;
+    /**
+     * The Ancho pantalla.
+     */
     int anchoPantalla;
+    /**
+     * The Nube.
+     */
     Texture nube;
 
+    /**
+     * Instantiates a new Nube.
+     *
+     * @param altoPantalla  the alto pantalla
+     * @param anchoPantalla the ancho pantalla
+     * @param textura       the textura
+     * @param rand          the rand
+     */
     public Nube(int altoPantalla, int anchoPantalla, Texture textura, Random rand) {
         int alto = altoPantalla / 3;
         posX = rand.nextInt(anchoPantalla);
@@ -27,26 +53,56 @@ public class Nube extends Actor {
         this.nube = textura;
     }
 
+    /**
+     * Gets pos x.
+     *
+     * @return the pos x
+     */
     public float getPosX() {
         return posX;
     }
 
+    /**
+     * Sets pos x.
+     *
+     * @param posX the pos x
+     */
     public void setPosX(float posX) {
         this.posX = posX;
     }
 
+    /**
+     * Gets pos y.
+     *
+     * @return the pos y
+     */
     public float getPosY() {
         return posY;
     }
 
+    /**
+     * Sets pos y.
+     *
+     * @param posY the pos y
+     */
     public void setPosY(float posY) {
         this.posY = posY;
     }
 
+    /**
+     * Gets velocidad.
+     *
+     * @return the velocidad
+     */
     public float getVelocidad() {
         return velocidad;
     }
 
+    /**
+     * Sets velocidad.
+     *
+     * @param velocidad the velocidad
+     */
     public void setVelocidad(float velocidad) {
         this.velocidad = velocidad;
     }

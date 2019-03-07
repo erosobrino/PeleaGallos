@@ -10,22 +10,80 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+/**
+ * The type Suelo.
+ */
 public class Suelo extends Actor {
+    /**
+     * The Textura.
+     */
     Texture textura;
 
+    /**
+     * The Mundo.
+     */
     World mundo;
 
-    Body body, bordeIzq, bordeDer;
+    /**
+     * The Body.
+     */
+    Body body, /**
+     * The Borde izq.
+     */
+    bordeIzq, /**
+     * The Borde der.
+     */
+    bordeDer;
 
 
-    Fixture fixture, fixtureIzq, fixtureDer;
+    /**
+     * The Fixture.
+     */
+    Fixture fixture, /**
+     * The Fixture izq.
+     */
+    fixtureIzq, /**
+     * The Fixture der.
+     */
+    fixtureDer;
 
+    /**
+     * The Juego.
+     */
     JuegoPrincipal juego;
 
-    int anchoPantalla, altoPantalla;
-    float tamañoX, tamañoY;//Son la mitad del real
+    /**
+     * The Ancho pantalla.
+     */
+    int anchoPantalla, /**
+     * The Alto pantalla.
+     */
+    altoPantalla;
+    /**
+     * The Tamaño x.
+     */
+    float tamañoX, /**
+     * The Tamaño y.
+     */
+    tamañoY;//Son la mitad del real
+    /**
+     * The Relleno.
+     */
     boolean relleno;
 
+    /**
+     * Instantiates a new Suelo.
+     *
+     * @param mundo         the mundo
+     * @param textura       the textura
+     * @param posicion      the posicion
+     * @param juego         the juego
+     * @param anchoPantalla the ancho pantalla
+     * @param altoPantalla  the alto pantalla
+     * @param tamañoX       the tamaño x
+     * @param tamañoY       the tamaño y
+     * @param relleno       the relleno
+     */
     public Suelo(World mundo, Texture textura, Vector2 posicion, JuegoPrincipal juego, int anchoPantalla, int altoPantalla, float tamañoX, float tamañoY, boolean relleno) {
         this.mundo = mundo;
         this.textura = textura;
@@ -36,7 +94,7 @@ public class Suelo extends Actor {
         this.tamañoY = tamañoY;
         this.relleno = relleno;
 
-        BodyDef def = new BodyDef();
+        BodyDef def = new BodyDef();                                    //Hitbox para el suelo completo, no se utiliza con estos mapas
         def.position.set(posicion.x - 1f, posicion.y + 0.5f);
         def.type = BodyDef.BodyType.StaticBody;
         body = mundo.createBody(def);
@@ -44,8 +102,19 @@ public class Suelo extends Actor {
         PolygonShape forma = new PolygonShape();
         forma.setAsBox(tamañoX, tamañoY);
         fixture = body.createFixture(forma, 1);
-        fixture.setUserData("suelo");
+        fixture.setUserData("sueloTodo");
         forma.dispose();
+
+        BodyDef parteArriba=new BodyDef();                               //Utilizado para margen de arriba, evita que salte si no lo toca
+        parteArriba.position.set(posicion.x-1, posicion.y + 0.5f+0.97f); //Sustituye a sueloTodo
+        parteArriba.type=BodyDef.BodyType.StaticBody;
+        Body bordeArriba=mundo.createBody(parteArriba);
+
+        PolygonShape formaArriba=new PolygonShape();
+        formaArriba.setAsBox(tamañoX,0.03f);
+        Fixture arriba=bordeArriba.createFixture(formaArriba,1);
+        arriba.setUserData("suelo");
+        formaArriba.dispose();
 
         BodyDef izqDef = new BodyDef();                                 //Evita que al estar pegado al borde de un suelo se pueda saltar si ya esta saltando
         izqDef.position.set(posicion.x - 1f+tamañoX, posicion.y + 0.5f);
@@ -53,7 +122,7 @@ public class Suelo extends Actor {
         bordeIzq = mundo.createBody(izqDef);
 
         PolygonShape formaBorde = new PolygonShape();
-        formaBorde.setAsBox(0.02f, tamañoY*0.95f);
+        formaBorde.setAsBox(0.02f, tamañoY*0.97f);
         fixtureIzq = bordeIzq.createFixture(formaBorde, 1);
         fixtureIzq.setUserData("sueloIzq");
 
@@ -68,6 +137,17 @@ public class Suelo extends Actor {
         formaBorde.dispose();
     }
 
+    /**
+     * Instantiates a new Suelo.
+     *
+     * @param mundo         the mundo
+     * @param textura       the textura
+     * @param posicion      the posicion
+     * @param juego         the juego
+     * @param anchoPantalla the ancho pantalla
+     * @param altoPantalla  the alto pantalla
+     * @param relleno       the relleno
+     */
     public Suelo(World mundo, Texture textura, Vector2 posicion, JuegoPrincipal juego, int anchoPantalla, int altoPantalla, boolean relleno) {
         this(mundo, textura, posicion, juego, anchoPantalla, altoPantalla, 1, 1, relleno);
     }
@@ -89,6 +169,9 @@ public class Suelo extends Actor {
     public void act(float delta) {
     }
 
+    /**
+     * Elimina.
+     */
     public void elimina() {
         bordeIzq.destroyFixture(fixtureIzq);
         bordeDer.destroyFixture(fixtureDer);
