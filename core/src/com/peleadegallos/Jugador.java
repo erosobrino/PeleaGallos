@@ -220,7 +220,7 @@ public class Jugador extends Actor {
      */
     arma;
 
-    int fuerzaX;
+    int fuerzaY = 10;
 
     /**
      * Instantiates a new Jugador.
@@ -420,32 +420,32 @@ public class Jugador extends Actor {
                     break;
                 case atras:
                     avanza = false;
-                    angulo=135;
+                    angulo = 135;
                     body.applyLinearImpulse(-0.75f, 0, posicionCuerpo.x, posicionCuerpo.y, true);
                     break;
                 case adelante:
                     avanza = true;
-                    angulo=45;
+                    angulo = 45;
                     body.applyLinearImpulse(0.75f, 0, posicionCuerpo.x, posicionCuerpo.y, true);
                     break;
                 case saltaAtras:
                     avanza = false;
                     indiceAux = 0;
-                    angulo=135;
+                    angulo = 135;
                     tiempoFrameSalto = System.currentTimeMillis();
                     if (body.getLinearVelocity().x > 0) //Si se esta moviento no salta tan lejos
                         body.setLinearVelocity(-1, 0);
-                    body.applyLinearImpulse(-5, 10, posicionCuerpo.x, posicionCuerpo.y, true);
+                    body.applyLinearImpulse(-5, fuerzaY, posicionCuerpo.x, posicionCuerpo.y, true);
                     saltando = true;
                     break;
                 case saltaAdelante:
                     avanza = true;
                     indiceAux = 0;
-                    angulo=45;
+                    angulo = 45;
                     tiempoFrameSalto = System.currentTimeMillis();
                     if (body.getLinearVelocity().x > 0) //Si se esta moviento no salta tan lejos
                         body.setLinearVelocity(1, 0);
-                    body.applyLinearImpulse(5, 10, posicionCuerpo.x, posicionCuerpo.y, true);
+                    body.applyLinearImpulse(5, fuerzaY, posicionCuerpo.x, posicionCuerpo.y, true);
                     saltando = true;
                     break;
             }

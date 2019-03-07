@@ -485,6 +485,7 @@ public class PantallaJuego extends PlantillaEscenas {
                         jugador1.saltando = false;
                         jugador1.tocaSuelo = true;
                         jugador1.indiceAux = 0;
+                        jugador1.fuerzaY = 6; //Asi cuando salte salta menos
                         if (debeSaltar)
                             juego.botonPulsado(jugador1.sonidoSalto);
                     }
@@ -492,6 +493,7 @@ public class PantallaJuego extends PlantillaEscenas {
                         jugador2.saltando = false;
                         jugador2.tocaSuelo = true;
                         jugador2.indiceAux = 0;
+                        jugador2.fuerzaY = 6;   //Asi cuando salte salta menos
                         if (debeSaltar)
                             juego.botonPulsado(jugador2.sonidoSalto);
                     }
@@ -533,6 +535,10 @@ public class PantallaJuego extends PlantillaEscenas {
 
             @Override
             public void endContact(Contact contact) {
+                if (hanColisionado(contact, "jugador1", "jugador2")) {
+                    jugador1.fuerzaY = 10;   //Cuando se separaran salta con la fuerza antigua
+                    jugador2.fuerzaY = 10;
+                }
             }
 
             @Override

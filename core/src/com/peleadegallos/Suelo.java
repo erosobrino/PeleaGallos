@@ -33,7 +33,7 @@ public class Suelo extends Actor {
     bordeIzq, /**
      * The Borde der.
      */
-    bordeDer;
+    bordeDer,bordeArriba;
 
 
     /**
@@ -45,7 +45,7 @@ public class Suelo extends Actor {
     fixtureIzq, /**
      * The Fixture der.
      */
-    fixtureDer;
+    fixtureDer,fixtureArriba;
 
     /**
      * The Juego.
@@ -108,12 +108,12 @@ public class Suelo extends Actor {
         BodyDef parteArriba=new BodyDef();                               //Utilizado para margen de arriba, evita que salte si no lo toca
         parteArriba.position.set(posicion.x-1, posicion.y + 0.5f+0.97f); //Sustituye a sueloTodo
         parteArriba.type=BodyDef.BodyType.StaticBody;
-        Body bordeArriba=mundo.createBody(parteArriba);
+        bordeArriba=mundo.createBody(parteArriba);
 
         PolygonShape formaArriba=new PolygonShape();
         formaArriba.setAsBox(tamañoX,0.03f);
-        Fixture arriba=bordeArriba.createFixture(formaArriba,1);
-        arriba.setUserData("suelo");
+        fixtureArriba=bordeArriba.createFixture(formaArriba,1);
+        fixtureArriba.setUserData("suelo");
         formaArriba.dispose();
 
         BodyDef izqDef = new BodyDef();                                 //Evita que al estar pegado al borde de un suelo se pueda saltar si ya esta saltando
@@ -176,7 +176,9 @@ public class Suelo extends Actor {
         bordeIzq.destroyFixture(fixtureIzq);
         bordeDer.destroyFixture(fixtureDer);
         body.destroyFixture(fixture);
+        bordeArriba.destroyFixture(fixtureArriba);
 
+        mundo.destroyBody(bordeArriba);
         mundo.destroyBody(bordeDer);
         mundo.destroyBody(bordeIzq);
         mundo.destroyBody(body);
