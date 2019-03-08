@@ -1,72 +1,68 @@
 package com.peleadegallos;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 /**
- * The type Selector personaje arma.
+ * Selector para las armas y los personajes
  */
 public class SelectorPersonajeArma extends SelectorPlantilla {
 
     /**
-     * The Personajes.
+     *Los personajes
      */
     Personaje[] personajes;
     /**
-     * The Armas.
+     * Las armas
      */
     Arma[] armas;
     /**
-     * The Img personaje.
+     * La imagen del personaje actual
      */
-    Image imgPersonaje, /**
-     * The Img armas.
+    Image imgPersonaje,
+    /**
+     * La imagen del arma actual
      */
     imgArmas;
     /**
-     * The Btadelante per.
+     * El boton adelante del personaje
      */
     Image btadelantePer, /**
-     * The Btatras per.
+     * El boton atras del personaje
      */
     btatrasPer, /**
-     * The Btadelante arm.
+     * El boton adelante del arma.
      */
     btadelanteArm, /**
-     * The Btatras arm.
+     * El boton atras del arma
      */
     btatrasArm;
 
     /**
-     * The Indice personaje.
+     * El indice del personaje seleccionado
      */
-    int indicePersonaje = 0, /**
-     * The Indice arma.
+    int indicePersonaje = 0,
+    /**
+     * El indice del arma seleccionada
      */
     indiceArma = 0;
 
     /**
-     * Instantiates a new Selector personaje arma.
+     * Inicializa un nuevo selector de armas y personajes
      *
-     * @param juego      the juego
-     * @param personajes the personajes
-     * @param armas      the armas
-     * @param idJugador  the id jugador
+     * @param juego      la pantalla de juego principal
+     * @param armas      las armas
+     * @param personajes los personajes
+     * @param idJugador  el id jugador, gestion de los botones de la clase padre
      */
     public SelectorPersonajeArma(final JuegoPrincipal juego, final Personaje[] personajes, final Arma[] armas, final int idJugador) {
-        super(juego,idJugador);
+        super(juego, idJugador);
         this.personajes = personajes;
         this.armas = armas;
+
+        //Cambian las imagenes y vuelven a empezar al llegar al final y viceversa
 
         btadelantePer = new Image(juego.manager.get("iconos/flechaArriba.png", Texture.class));
         btadelantePer.setSize(altoPantalla / 7, altoPantalla / 7);
@@ -131,6 +127,12 @@ public class SelectorPersonajeArma extends SelectorPlantilla {
 
 
     //Necesario hacer asi porque sino no se puede eliminar del escenario y se superponen las imagenes
+
+    /**
+     * Cambia la imagen del personaje seleccionada
+     *
+     * @param indice el indice actual
+     */
     private void actualizaImagenPersonaje(int indice) {
         if (imgPersonaje != null)
             imgPersonaje.remove();
@@ -140,6 +142,11 @@ public class SelectorPersonajeArma extends SelectorPlantilla {
         escenario.addActor(imgPersonaje);
     }
 
+    /**
+     * Cambia la imagen del arma seleccionada
+     *
+     * @param indice el indice actual
+     */
     private void actualizaImagenArma(int indice) {
         if (imgArmas != null)
             imgArmas.remove();
@@ -149,6 +156,9 @@ public class SelectorPersonajeArma extends SelectorPlantilla {
         escenario.addActor(imgArmas);
     }
 
+    /**
+     * Se ejecuta al mostrar la pantalla, añade los actores y actualiza la imagen del personaje y el arma
+     */
     @Override
     public void show() {
         super.show();
@@ -158,13 +168,18 @@ public class SelectorPersonajeArma extends SelectorPlantilla {
         escenario.addActor(btadelantePer);
         escenario.addActor(btadelanteArm);
 
-        indiceArma=0;
-        indicePersonaje=0;
+        indiceArma = 0;
+        indicePersonaje = 0;
 
         actualizaImagenArma(indiceArma);
         actualizaImagenPersonaje(indicePersonaje);
     }
 
+    /**
+     * Renderiza la pantalla llamando a la clase padre y muestra informacion del arma y del personaje
+     *
+     * @param delta el tiempo desde la ultima ejecucion
+     */
     @Override
     public void render(float delta) {
         super.render(delta);
@@ -177,12 +192,15 @@ public class SelectorPersonajeArma extends SelectorPlantilla {
         fuente.draw(spriteBatch, juego.idiomas.get("vida") + ": " + personajes[indicePersonaje].getVida(), anchoPantalla / 4 * 1.1f, altoPantalla - altoPantalla / 6 * 2 * 1.25f);
         fuente.draw(spriteBatch, juego.idiomas.get("velocidadPer") + ": " + personajes[indicePersonaje].getVelocidad(), anchoPantalla / 4 * 1.1f, altoPantalla - altoPantalla / 6 * 4 * 0.75f);
 
-        fuente.draw(spriteBatch, juego.idiomas.get("alcance") + ": " + armas[indiceArma].getAlcance(), anchoPantalla / 2 * 1.25f, altoPantalla - altoPantalla / 3*1.15f);
-        fuente.draw(spriteBatch, juego.idiomas.get("balasTotales") + ": " + armas[indiceArma].getBalas(), anchoPantalla / 2 * 1.25f, altoPantalla - altoPantalla / 3*1.35f);
-        fuente.draw(spriteBatch, juego.idiomas.get("daño") + ": " + armas[indiceArma].getDaño(), anchoPantalla / 2 * 1.25f, altoPantalla - altoPantalla / 3*1.55f);
+        fuente.draw(spriteBatch, juego.idiomas.get("alcance") + ": " + armas[indiceArma].getAlcance(), anchoPantalla / 2 * 1.25f, altoPantalla - altoPantalla / 3 * 1.15f);
+        fuente.draw(spriteBatch, juego.idiomas.get("balasTotales") + ": " + armas[indiceArma].getBalas(), anchoPantalla / 2 * 1.25f, altoPantalla - altoPantalla / 3 * 1.35f);
+        fuente.draw(spriteBatch, juego.idiomas.get("daño") + ": " + armas[indiceArma].getDaño(), anchoPantalla / 2 * 1.25f, altoPantalla - altoPantalla / 3 * 1.55f);
         spriteBatch.end();
     }
 
+    /**
+     * Se ejecuta al desaparecer la pantalla, elimina los actores
+     */
     @Override
     public void hide() {
         super.hide();

@@ -16,43 +16,43 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 /**
- * The type Opciones.
+ * Pantalla para las opciones
  */
 class Opciones extends PlantillaEscenas {
 
     /**
-     * The Img volumen.
+     * La Imagen volumen.
      */
     Image imgVolumen;
     /**
-     * The Img vibrar.
+     * La Imagen vibrar.
      */
     Image imgVibrar;
     /**
-     * The Img desarrollo.
+     * La Imagen desarrollo.
      */
     Image imgDesarrollo;
     /**
-     * The Batch.
+     * Batch para escribir por pantalla
      */
     SpriteBatch batch;
     /**
-     * The Bt borrar.
+     * El boton borrar records
      */
     TextButton btBorrar;
     /**
-     * The Pos x.
+     * La posicion x para colocar el texto
      */
     int posX;
     /**
-     * The Muestra texto.
+     * Para que no se superponga el texto a la ventana modal
      */
     boolean muestraTexto;
 
     /**
-     * Instantiates a new Opciones.
+     * Inicializa la pantalla opciones
      *
-     * @param juego the juego
+     * @param juego la pantalla de juego principal
      */
     public Opciones(final JuegoPrincipal juego) {
         super(juego);
@@ -68,12 +68,6 @@ class Opciones extends PlantillaEscenas {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 juego.botonPulsado(sonidoClick);
-                fondo.remove();
-                home.remove();
-                imgVolumen.remove();
-                imgVibrar.remove();
-                imgDesarrollo.remove();
-                btBorrar.remove();
                 muestraTexto = false;
                 confirmacion();
             }
@@ -83,6 +77,9 @@ class Opciones extends PlantillaEscenas {
         batch = new SpriteBatch();
     }
 
+    /**
+     * Lanza una ventana de confirmacion para borrar los records, si se pulsa si los borra, sino no hace nada
+     */
     private void confirmacion() {
         final Dialog dialogo = new Dialog("", skin);
         dialogo.setModal(true);
@@ -101,7 +98,6 @@ class Opciones extends PlantillaEscenas {
                 dialogo.cancel();
                 dialogo.remove();
                 juego.borraDatos();
-                show();
                 return true;
             }
 
@@ -115,24 +111,26 @@ class Opciones extends PlantillaEscenas {
                 dialogo.hide();
                 dialogo.cancel();
                 dialogo.remove();
-                show();
                 return true;
             }
 
         });
         int pad = altoPantalla / 80;
-        dialogo.getContentTable().add(texto).pad(pad);
+        dialogo.getContentTable().add(texto).pad(pad); //Para añadir elementos se añaden a la tabla de contenido
 
         Table tabla = new Table();
-        tabla.add(btSi).pad(pad).width(anchoPantalla/7*2);
-        tabla.add(btNo).pad(pad).width(anchoPantalla/7*2);
+        tabla.add(btSi).pad(pad).width(anchoPantalla / 7 * 2);
+        tabla.add(btNo).pad(pad).width(anchoPantalla / 7 * 2);
         dialogo.getButtonTable().add(tabla).center().padBottom(pad);
 
         dialogo.show(escenario);
         escenario.addActor(dialogo);
     }
 
-
+    /**
+     * Actualiza los iconos mostrados dependiendo de si estan activado o no y
+     * cuando se modifican guarda los cambios en las shared preferences
+     */
     private void actualizaIconos() {
         if (imgVibrar != null)
             imgVibrar.remove();
@@ -205,6 +203,10 @@ class Opciones extends PlantillaEscenas {
         show();
     }
 
+    /**
+     * Se ejecuta cuando aparece la pantalla
+     * Cambia el escalado de la fuente y añade los actores
+     */
     @Override
     public void show() {
         super.show();
@@ -221,9 +223,12 @@ class Opciones extends PlantillaEscenas {
         escenario.addActor(btBorrar);
 
         Gdx.input.setInputProcessor(escenario);  //Pone como listener al escenario, asi funcionan botones
-        Gdx.input.setCatchBackKey(true);
     }
 
+    /**
+     * Renderiza la pantalla actual, muestra el texto y si se pulsa atras va al menu
+     * @param delta el tiempo desde la ultima ejecucion
+     */
     @Override
     public void render(float delta) {
         super.render(delta);
@@ -243,6 +248,9 @@ class Opciones extends PlantillaEscenas {
         }
     }
 
+    /**
+     * Se ejecuta al desaparecer la pantalla, elimna los actores y el inputprocessor
+     */
     @Override
     public void hide() {
         fondo.remove();

@@ -3,7 +3,8 @@ package com.peleadegallos;
 import com.badlogic.gdx.graphics.Texture;
 
 /**
- * Las texturas que tiene el cada jugador, todos los personajes tiene la misma cantidad de imagenes para cada accion
+ * Las texturas que tiene el cada jugador, todos los personajes tiene la misma cantidad
+ * de imagenes para cada accion y tienen todas el mismo formato de nombre
  */
 public class TexturasJugador {
     Texture[] parado = new Texture[10];

@@ -12,39 +12,43 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 
 /**
- * The type Menu inicio.
+ * Pantalla de inicio, desdee aqui se lanzan el resto
  */
 public class MenuInicio extends PlantillaEscenas {
 
     /**
-     * The Jugar.
+     * El boton Jugar.
      */
-    TextButton jugar, /**
-     * The Opciones.
+    TextButton jugar,
+    /**
+     * El boton Opciones.
      */
-    opciones, /**
-     * The Logros.
+    opciones,
+    /**
+     * El boton Logros.
      */
-    logros, /**
-     * The Ayuda.
+    logros,
+    /**
+     * El boton Ayuda.
      */
     ayuda;
     /**
-     * The Alto.
+     * El Alto.
      */
-    int alto, /**
-     * The Ancho.
+    int alto,
+    /**
+     * El Ancho.
      */
     ancho;
     /**
-     * The Img info.
+     * El dibujo para la informacion
      */
     Image imgInfo;
 
     /**
-     * Instantiates a new Menu inicio.
+     * Inicialza la pantalla con todos los botones necesarios
      *
-     * @param juego the juego
+     * @param juego la pantalla de juego principal
      */
     public MenuInicio(final JuegoPrincipal juego) {
         super(juego);
@@ -91,7 +95,7 @@ public class MenuInicio extends PlantillaEscenas {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 juego.botonPulsado(sonidoClick);
-                juego.setScreen(juego.logros=new PantallaLogros(juego));
+                juego.setScreen(juego.logros = new PantallaLogros(juego));
             }
         });
 
@@ -114,6 +118,10 @@ public class MenuInicio extends PlantillaEscenas {
         });
     }
 
+    /**
+     * Se ejecuta cuando se muestra la pantalla
+     * Añade los actores y pone como inputprocesso al escenario
+     */
     @Override
     public void show() {
         super.show();
@@ -129,6 +137,11 @@ public class MenuInicio extends PlantillaEscenas {
         Gdx.input.setInputProcessor(escenario);  //Pone como listener al escenario, asi funcionan botones
     }
 
+    /**
+     * Rrenderiza el estado de la pantalla actual
+     *
+     * @param delta el tiempo desde la utlima ejecucion
+     */
     @Override
     public void render(float delta) {
         super.render(delta);
@@ -137,15 +150,17 @@ public class MenuInicio extends PlantillaEscenas {
         escenario.draw();
     }
 
+    /**
+     * Se ejecuta cuando la pantalla no esta visble
+     * Quita los actores del escenario
+     */
     @Override
     public void hide() {
         imgInfo.remove();
-//        musica.pause();
         jugar.remove();
         opciones.remove();
         logros.remove();
         ayuda.remove();
-//        escenario.dispose();
 
         Gdx.input.setInputProcessor(null);  //Quita como listener al escenario
     }

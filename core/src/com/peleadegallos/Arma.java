@@ -3,7 +3,7 @@ package com.peleadegallos;
 import com.badlogic.gdx.graphics.Texture;
 
 /**
- * The type Arma.
+ * Clase utilizada para guardar los datos de todas las armas
  */
 public class Arma {
 
@@ -12,109 +12,111 @@ public class Arma {
     private String nombre;
 
     /**
-     * Get daño int.
+     * Devuelve el daño de las balas.
      *
-     * @return the int
+     * @return el daño
      */
     public int getDaño() {
         return daño;
     }
 
     /**
-     * Set daño.
+     * Modifica el daño de la cada bala
      *
-     * @param daño the daño
+     * @param daño el daño
      */
     public void setDaño(int daño) {
         this.daño = daño;
     }
 
     /**
-     * Gets balas.
+     * Devuelve la cantidad de balas.
      *
-     * @return the balas
+     * @return las balas
      */
     public int getBalas() {
         return balas;
     }
 
     /**
-     * Sets balas.
+     * Modifica la cantidad de balas del cargador
      *
-     * @param balas the balas
+     * @param balas la cantidad de balas
      */
     public void setBalas(int balas) {
         this.balas = balas;
     }
 
     /**
-     * Gets alcance.
+     * Devuelve el alcance.
      *
-     * @return the alcance
+     * @return el alcance
      */
     public int getAlcance() {
         return alcance;
     }
 
     /**
-     * Sets alcance.
+     * Modifica el alcance
      *
-     * @param alcance the alcance
+     * @param alcance el nuevo alcance, su valor minimo es 1
      */
     public void setAlcance(int alcance) {
+        if (alcance < 0)
+            alcance = 1;
         this.alcance = alcance;
     }
 
     /**
-     * Gets textura.
+     * Devuelve la textura actual
      *
-     * @return the textura
+     * @return la textura
      */
     public Texture getTextura() {
         return textura;
     }
 
     /**
-     * Sets textura.
+     * Cambia la textura
      *
-     * @param textura the textura
+     * @param textura la nueva textura
      */
     public void setTextura(Texture textura) {
         this.textura = textura;
     }
 
     /**
-     * Instantiates a new Arma.
+     * Devuelve el nombrede la arma
      *
-     * @param textura the textura
-     * @param alcance the alcance
-     * @param balas   the balas
-     * @param daño    the daño
-     * @param nombre  the nombre
-     */
-    public Arma(Texture textura, int alcance, int balas, int daño, String nombre) {
-        this.textura = textura;
-        this.alcance = alcance;
-        this.balas = balas;
-        this.daño = daño;
-        this.nombre=nombre;
-    }
-
-    /**
-     * Gets nombre.
-     *
-     * @return the nombre
+     * @return el nombre del arma
      */
     public String getNombre() {
         return nombre;
     }
 
     /**
-     * Sets nombre.
+     * Cambia el nombre al arma
      *
-     * @param nombre the nombre
+     * @param nombre el nombre
      */
     public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    /**
+     * Instantiates a new Arma.
+     *
+     * @param textura la textura de la arma
+     * @param alcance el alcance o potencia con la que se dispara
+     * @param balas   la cantidad de balas del cargador
+     * @param daño    el daño
+     * @param nombre  el nombre
+     */
+    public Arma(Texture textura, int alcance, int balas, int daño, String nombre) {
+        this.textura = textura;
+        this.alcance = alcance;
+        this.balas = balas;
+        this.daño = daño;
         this.nombre = nombre;
     }
 }

@@ -15,41 +15,41 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 /**
- * The type Jugador.
+ * El actor para los jugadores
  */
 public class Jugador extends Actor {
 
     /**
-     * The Img bala.
+     * La imagen que tendran sus balas
      */
     public Texture imgBala;
     /**
-     * The Img arma.
+     * La imagen que tendra su arma
      */
     public Texture imgArma;
 
     /**
-     * The enum Movimiento.
+     * Enumerado con sus posible movimientos
      */
     enum Movimiento {
         /**
-         * Nada movimiento.
+         * Nada.
          */
         nada(0),
         /**
-         * Adelante movimiento.
+         * Adelante.
          */
         adelante(1),
         /**
-         * Atras movimiento.
+         * Atras.
          */
         atras(2),
         /**
-         * Salta adelante movimiento.
+         * Salta adelante.
          */
         saltaAdelante(3),
         /**
-         * Salta atras movimiento.
+         * Salta atras.
          */
         saltaAtras(4);
 
@@ -58,117 +58,125 @@ public class Jugador extends Actor {
     }
 
     /**
-     * The Frame parado av.
+     * Los frames que tiene dependiendo de lo que hace
      */
-    public Texture[] frameParadoAv;//avanza
-    private Texture[] frameMovimientoAv;//avanza
-    private Texture[] frameSaltaAV;//avanza
-    private Sprite[] frameParadoRe;//retrocede
-    private Sprite[] frameMovimientoRe;//retrocede
-    private Sprite[] frameSaltaRe;//retrocede
-    private Texture[] frameMuertoAv;
-    private Sprite[] frameMuertoRe;
+    public Texture[] frameParadoAv;//avanza y parado
+    private Texture[] frameMovimientoAv;//avanza y se mueve
+    private Texture[] frameSaltaAV;//avanza y salta
+    private Sprite[] frameParadoRe;//retrocede y parado
+    private Sprite[] frameMovimientoRe;//retrocede y se mueve
+    private Sprite[] frameSaltaRe;//retrocede y salta
+    private Texture[] frameMuertoAv;//muerto avanza
+    private Sprite[] frameMuertoRe;//muerto retrocede
 
     /**
-     * The Mundo.
+     * El Mundo.
      */
     World mundo;
 
     /**
-     * The Body.
+     * El cuerpo del jugador
      */
     Body body;
 
     /**
-     * The Fixture.
+     * La forma de su cuerpo
      */
     Fixture fixture;
 
     /**
-     * The Vivo.
+     * Si esta Vivo.
      */
     boolean vivo = true;
 
-    private int vida = 100;
+    /**
+     * Su vida
+     */
+    private int vida;
 
     /**
-     * The Juego.
+     * El Juego.
      */
     JuegoPrincipal juego;
 
     /**
-     * The Saltando.
+     * Si esta Saltando.
      */
     boolean saltando;
     /**
-     * The Toca suelo.
+     * Si Toca el suelo u otro jugador
      */
     boolean tocaSuelo;
 
     /**
-     * The Avanza.
+     * Si Avanza.
      */
     boolean avanza = true;
     /**
-     * The Turno.
+     * Si tiene el Turno.
      */
     boolean turno;
     /**
-     * The Movimiento.
+     * Su Movimiento.
      */
     Movimiento movimiento;
     /**
-     * The Tiempo frame muerto.
+     * Cada cuanto cambia el frame cuando muere
      */
     int tiempoFrameMuerto = 100;
+
+    /**
+     * El tiempo para cambiar el frame al morir
+     */
     private long tiempoF = System.currentTimeMillis();
     /**
-     * The Indice.
+     * El Indice del frame.
      */
-    int indice = 1;
+    int indice = 0;
     /**
-     * The Tamaño x.
+     * El Tamaño x.
      */
-    float tamañoX = 0.5f, /**
-     * The Tamaño y.
+    float tamañoX = 0.5f,
+    /**
+     * El Tamaño y.
      */
     tamañoY = 0.5f;
     /**
-     * The Cont frame muerto.
+     * El contador para los frames al morir
      */
     int contFrameMuerto = 0;
     /**
-     * The Sonido salto.
+     * El Sonido salto.
      */
     Sound sonidoSalto;
     /**
-     * The Sonido andar.
+     * El Sonido andar.
      */
     Music sonidoAndar;
 
     /**
-     * The Aspecto arma.
+     * Las proporciones que tiene el arma
      */
     float aspectoArma;
 
     /**
-     * The Indice aux.
+     * Indice para otro tipo de casos
      */
     int indiceAux;
 
     /**
-     * Gets vida.
+     * Devuelve vida.
      *
-     * @return the vida
+     * @return la vida
      */
     public int getVida() {
         return vida;
     }
 
     /**
-     * Sets vida.
+     * Establece vida esta debe ser o igual a 0
      *
-     * @param vida the vida
+     * @param vida la vida
      */
     public void setVida(int vida) {
         if (vida <= 0) {
@@ -179,68 +187,67 @@ public class Jugador extends Actor {
     }
 
     /**
-     * The Pantalla juego.
-     */
-    PantallaJuego pantallaJuego;
-    /**
-     * The Region arma.
+     * La region del arma a dibujar
      */
     TextureRegion regionArma;
     /**
-     * The Region arma re.
+     * La region del arma a dibujar /cuando mira hacia atras
      */
-    TextureRegion regionArmaRe;//cuando mira hacia atras
+    TextureRegion regionArmaRe;
     /**
-     * The Angulo.
+     * El Angulo.
      */
     float angulo;
     /**
-     * The Tipo bala.
+     * El tipo de bala
      */
     String tipoBala;
     /**
-     * The Cantidad balas.
+     * La cantiad de balas que tiene por cada cargador
      */
     int cantidadBalas;
     /**
-     * The Balas restantes.
+     * Las balas que le quedan de ese cargador
      */
     int balasRestantes;
 
     /**
-     * The Tiempo frame salto.
+     * El Tiempo desde el ultimo frame salto.
      */
     long tiempoFrameSalto;
 
     /**
-     * The Nombre.
+     * El Nombre.
      */
-    String nombre, /**
-     * The Arma.
+    String nombre,
+    /**
+     * El Arma.
      */
     arma;
 
+    /**
+     * La fuerza y con la que salta, dependiendo de donde esta el jugador se cambia esta propiedad
+     */
     int fuerzaY = 10;
 
     /**
-     * Instantiates a new Jugador.
+     * Inicializa el jugador
      *
-     * @param mundo             the mundo
-     * @param texturaParado     the textura parado
-     * @param texturaMovimiento the textura movimiento
-     * @param texturaSaltando   the textura saltando
-     * @param muerto            the muerto
-     * @param posicion          the posicion
-     * @param imgBala           the img bala
-     * @param imgArma           the img arma
-     * @param juego             the juego
-     * @param turno             the turno
-     * @param movimiento        the movimiento
-     * @param pantallaJuego     the pantalla juego
-     * @param tipoBala          the tipo bala
-     * @param cantidadBalas     the cantidad balas
+     * @param mundo             el mundo
+     * @param texturaParado     la textura parado
+     * @param texturaMovimiento la textura movimiento
+     * @param texturaSaltando   la textura saltando
+     * @param muerto            si esta muerto
+     * @param posicion          la posicion
+     * @param imgBala           la imagen bala
+     * @param imgArma           la imagen arma
+     * @param juego             el juego
+     * @param turno             el turno
+     * @param movimiento        el movimiento
+     * @param tipoBala          el tipo de bala
+     * @param cantidadBalas     la cantidad de balas
      */
-    public Jugador(World mundo, Texture[] texturaParado, Texture[] texturaMovimiento, Texture[] texturaSaltando, Texture[] muerto, Vector2 posicion, Texture imgBala, Texture imgArma, JuegoPrincipal juego, boolean turno, Movimiento movimiento, PantallaJuego pantallaJuego, String tipoBala, int cantidadBalas) {
+    public Jugador(World mundo, Texture[] texturaParado, Texture[] texturaMovimiento, Texture[] texturaSaltando, Texture[] muerto, Vector2 posicion, Texture imgBala, Texture imgArma, JuegoPrincipal juego, boolean turno, Movimiento movimiento, String tipoBala, int cantidadBalas) {
         this.mundo = mundo;
         this.frameParadoAv = texturaParado;
         this.frameMovimientoAv = texturaMovimiento;
@@ -251,7 +258,6 @@ public class Jugador extends Actor {
         this.movimiento = movimiento;
         this.imgBala = imgBala;
         this.imgArma = imgArma;
-        this.pantallaJuego = pantallaJuego;
         this.angulo = 45;
         this.tipoBala = tipoBala;
         this.cantidadBalas = cantidadBalas;
@@ -260,29 +266,30 @@ public class Jugador extends Actor {
         if (imgArma != null) {
             aspectoArma = imgArma.getWidth() / imgArma.getHeight();
             regionArma = new TextureRegion(imgArma); //nesecario para poder rotar arma
-            regionArmaRe = new TextureRegion(espejo(imgArma));
+            regionArmaRe = new TextureRegion(juego.espejo(imgArma));
         }
 
         sonidoSalto = juego.manager.get("sonidos/sonidoSalto.mp3", Sound.class);
         sonidoAndar = juego.manager.get("sonidos/sonidoAndar.mp3", Music.class);
 
+        //Roto las imagenes para que vaya en la otra direccion
         this.frameParadoRe = new Sprite[frameParadoAv.length];
         for (int i = 0; i < frameParadoAv.length; i++) {//lo invierte
-            frameParadoRe[i] = espejo(frameParadoAv[i]);
+            frameParadoRe[i] = juego.espejo(frameParadoAv[i]);
         }
         this.frameMovimientoRe = new Sprite[frameMovimientoAv.length];
         for (int i = 0; i < frameMovimientoAv.length; i++) {//lo invierte
-            frameMovimientoRe[i] = espejo(frameMovimientoAv[i]);
+            frameMovimientoRe[i] = juego.espejo(frameMovimientoAv[i]);
         }
 
         this.frameSaltaRe = new Sprite[frameSaltaAV.length];
         for (int i = 0; i < frameSaltaAV.length; i++) {
-            frameSaltaRe[i] = espejo(frameSaltaAV[i]);
+            frameSaltaRe[i] = juego.espejo(frameSaltaAV[i]);
         }
 
         this.frameMuertoRe = new Sprite[frameMuertoAv.length];
         for (int i = 0; i < frameMuertoAv.length; i++) {
-            frameMuertoRe[i] = espejo(frameMuertoAv[i]);
+            frameMuertoRe[i] = juego.espejo(frameMuertoAv[i]);
         }
 
         BodyDef def = new BodyDef();
@@ -291,10 +298,6 @@ public class Jugador extends Actor {
         def.fixedRotation = true;
         body = mundo.createBody(def);
 
-//        PolygonShape forma = new PolygonShape();
-//        forma.setAsBox(tamañoX, tamañoY);
-//        fixture = body.createFixture(forma, 3);
-//        forma.dispose();
         CircleShape forma = new CircleShape();
         forma.setRadius(tamañoY);
         fixture = body.createFixture(forma, 3);
@@ -303,21 +306,18 @@ public class Jugador extends Actor {
         forma.dispose();
     }
 
-    private Sprite espejo(Texture imagen) {
-        Sprite sprite = new Sprite(imagen);
-        sprite.flip(true, false);
-        return sprite;
-    }
-
     /**
      * Cambia frame.
      */
     public void cambiaFrame() {
         indice++;
         if (indice >= 10)
-            indice = 1;
+            indice = 0;
     }
 
+    /**
+     * Cambia el frame cuando esta saltando para que parezca continuo
+     */
     private void cambiaFrameAux() {//frame salto que cambia
         if ((System.currentTimeMillis() - tiempoFrameSalto) > 150) {
             indiceAux++;
@@ -328,6 +328,13 @@ public class Jugador extends Actor {
         }
     }
 
+    /**
+     * Cambia la posicion con el offset que tiene y dependiendo de su movimineto dibuja sus frames
+     * y los frames de su arma, dependiendo del angulo con el que apunto esta se coloca en una posicion u otra
+     *
+     * @param batch       con el que se dibujan los frames
+     * @param parentAlpha el alpha del padre
+     */
     @Override
     public void draw(Batch batch, float parentAlpha) {
         setPosition(body.getPosition().x * juego.PIXEL_METRO_X + 1.5f * juego.PIXEL_METRO_X, body.getPosition().y * juego.PIXEL_METRO_Y);
@@ -410,6 +417,13 @@ public class Jugador extends Actor {
         }
     }
 
+    /**
+     * Mueve el cuerpo del jugador en fucnion de su posicion, esto se hace aplicando fuerzas sobre su centro,
+     * si se esta moviendo reduce su velocidad y salta, ded esta forma no salta tan lejos, cada vez que
+     * se cambia el movimiento de nada a otro caambia el angulo que tiene el jugador al predefinido
+     *
+     * @param delta el tiempo desde la ultima ejecucion
+     */
     @Override
     public void act(float delta) {
         if (turno && vivo && !saltando) {
@@ -453,7 +467,8 @@ public class Jugador extends Actor {
     }
 
     /**
-     * Elimina.
+     * Destruye las fixtures y los cuerpos del mundo para no cargar la memoria,
+     * si la bala es de canon vibra y suena el sonido de disparo
      */
     public void elimina() {
         body.destroyFixture(fixture);

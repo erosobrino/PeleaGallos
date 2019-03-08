@@ -10,36 +10,38 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 /**
- * The type Selector plantilla.
+ * Plantilla para los selectores de mapa o personaje y armas
  */
 public class SelectorPlantilla extends PlantillaEscenas {
 
     /**
-     * The Continuar.
+     * El boton Continuar.
      */
-    TextButton continuar, /**
-     * The Anterior.
+    TextButton continuar,
+    /**
+     * El boton Anterior.
      */
     anterior;
     /**
-     * The Id jugador.
+     * El Id del jugador.
      */
     int idJugador;
     /**
-     * The Sprite batch.
+     * The Sprite batch para poder escribir por pantalla
      */
     SpriteBatch spriteBatch;
 
     /**
-     * Instantiates a new Selector plantilla.
+     * Inicializa el selector
      *
-     * @param juego     the juego
-     * @param idJugador the id jugador
+     * @param juego     la clase de juego principal
+     * @param idJugador el id del jugador
      */
     public SelectorPlantilla(final JuegoPrincipal juego, final int idJugador) {
         super(juego);
         this.idJugador = idJugador;
 
+        //Cambia al siguente selector o a la pantall de juego
         continuar = new TextButton(juego.idiomas.get("continuar"), skin);
         continuar.setSize(anchoPantalla / 7 * 2, altoPantalla / 5);
         continuar.setPosition(anchoPantalla - anchoPantalla / 7 * 2 * 1.05f, altoPantalla * 0.05f);
@@ -65,6 +67,7 @@ public class SelectorPlantilla extends PlantillaEscenas {
             }
         });
 
+        //Cambia al selector anterio o a la pantalla de menu
         anterior = new TextButton(juego.idiomas.get("atras"), skin);
         anterior.setSize(anchoPantalla / 7 * 2, altoPantalla / 5);
         anterior.setPosition(anchoPantalla - anchoPantalla / 7 * 2 * 1.05f, altoPantalla * 0.95f - altoPantalla / 5);
@@ -93,6 +96,10 @@ public class SelectorPlantilla extends PlantillaEscenas {
         spriteBatch = new SpriteBatch();
     }
 
+    /**
+     * Se ejecuta al mostrar la pantalla, añade los actore y cambia el inputprocessor
+     * Cambia el escalado de la fuente para que no se muy grande
+     */
     @Override
     public void show() {
         super.show();
@@ -106,6 +113,10 @@ public class SelectorPlantilla extends PlantillaEscenas {
         fuente.getData().setScale(escalado025);
     }
 
+    /**
+     * Renderiza la pantalla actual, si se pulsa atras va a la pantalla anterior
+     * @param delta el tiempo desde la ultima ejecucion
+     */
     @Override
     public void render(float delta) {
         super.render(delta);
@@ -122,6 +133,9 @@ public class SelectorPlantilla extends PlantillaEscenas {
         escenario.draw();
     }
 
+    /**
+     * Elimina del escenario los actores
+     */
     @Override
     public void hide() {
         super.hide();

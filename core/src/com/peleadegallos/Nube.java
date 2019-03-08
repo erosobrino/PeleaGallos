@@ -1,121 +1,130 @@
 package com.peleadegallos;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
-import java.awt.Color;
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * The type Nube.
+ * El actor nube, lo mueve de forma automatica y vuelve a aparecer por pantalla
  */
 public class Nube extends Actor {
 
     /**
-     * The Pos x.
+     * La Posicion x.
      */
-    float posX, /**
-     * The Pos y.
+    float posX,
+    /**
+     * La Posicion y.
      */
-    posY, /**
-     * The Velocidad.
+    posY,
+    /**
+     * La Velocidad.
      */
     velocidad;
     /**
-     * The Ancho pantalla.
+     * El ancho de la pantalla
      */
     int anchoPantalla;
     /**
-     * The Nube.
+     * El alto de la pantalla
+     */
+    int altoPantalla;
+    /**
+     * La textura de la Nube.
      */
     Texture nube;
 
     /**
-     * Instantiates a new Nube.
+     * Inicializa la nube con los valores necesarios para que siempre vualva a aparecer
      *
-     * @param altoPantalla  the alto pantalla
-     * @param anchoPantalla the ancho pantalla
-     * @param textura       the textura
-     * @param rand          the rand
+     * @param altoPantalla  el alto pantalla
+     * @param anchoPantalla el ancho pantalla
+     * @param textura       la textura
+     * @param rand          el random para la posicion y la velocidad
      */
     public Nube(int altoPantalla, int anchoPantalla, Texture textura, Random rand) {
         int alto = altoPantalla / 3;
         posX = rand.nextInt(anchoPantalla);
         this.anchoPantalla = anchoPantalla;
+        this.altoPantalla=altoPantalla;
         posY = rand.nextInt(alto*2)+alto*1.1f;
         velocidad = rand.nextInt(100) + 20;
         this.nube = textura;
     }
 
     /**
-     * Gets pos x.
+     * Devuelve pos x.
      *
-     * @return the pos x
+     * @return la posicion x
      */
     public float getPosX() {
         return posX;
     }
 
     /**
-     * Sets pos x.
+     * Establece pos x.
      *
-     * @param posX the pos x
+     * @param posX la posicion x
      */
     public void setPosX(float posX) {
         this.posX = posX;
     }
 
     /**
-     * Gets pos y.
+     * Devuelve pos y.
      *
-     * @return the pos y
+     * @return la posicion y
      */
     public float getPosY() {
         return posY;
     }
 
     /**
-     * Sets pos y.
+     * Establece pos y.
      *
-     * @param posY the pos y
+     * @param posY la posicion y
      */
     public void setPosY(float posY) {
         this.posY = posY;
     }
 
     /**
-     * Gets velocidad.
+     * Devuelve velocidad.
      *
-     * @return the velocidad
+     * @return la velocidad
      */
     public float getVelocidad() {
         return velocidad;
     }
 
     /**
-     * Sets velocidad.
+     * Establece velocidad.
      *
-     * @param velocidad the velocidad
+     * @param velocidad la velocidad
      */
     public void setVelocidad(float velocidad) {
         this.velocidad = velocidad;
     }
 
-
+    /**
+     * Dibuja la nube por pantalla
+     * @param batch dibuja la nube por pantalla
+     * @param parentAlpha el alpha del padre
+     */
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
         batch.end();
         batch.begin();
-        batch.draw(nube, posX, posY);
+        batch.draw(nube, posX, posY,anchoPantalla/1920*nube.getWidth(),altoPantalla/1080*nube.getHeight());
     }
 
+    /**
+     * Mueve la nube en funcion de la velocidad y del tiempo desde la ultima ejecucion
+     * @param delta el tiempo desde la ultima ejecucion
+     */
     @Override
     public void act(float delta) {
         this.posX -= velocidad * delta;

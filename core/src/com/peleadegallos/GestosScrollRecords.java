@@ -7,21 +7,33 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import java.util.ArrayList;
 
 /**
- * The type Gestos scroll records.
+ * Gestor de gestos utilizado para poder desplazar records y asi poder ver todos
  */
 public class GestosScrollRecords extends GestureDetector {
+    /**
+     * El escenario que gestiona el resto de gsto o pulsaciones
+     */
     private Stage escenario;
+    /**
+     * El alto de la pantalla, de esto depende cuando hay que mover el dedo para desplazar una posicion
+     */
     private int altoPantalla;
+    /**
+     * El punto donde se toca la primera vez
+     */
     private Vector2 pInicio;
+    /**
+     * La pantalla de logros en la que se desplazaran los records
+     */
     private PantallaLogros logros;
 
     /**
-     * Instantiates a new Gestos scroll records.
+     * Inicializa el gestor de gestos
      *
-     * @param listener     the listener
-     * @param escenario    the escenario
-     * @param altoPantalla the alto pantalla
-     * @param logros       the logros
+     * @param listener     el listener de los gestos
+     * @param escenario    el escenario
+     * @param altoPantalla el alto de la pantalla
+     * @param logros       la pantalla de logros en la que se utilizara
      */
     public GestosScrollRecords(GestureDetector.GestureListener listener, Stage escenario, int altoPantalla, PantallaLogros logros) {
         super(listener);
@@ -30,7 +42,12 @@ public class GestosScrollRecords extends GestureDetector {
         this.logros = logros;
     }
 
-
+    /**
+     * No utilizada pero se intenta gestionar primero con el escenario
+     *
+     * @param keycode
+     * @return
+     */
     @Override
     public boolean keyDown(int keycode) {
         escenario.keyDown(keycode);
@@ -38,6 +55,12 @@ public class GestosScrollRecords extends GestureDetector {
         return false;
     }
 
+    /**
+     * No utilizada pero se intenta gestionar primero con el escenario
+     *
+     * @param keycode
+     * @return
+     */
     @Override
     public boolean keyUp(int keycode) {
         escenario.keyUp(keycode);
@@ -45,6 +68,12 @@ public class GestosScrollRecords extends GestureDetector {
         return false;
     }
 
+    /**
+     * No utilizada pero se intenta gestionar primero con el escenario
+     *
+     * @param character
+     * @return
+     */
     @Override
     public boolean keyTyped(char character) {
         escenario.keyTyped(character);
@@ -52,6 +81,15 @@ public class GestosScrollRecords extends GestureDetector {
         return false;
     }
 
+    /**
+     * Intenta gestionar primero con escenario y sino, guarda el punto donde se pulsa como inicial
+     *
+     * @param screenX la posicion el eje x que se pulsa
+     * @param screenY la posicion el eje y que se pulsa
+     * @param pointer el dedo utilizado
+     * @param button  el boton pulsado
+     * @return true si se gestiona, false si no
+     */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (!escenario.touchDown(screenX, screenY, pointer, button)) {
@@ -61,6 +99,15 @@ public class GestosScrollRecords extends GestureDetector {
         } else return true;
     }
 
+    /**
+     * Primero se intenta gestionar con el escenario y despues con el listener
+     *
+     * @param screenX la posicion el eje x que se pulsa
+     * @param screenY la posicion el eje y que se pulsa
+     * @param pointer el dedo utilizado
+     * @param button  el boton pulsado
+     * @return true si se gestiona, false si no
+     */
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         if (!escenario.touchUp(screenX, screenY, pointer, button)) {
@@ -69,14 +116,24 @@ public class GestosScrollRecords extends GestureDetector {
         } else return true;
     }
 
+    /**
+     * Primero se intenta gestionar con el escenario y despues con el listener
+     * Si se desplaza el dedo lo suficiente avana una posicion en los recordas mostrados en caso de que estos no entren
+     *
+     * @param screenX la posicion el eje x que se pulsa
+     * @param screenY la posicion el eje y que se pulsa
+     * @param pointer el dedo utilizado
+     * @return true si se gestiona, false si no
+     */
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         if (!escenario.touchDragged(screenX, screenY, pointer)) {
             super.touchDragged(screenX, screenY, pointer);
-            if ((pInicio.y - screenY) % (altoPantalla / 100) == 0) {
+            if ((pInicio.y - screenY) > (altoPantalla / 120)) {
                 if (pInicio.y > screenY) {
-                    if (logros.posDedo < (logros.juego.datosGuardados.getRecords().size() - 6))
+                    if (logros.posDedo < (logros.juego.datosGuardados.getRecords().size() - 6)) { //6 es la cantidad de records que se mostraran a la vez
                         logros.posDedo++;
+                    }
                 } else {
                     if (logros.posDedo > 0)
                         logros.posDedo--;
@@ -87,6 +144,13 @@ public class GestosScrollRecords extends GestureDetector {
         } else return true;
     }
 
+    /**
+     * No utilizada pero se intenta gestionar primero con el escenario
+     *
+     * @param screenX
+     * @param screenY
+     * @return
+     */
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         escenario.mouseMoved(screenX, screenY);
@@ -94,9 +158,14 @@ public class GestosScrollRecords extends GestureDetector {
         return false;
     }
 
+    /**
+     * No utilizada pero se intenta gestionar primero con el escenario
+     *
+     * @param amount
+     * @return
+     */
     @Override
     public boolean scrolled(int amount) {
-        System.out.println(amount + "scrolllll");
         escenario.scrolled(amount);
         super.scrolled(amount);
         return false;

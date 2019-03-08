@@ -3,45 +3,46 @@ package com.peleadegallos;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 /**
- * The type Selector mapa.
+ * Selector para los mapas
  */
 public class SelectorMapa extends SelectorPlantilla {
 
     /**
-     * The Mapas.
+     * Los Mapas.
      */
     Mapa[] mapas;
     /**
-     * The Btadelante.
+     * El boton adelante.
      */
-    Image btadelante, /**
-     * The Btatras.
+    Image btadelante,
+    /**
+     * El boton atras.
      */
     btatras;
     /**
-     * The Mapa seleccionado.
+     * El Mapa seleccionado.
      */
     Image mapaSeleccionado;
     /**
-     * The Indice mapa.
+     * El Indice del mapa seleccionado
      */
     int indiceMapa = 0;
 
     /**
-     * Instantiates a new Selector mapa.
+     * Inicializa un nuevo selector de mapas
      *
-     * @param juego     the juego
-     * @param mapas     the mapas
-     * @param idJugador the id jugador
+     * @param juego     la pantalla de juego principal
+     * @param mapas     los mapas
+     * @param idJugador el id jugador, gestion de los botones de la clase padre
      */
     public SelectorMapa(final JuegoPrincipal juego, final Mapa[] mapas, int idJugador) {
         super(juego, idJugador);
         this.mapas = mapas;
 
+        //Cambian los mapas elegidos
         btadelante = new Image(juego.manager.get("iconos/flechaDerecha.png", Texture.class));
         btadelante.setSize(altoPantalla / 7, altoPantalla / 7);
         btadelante.setPosition(anchoPantalla / 10*7.25f, altoPantalla/2-altoPantalla/7*0.8f);
@@ -73,6 +74,10 @@ public class SelectorMapa extends SelectorPlantilla {
         });
     }
 
+    /**
+     * Funcion que cambia la imagen del mapa seleccionado, si esta en el escenario lo elimina y despues lo añade
+     * @param indice el indice de mapa que se tiene que mostrar
+     */
     private void actualizaMapa(int indice) {
         if (mapaSeleccionado != null)
             mapaSeleccionado.remove();
@@ -82,6 +87,9 @@ public class SelectorMapa extends SelectorPlantilla {
         escenario.addActor(mapaSeleccionado);
     }
 
+    /**
+     * Se ejecuta al mostrar la pantalla, añade los actores y actualiza la imagen del mapa
+     */
     @Override
     public void show() {
         super.show();
@@ -94,11 +102,18 @@ public class SelectorMapa extends SelectorPlantilla {
         actualizaMapa(indiceMapa);
     }
 
+    /**
+     * Renderiza la pantalla llamando a la clase padre
+     * @param delta el tiempo desde la ultima ejecucion
+     */
     @Override
     public void render(float delta) {
         super.render(delta);
     }
 
+    /**
+     * Se ejecuta al desaparecer la pantalla, elimina los actores
+     */
     @Override
     public void hide() {
         super.hide();

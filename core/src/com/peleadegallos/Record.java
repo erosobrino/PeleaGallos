@@ -33,7 +33,7 @@ public class Record {
     }
 
     /**
-     * Inicializa el reocrd, necesario para deserializar el archivo de guardado json
+     * Inicializa el record, necesario para deserializar el archivo de guardado json
      */
     public Record() {
 

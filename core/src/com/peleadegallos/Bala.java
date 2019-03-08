@@ -9,118 +9,112 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 /**
- * The type Bala.
+ * Actor bala
  */
 public class Bala extends Actor {
 
     /**
-     * The constant cantidadBalas.
+     * Cantidad de balas lanzadas, utilizado a la hora de eliminarlas
      */
     public static int cantidadBalas = 0;
     /**
-     * The Sprite.
+     * La imagen de la bala
      */
     Sprite sprite;
 
     /**
-     * The Mundo.
+     * El mundo al que pertenece
      */
     World mundo;
 
     /**
-     * The Body.
+     * El cuerpo de la bala
      */
     Body body;
 
     /**
-     * The Fixture.
+     * Descripcion del cuerpo de la bala (tamaño, posicion, etc)
      */
     Fixture fixture;
 
     /**
-     * The Juego.
+     * La clase principal, en ella estan algunas constantes y datos necesarios
      */
     JuegoPrincipal juego;
 
     /**
-     * The Ancho pantalla.
-     */
-    int anchoPantalla, /**
-     * The Alto pantalla.
-     */
-    altoPantalla;
-    /**
-     * The Radio.
+     * El radio de la bala
      */
     float radio;//Son la mitad del real
 
     /**
-     * The Impacto.
+     * Utilizada para eliminar la bala en caso de que impacte en elgun lugar
      */
     boolean impacto = false;
 
     /**
-     * The Daño.
+     * El daño que quita cuando toca a un personaje
      */
     int daño;
     /**
-     * The Cont.
+     * Para que solo se le aplique fuerza una vez, en el momento de dispararse
      */
-    int cont = 0;
+    boolean disparada = false;
 
     /**
-     * The Fuerza.
+     * La fuerza que se le aplica a la bala
      */
     float fuerza;
     /**
-     * The Angulo.
+     * El angulo con el que se dispara
      */
     float angulo;
     /**
-     * The Id bala.
+     * El Id de la bala, se utiliza con cantidaBalas, para utilizarlo debe estar en radianes
      */
     int idBala;
     /**
-     * The Sonido canon.
+     * El sonido de disparo
      */
     Sound sonidoCanon;
     /**
-     * The Offset x.
+     * El offset que tiene la imagen respecto al body en el eje x
      */
-    float offsetX, /**
-     * The Offset y.
+    float offsetX,
+    /**
+     * El offset que tiene la imagen respecto al body en el eje y
      */
     offsetY;
     /**
-     * The Jugador.
+     * El jugador que dispara esta bala
      */
     Jugador jugador;
 
     /**
-     * Instantiates a new Bala.
+     * Inicializa la bala en la posicion y se dispara al realizar el act
      *
-     * @param mundo    the mundo
-     * @param posicion the posicion
-     * @param juego    the juego
-     * @param jugador  the jugador
+     * @param mundo    el mundo que la crea
+     * @param posicion la posicion de la que se dispara
+     * @param juego    la pantalla principal
+     * @param jugador  el jugador que la dispara
      */
     public Bala(World mundo, Vector2 posicion, JuegoPrincipal juego, Jugador jugador) {
         this.mundo = mundo;
         this.juego = juego;
         this.angulo = (float) Math.toRadians(jugador.angulo);
-        if (jugador.avanza)
+        if (jugador.avanza)                                 //Dependiendo de si el jugador avanza, la imagen se rota para que se diriga hacia el mismo lado
             this.sprite = new Sprite(jugador.imgBala);
         else
-            this.sprite = espejo(jugador.imgBala);
+            this.sprite = juego.espejo(jugador.imgBala);
         cantidadBalas++;
         idBala = cantidadBalas;
         this.jugador = jugador;
 
+        //Cada case debe tener como minimo estas propiedades
 //        radio
 //        daño
 //        fuerza
@@ -136,7 +130,7 @@ public class Bala extends Actor {
                 offsetX = 0.8f;
                 offsetY = 0.2f;
                 centroJugador = new Vector2(jugador.getX() + jugador.tamañoX * juego.PIXEL_METRO_X, jugador.getY() + jugador.tamañoY * juego.PIXEL_METRO_Y);
-                posicion.x = centroJugador.x / juego.PIXEL_METRO_X - 2 + jugador.tamañoX * (float) Math.cos(angulo) * 1.5f;
+                posicion.x = centroJugador.x / juego.PIXEL_METRO_X - 2 + jugador.tamañoX * (float) Math.cos(angulo) * 1.5f;         //Dependiendo del angulo la bala sale mas arriba o abajo
                 posicion.y = centroJugador.y / juego.PIXEL_METRO_Y - 0.5f + jugador.tamañoY * (float) Math.sin(angulo) * 1.3f;
                 break;
             case "pistola":
@@ -148,7 +142,7 @@ public class Bala extends Actor {
                 offsetX = 0.8f;
                 offsetY = 0.2f;
                 centroJugador = new Vector2(jugador.getX() + jugador.tamañoX * juego.PIXEL_METRO_X, jugador.getY() + jugador.tamañoY * juego.PIXEL_METRO_Y);
-                posicion.x = centroJugador.x / juego.PIXEL_METRO_X - 2 + jugador.tamañoX * (float) Math.cos(angulo) * 1.5f;
+                posicion.x = centroJugador.x / juego.PIXEL_METRO_X - 2 + jugador.tamañoX * (float) Math.cos(angulo) * 1.5f;      //Dependiendo del angulo la bala sale mas arriba o abajo
                 posicion.y = centroJugador.y / juego.PIXEL_METRO_Y - 0.5f + jugador.tamañoY * (float) Math.sin(angulo) * 1.3f;
                 break;
             case "canon":
@@ -157,7 +151,7 @@ public class Bala extends Actor {
                 radio = 0.25f;
                 daño = 10;
                 fuerza = 1;
-                posicion.x -= 1.5f;
+                posicion.x -= 1.5f;     //En el caso del canon la bala sale siempre desde la misma altura
                 break;
         }
 
@@ -169,39 +163,45 @@ public class Bala extends Actor {
         CircleShape forma = new CircleShape();
         forma.setRadius(radio);
         fixture = body.createFixture(forma, 1);
-        fixture.setUserData(idBala);
+        fixture.setUserData(idBala);                    //Con este vamos cambiando la propiedad impacto cuand esta se choca
         forma.dispose();
 
     }
 
-    private Sprite espejo(Texture imagen) {
-        Sprite sprite = new Sprite(imagen);
-        sprite.flip(true, false);
-        return sprite;
-    }
 
-
+    /**
+     * Modifica la posicion del actor con la posicion del body de la bala, se multiplica por el offset para que las coordenadas de ambos se vena igual sobre la pantalla
+     * Se tiene que cambia la realcion porque uno esta en metros y el otro en pixeles
+     *
+     * @param batch el batch que se utiliza para dibujar el sprite de la bala
+     * @param parentAlpha el alpha
+     */
     @Override
     public void draw(Batch batch, float parentAlpha) {
         setPosition(body.getPosition().x * juego.PIXEL_METRO_X + radio * 7 * juego.PIXEL_METRO_X, body.getPosition().y * juego.PIXEL_METRO_Y + radio * juego.PIXEL_METRO_Y);
         batch.draw(sprite, getX() + juego.PIXEL_METRO_X * offsetX, getY() + juego.PIXEL_METRO_Y * offsetY, juego.PIXEL_METRO_X * 2 * radio, juego.PIXEL_METRO_Y * 2 * radio);
     }
 
+    /**
+     * Esta funcion se ejecuta al hacer escenario.act, en este caso solo se debe ejecutar una vez, en el momento del disparo
+     * @param delta el tiempo en ms desde la ultima ejecucion
+     */
     @Override
     public void act(float delta) {
         if (!impacto) {
-            if (cont < 1) {
+            if (!disparada) {
                 Vector2 posicionCuerpo = body.getPosition();
                 double x = fuerza * Math.cos(angulo);
                 double y = fuerza * Math.sin(angulo);
                 body.applyLinearImpulse((float) x, (float) y, posicionCuerpo.x, posicionCuerpo.y, true);
-                cont++;
+                disparada = true;
             }
         }
     }
 
     /**
-     * Elimina.
+     * Destruye las fixtures y los cuerpos del mundo para no cargar la memoria,
+     * si la bala es de canon vibra y suena el sonido de disparo
      */
     public void elimina() {
         if (jugador.tipoBala.equals("canon"))

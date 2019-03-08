@@ -1,22 +1,22 @@
 package com.peleadegallos;
 
 /**
- * The interface Adaptador codigo android.
+ * Interfaz para utilizar el codigo android.
  */
 public interface AdaptadorCodigoAndroid {
 
     /**
-     * Nueva notificacion.
+     * Crea y envia una nueva notificacion
      *
-     * @param titulo the titulo
-     * @param texto  the texto
+     * @param titulo el titulo de la notificacion
+     * @param texto  el texto que tendrá la notificacion
      */
     void nuevaNotificacion(String titulo, String texto);
 
     /**
-     * Gets current lux.
+     * La luz que detecta el sensor
      *
-     * @return the current lux
+     * @return la luz actual
      */
     float getCurrentLux();
 }

@@ -6,26 +6,27 @@ import com.badlogic.gdx.math.Vector2;
 import java.awt.Image;
 
 /**
- * The type Mapa.
+ * Clase para guardar los datos de los mapas
  */
 public class Mapa {
     /**
-     * The Mapa.
+     * La imagen del mapa completo
      */
-    Texture mapa, /**
-     * The Cuadrado mapa.
+    Texture mapa,
+    /**
+     * La textura de cada cuadrado del mapa
      */
     cuadradoMapa;
     /**
-     * The Puntos.
+     * Los puntos en los que se coloca cada duadrado del mapa
      */
-    Vector2[] puntos=new Vector2[8];
+    Vector2[] puntos = new Vector2[8];
     /**
-     * The Rozamiento.
+     * El Rozamiento.
      */
     float rozamiento;
     /**
-     * The Nombre.
+     * El Nombre.
      */
     String nombre;
 }

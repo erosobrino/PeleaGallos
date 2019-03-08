@@ -1,105 +1,93 @@
 package com.peleadegallos;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonWriter;
 
 import java.util.ArrayList;
 
 /**
- * The type Finalizacion partida.
+ * La pantalla de finalizacion mostrada despues de acabar cada partida
  */
 public class FinalizacionPartida extends PlantillaEscenas {
 
     /**
-     * The Skin.
-     */
-    Skin skin;
-    /**
-     * The Bt reiniciar.
+     * El boton de reiniciar partida
      */
     TextButton btReiniciar, /**
-     * The Bt menu principal.
+     * El boton para ir al menu principal
      */
     btMenuPrincipal;
     /**
-     * The Pantalla anterior.
-     */
-    PlantillaEscenas pantallaAnterior;
-
-    /**
-     * The Batch texto.
+     * El batch para poder escribir en la pantalla
      */
     SpriteBatch batchTexto;
 
     /**
-     * The Frames ganador.
+     * Los frames que se mostraran del ganador
      */
     Texture[] framesGanador;
     /**
-     * The Img ganador.
+     * El frame mostrado en cada momento, se quita de framesGanador
      */
     Image imgGanador = null;
     /**
-     * The Jugadores.
+     * Los jugadores de la partida
      */
     ArrayList<Jugador> jugadores;
     /**
-     * The Mapa.
+     * El Mapa.
      */
     String mapa;
 
+    /**
+     * El tiempo de la partida
+     */
     private int tiempo;
     /**
-     * The Balas.
+     * Las balas de la partida
      */
-    int balas, /**
-     * The Ganador.
+    int balas,
+    /**
+     * El id del ganador
      */
     ganador;
     /**
-     * The Str tiempo.
+     * La cadena de tiempo formateada a minutos y segundos
      */
     String strTiempo;
 
     /**
-     * The Tiempo f.
+     * El tiempo en el que cambia el frame, en ms
      */
     long tiempoF;
     /**
-     * The Cont frame.
+     * En contador de frames, cambia solo
      */
     int contFrame = 0;
     /**
-     * The Tiempo frame.
+     * El tiempo que tarda en cambiar de frame
      */
     int tiempoFrame = 200;
 
     /**
-     * Gets tiempo.
+     * Devuelve el tiempo en segundos
      *
-     * @return the tiempo
+     * @return el tiempo
      */
     public int getTiempo() {
         return tiempo;
     }
 
     /**
-     * Sets tiempo.
+     * Funcion que cuando se modifica el tiempo modifica la cadena strTiempo formateandola a minutos y segundos
      *
-     * @param tiempo the tiempo
+     * @param tiempo el nuevo tiempo
      */
     public void setTiempo(int tiempo) {
         this.tiempo = tiempo;
@@ -107,14 +95,12 @@ public class FinalizacionPartida extends PlantillaEscenas {
     }
 
     /**
-     * Instantiates a new Finalizacion partida.
+     * Inicializa una nueva pantalla de finalizacion de partida
      *
-     * @param juego the juego
+     * @param juego la clase principal del juego
      */
     public FinalizacionPartida(final JuegoPrincipal juego) {
         super(juego);
-
-        skin = new Skin(Gdx.files.internal("skin/flat-earth-ui.json"));
 
         btReiniciar = new TextButton(juego.idiomas.get("reiniciar"), skin);
         btReiniciar.setSize(anchoPantalla / 7 * 2, altoPantalla / 7);
@@ -126,7 +112,7 @@ public class FinalizacionPartida extends PlantillaEscenas {
             public void changed(ChangeEvent event, Actor actor) {
                 if (juego.vibracionEncendida)
                     Gdx.input.vibrate(juego.tiempoVibrar);
-                juego.setScreen(pantallaAnterior);
+                juego.setScreen(juego.pantallaJuego);
             }
         });
 
@@ -147,13 +133,18 @@ public class FinalizacionPartida extends PlantillaEscenas {
         batchTexto = new SpriteBatch();
     }
 
+    /**
+     * Se ejecuta en cuando la pantalla de su muestra
+     * Guarda los datos de la ultima partida
+     */
     @Override
     public void show() {
         super.show();
 
-        tiempoF = System.currentTimeMillis();
+        tiempoF = System.currentTimeMillis();       //Cuando aparece coge el tiempo actual para ir cambiando el frame
 
-        actualizaImagen(0);
+        actualizaImagen(0);                 //Modifica el frame que aparece por pantalla
+        contFrame=0;
         escenario.addActor(imgGanador);
 
         escenario.addActor(fondo);
@@ -168,6 +159,10 @@ public class FinalizacionPartida extends PlantillaEscenas {
         Gdx.input.setInputProcessor(escenario);
     }
 
+    /**
+     * Modifica el frame actual dandole una posicion y un tamaño, si existe primero la elimin del escenario y despues la añade
+     * @param indice el indice que tiene que poner cogiendolo del array de frames
+     */
     private void actualizaImagen(int indice) {
         if (imgGanador != null)
             imgGanador.remove();
@@ -177,6 +172,10 @@ public class FinalizacionPartida extends PlantillaEscenas {
         escenario.addActor(imgGanador);
     }
 
+    /**
+     *Modiica el frame si ha pasado el tiempo necesario e indica cierta informacion de la partida
+     * @param delta el tiempo desde la ultima ejecucion
+     */
     @Override
     public void render(float delta) {
         super.render(delta);
@@ -189,7 +188,7 @@ public class FinalizacionPartida extends PlantillaEscenas {
             actualizaImagen(contFrame);
         }
 
-        escenario.act();
+        escenario.act();    //Esto primero para que no aparezcan las nubes por encima del texto
         escenario.draw();
 
         batchTexto.begin();
@@ -204,9 +203,12 @@ public class FinalizacionPartida extends PlantillaEscenas {
         batchTexto.end();
     }
 
+    /**
+     * Se ejecuta cuando la pantalla desaparece, quita los actores del escenario y tambien el inputprocessor
+     */
     @Override
     public void hide() {
-        musica.pause();
+        super.hide();
         imgGanador.remove();
         fondo.remove();
         btReiniciar.remove();

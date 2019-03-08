@@ -63,7 +63,7 @@ public class AcercaDe extends PlantillaEscenas {
 
     /**
      * Se ejecuta al desaparecer la pantalla, quita el escenario como inputproccessor
-     * para que se puedan utilizar los botones en las otras pantallas
+     * para que se puedan utilizar los botones en las otras pantallas y quita del escenario el fondo y el boton home
      */
     @Override
     public void hide() {

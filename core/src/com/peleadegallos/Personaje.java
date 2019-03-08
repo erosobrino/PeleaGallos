@@ -3,7 +3,7 @@ package com.peleadegallos;
 import com.badlogic.gdx.graphics.Texture;
 
 /**
- * The type Personaje.
+ * La clase que guarda los datos del personaje para mostrar en el selector
  */
 public class Personaje {
 
@@ -12,89 +12,89 @@ public class Personaje {
     private String nombre;
 
     /**
-     * Gets textura.
+     * Devuelve textura.
      *
-     * @return the textura
+     * @return la textura
      */
     public Texture getTextura() {
         return textura;
     }
 
     /**
-     * Sets textura.
+     * Establece textura.
      *
-     * @param textura the textura
+     * @param textura la textura
      */
     public void setTextura(Texture textura) {
         this.textura = textura;
     }
 
     /**
-     * Gets vida.
+     * Devuelve vida.
      *
-     * @return the vida
+     * @return la vida
      */
     public int getVida() {
         return vida;
     }
 
     /**
-     * Sets vida.
+     * Establece vida.
      *
-     * @param vida the vida
+     * @param vida la vida
      */
     public void setVida(int vida) {
         this.vida = vida;
     }
 
     /**
-     * Gets velocidad.
+     * Devuelve velocidad.
      *
-     * @return the velocidad
+     * @return la velocidad
      */
     public int getVelocidad() {
         return velocidad;
     }
 
     /**
-     * Sets velocidad.
+     * Establece velocidad.
      *
-     * @param velocidad the velocidad
+     * @param velocidad la velocidad
      */
     public void setVelocidad(int velocidad) {
         this.velocidad = velocidad;
     }
 
     /**
-     * Instantiates a new Personaje.
+     * Devuelve nombre.
      *
-     * @param textura   the textura
-     * @param vida      the vida
-     * @param velocidad the velocidad
-     * @param nombre    the nombre
-     */
-    public Personaje(Texture textura, int vida, int velocidad, String nombre) {
-        this.textura = textura;
-        this.velocidad = velocidad;
-        this.vida = vida;
-        this.nombre = nombre;
-    }
-
-    /**
-     * Gets nombre.
-     *
-     * @return the nombre
+     * @return el nombre
      */
     public String getNombre() {
         return nombre;
     }
 
     /**
-     * Sets nombre.
+     * Establece nombre.
      *
-     * @param nombre the nombre
+     * @param nombre el nombre
      */
     public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    /**
+     * Inicializa un nuevo personaje
+     *
+     * @param textura   la textura
+     * @param vida      la vida
+     * @param velocidad la velocidad
+     * @param nombre    el nombre para la carga de las texturas en la pantallajuego
+     */
+    public Personaje(Texture textura, int vida, int velocidad, String nombre) {
+        this.textura = textura;
+        this.velocidad = velocidad;
+        this.vida = vida;
         this.nombre = nombre;
     }
 }

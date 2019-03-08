@@ -8,54 +8,53 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 /**
- * The type Actor limite mapa.
+ * Actor utilizado para limitar los limites de la pantalla, este es estatico
  */
 public class ActorLimiteMapa extends Actor {
 
     /**
-     * The Mundo.
+     * El mundo que va a crear los cuerpos del actor y al que se asocia
      */
     World mundo;
 
     /**
-     * The Body izq.
+     * El cuerpo de la parte izquierda de la pantalla
      */
     Body bodyIzq, /**
-     * The Body der.
+     * El cuerpo de la parte izquierda de la pantalla
      */
     bodyDer;
 
     /**
-     * The Fixture izq.
+     * Descripcion del cuerpo de la izquierda (tamño, forma, densidad)
      */
     Fixture fixtureIzq, /**
-     * The Fixture der.
+     * Descripcion del cuerpo de la derecha (tamño, forma, densidad)
      */
     fixtureDer;
 
     /**
-     * Instantiates a new Actor limite mapa.
+     * Inicializa los limites del juego en el borde de la pantalla
      *
-     * @param mundo         the mundo
-     * @param juego         the juego
-     * @param altoPantalla  the alto pantalla
-     * @param anchoPantalla the ancho pantalla
+     * @param mundo         el mundo que lo crea
+     * @param altoPantalla  el alto de la pantalla
+     * @param anchoPantalla el ancho de la pantalla
      */
-    public ActorLimiteMapa(World mundo, JuegoPrincipal juego, int altoPantalla, int anchoPantalla) {
+    public ActorLimiteMapa(World mundo, int altoPantalla, int anchoPantalla) {
         this.mundo = mundo;
 
         BodyDef def = new BodyDef();
-        def.position.set(-2, 0);
-        def.type = BodyDef.BodyType.StaticBody;
+        def.position.set(-2, 0);                    //Posicion con offset porque se cambia la posicion de la camara
+        def.type = BodyDef.BodyType.StaticBody;     //0,0
         bodyIzq = mundo.createBody(def);
 
         PolygonShape forma = new PolygonShape();
         forma.setAsBox(0, altoPantalla);
         fixtureIzq = bodyIzq.createFixture(forma, 3);
-        fixtureIzq.setUserData("limiteIzquierda");
+        fixtureIzq.setUserData("limiteIzquierda");              //Para saber cuando de toca se usa el userdata
 
-        def.position.set(14, 0);
-        def.type = BodyDef.BodyType.StaticBody;
+        def.position.set(14, 0);                    //Posicion con offset porque se cambia la posicion de la camara
+        def.type = BodyDef.BodyType.StaticBody;     //16,0
         bodyDer = mundo.createBody(def);
 
         fixtureDer = bodyDer.createFixture(forma, 3);
@@ -64,7 +63,7 @@ public class ActorLimiteMapa extends Actor {
     }
 
     /**
-     * Elimina.
+     * Destruye las fixtures y los cuerpos del mundo para no cargar la memoria
      */
     public void elimina() {
         bodyIzq.destroyFixture(fixtureIzq);

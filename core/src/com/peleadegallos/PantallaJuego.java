@@ -31,173 +31,169 @@ import com.badlogic.gdx.utils.Timer;
 import java.util.ArrayList;
 
 /**
- * The type Pantalla juego.
+ * La pantalla de juego, esta se utiliza independientemente del mapa o los jugadores
  */
 public class PantallaJuego extends PlantillaEscenas {
 
     /**
-     * The Mundo.
+     * El Mundo.
      */
     World mundo;
 
     /**
-     * The Jugador 1.
+     * El Jugador 1.
      */
     Jugador jugador1;
     /**
-     * The Jugador 2.
+     * El Jugador 2.
      */
     Jugador jugador2;
     /**
-     * The Jug actual.
+     * El Jugador actual.
      */
     Jugador jugActual;
 
     /**
-     * The Jugador actual.
+     * String con el nombre de la fixture del jugador actual
      */
     String jugadorActual = "jugador1";
 
     /**
-     * The Jugadores.
+     * Coleccion de jugadores
      */
     ArrayList<Jugador> jugadores;
     /**
-     * The Suelos.
+     * Coleccion con los todos los suelos
      */
     ArrayList<Suelo> suelos;
 
     /**
-     * The Bala.
-     */
-    Bala bala;
-    /**
-     * The Balas.
+     * Coleccion de Balas.
      */
     ArrayList<Bala> balas;
 
     /**
-     * The Bt adelante.
+     * El Boton adelante.
      */
-    Image btAdelante, /**
-     * The Bt atras.
+    Image btAdelante,
+    /**
+     * El Boton atras.
      */
-    btAtras, /**
-     * The Bt saltar adelante.
+    btAtras,
+    /**
+     * El Boton saltar adelante.
      */
-    btSaltarAdelante, /**
-     * The Bt saltar atras.
+    btSaltarAdelante,
+    /**
+     * El Boton saltar atras.
      */
-    btSaltarAtras, /**
-     * The Bt disparo.
+    btSaltarAtras,
+    /**
+     * El Boton disparo.
      */
     btDisparo;
 
     /**
-     * The Camera.
+     * La camara qu see usa, despalzamiento para centrarlo
      */
     OrthographicCamera camera;
     /**
-     * The Renderer.
+     * Renderer de box2d para poder ver los limites en la partde de box2s
      */
     Box2DDebugRenderer renderer;
-
     /**
-     * The Skin.
-     */
-    Skin skin;
-    /**
-     * The Bt cambio personaje.
+     * El Boton para cambio de personaje.
      */
     TextButton btCambioPersonaje;
 
     /**
-     * The Fling.
+     * La coleccion de puntos para apuntar
      */
     ArrayList<Vector2> fling;
     /**
-     * The Formas.
+     * Permite dibujar formas por pantalla
      */
     ShapeRenderer formas;
 
     /**
-     * The Batch texto.
+     * Permite escribir texto por pantalla
      */
     SpriteBatch batchTexto;
 
     /**
-     * The Limite mapa.
+     * El actor con los limites del mapa
      */
     ActorLimiteMapa limiteMapa;
 
     /**
-     * The Tiempo string.
+     * El tiempo mostrado por pantalla formateado a segundos
      */
     String tiempoString = 20 + "";
     /**
-     * The Tiempo turno.
+     * El tiempo de duracion de cada turno
      */
     int tiempoTurno = 20;
     /**
-     * The Tiempo.
+     * El tiempo que le queda al turno
      */
     int tiempo = tiempoTurno;
     /**
-     * The Cont timer.
+     * Veces que se ejecuta el timer
      */
     int contTimer = 0;
     /**
-     * The Segundos partida.
+     * Los segundos desde que se inicio la partida
      */
     int segundosPartida = 0;
 
     /**
-     * The Partida acabada.
+     * Si se ha acabado la partida
      */
     boolean partidaAcabada;
     /**
-     * The Id ganador.
+     * El id del ganador
      */
     int idGanador;
     /**
-     * The Visible.
+     * Si la pantalla esta visible
      */
     boolean visible;
     /**
-     * The Balas utilizadas.
+     * La cantida total de balas disparadas
      */
     int balasUtilizadas = 0;
     /**
-     * The Debe saltar.
+     * Si el jugador actual debe volver a saltar en cuanto toca el suelo
      */
     boolean debeSaltar = false; //salto continuo con sonido, contact listener
 
     /**
-     * The Angulo.
+     * El angulo
      */
     double angulo;
     /**
-     * The Gestor gestos.
+     * El gestor de gestos que se utiliza para poder gestionar el fling y el escenario
      */
     GestorGestos gestorGestos;
 
     /**
-     * The Mapa.
+     * El nombre del mapa
      */
     String mapa;
 
     /**
-     * The Id actual.
+     * El id del jugador actual
      */
     int idActual = 1;
 
     /**
-     * The Timer.
+     * El timer
      */
     Timer.Task timer;
 
     /**
-     * Instantiates a new Pantalla juego.
+     * Inicializa la pantalla de juego
+     * Inicia los botones y el mundo pero no añade los actores, eso se hace en el show
      *
      * @param juego the juego
      */
@@ -209,8 +205,6 @@ public class PantallaJuego extends PlantillaEscenas {
 
         camera = new OrthographicCamera(juego.metrosX, juego.metrosY);
         renderer = new Box2DDebugRenderer();
-//        escenario = new Stage(new FitViewport(anchoPantalla, altoPantalla));
-//        escenario.setDebugAll(true);
         camera.translate(6, 4);
 
         btAdelante = new Image(juego.manager.get("iconos/flechaDerecha.png", Texture.class));
@@ -320,8 +314,6 @@ public class PantallaJuego extends PlantillaEscenas {
             }
         });
 
-        skin = new Skin(Gdx.files.internal("skin/flat-earth-ui.json"));         //Skin para botones y fuente (creada con hierro v5)
-
         btCambioPersonaje = new TextButton(juego.idiomas.get("cambioPersonaje"), skin);
         btCambioPersonaje.setSize(anchoPantalla / 5, altoPantalla / 7);
         btCambioPersonaje.setPosition(anchoPantalla / 2 - btCambioPersonaje.getWidth() / 2, 0);
@@ -355,6 +347,10 @@ public class PantallaJuego extends PlantillaEscenas {
         batchTexto = new SpriteBatch();
     }
 
+    /**
+     * Ventana de confirmacion para salir de la partida
+     * Pausa el timer y se reinicia si se cancela, la ventana es modal, por tanto no se puede seguir jugando
+     */
     private void confirmacion() {
         final Dialog dialogo = new Dialog("", skin);
         dialogo.setModal(true);
@@ -398,24 +394,30 @@ public class PantallaJuego extends PlantillaEscenas {
             }
 
         });
-        int pad = altoPantalla / 80;
-        dialogo.getContentTable().add(texto).pad(pad);
+        int pad = altoPantalla / 80; //El padding
+        dialogo.getContentTable().add(texto).pad(pad); //Para añadir elementos se añaden a la tabla de contenido
 
         Table tabla = new Table();
         tabla.add(btSi).pad(pad).width(anchoPantalla / 7 * 2);
         tabla.add(btNo).pad(pad).width(anchoPantalla / 7 * 2);
         dialogo.getButtonTable().add(tabla).center().padBottom(pad);
 
-        dialogo.show(escenario);
+        dialogo.show(escenario); //Lo centra en pantalla
         escenario.addActor(dialogo);
     }
 
+    /**
+     * Resetea las estadisticas e inicia los jugadores cargando sus texturas y colocandolos
+     * Carga los suelos
+     * Añade los actores y estabelece el gestor de gestos
+     */
     @Override
     public void show() {
         super.show();
         fling = new ArrayList<Vector2>();
         balas = new ArrayList<Bala>();
         idGanador = 0;
+        segundosPartida = 0;
         partidaAcabada = false;
         visible = true;
         //Limites  visible 0-8x 0-15y
@@ -437,7 +439,7 @@ public class PantallaJuego extends PlantillaEscenas {
         jugActual = jugador1;
 
 
-        limiteMapa = new ActorLimiteMapa(mundo, juego, altoPantalla, anchoPantalla);
+        limiteMapa = new ActorLimiteMapa(mundo, altoPantalla, anchoPantalla);
         escenario.addActor(limiteMapa);
 
         escenario.addActor(jugador1);
@@ -455,15 +457,27 @@ public class PantallaJuego extends PlantillaEscenas {
 
         mundo.setContactListener(new ContactListener() {
 
+            /**
+             * Detecta si la colision se produce entre dos cuerpos
+             * No depende de quien choca con quien
+             * @param contact la colision
+             * @param nombreObjeto1 el nombre de la fixture del elemento 1
+             * @param nombreObjeto2 el nombre de la fixture del elemento 2
+             * @return true si son ellos, false si no
+             */
             private boolean hanColisionado(Contact contact, Object nombreObjeto1, Object nombreObjeto2) {
                 return (contact.getFixtureA().getUserData().equals(nombreObjeto1) && contact.getFixtureB().getUserData().equals(nombreObjeto2))
                         || (contact.getFixtureA().getUserData().equals(nombreObjeto2) && contact.getFixtureB().getUserData().equals(nombreObjeto1));
             }
 
+            /**
+             * Cuando se chocan
+             * @param contact el choque
+             */
             @Override
             public void beginContact(Contact contact) {
                 if (hanColisionado(contact, "jugador1", "suelo")) {
-                    jugador1.indiceAux = 0;
+                    jugador1.indiceAux = 0; //Para que tenga efecto al saltar
                     if (jugador1.saltando) {
                         jugador1.saltando = false;
                         jugador1.tocaSuelo = true;
@@ -472,7 +486,7 @@ public class PantallaJuego extends PlantillaEscenas {
                     }
                 }
                 if (hanColisionado(contact, "jugador2", "suelo")) {
-                    jugador2.indiceAux = 0;
+                    jugador2.indiceAux = 0; //Para que tenga efecto al saltar
                     if (jugador2.saltando) {
                         jugador2.saltando = false;
                         jugador2.tocaSuelo = true;
@@ -480,6 +494,7 @@ public class PantallaJuego extends PlantillaEscenas {
                             juego.botonPulsado(jugador2.sonidoSalto);
                     }
                 }
+                //Para que puedan seguir saltando y no parezca que se esta caeyendo, se le reduce el salto para que np se pueda saltar muy alto
                 if (hanColisionado(contact, "jugador1", "jugador2")) {
                     if (jugador1.saltando) {
                         jugador1.saltando = false;
@@ -499,6 +514,7 @@ public class PantallaJuego extends PlantillaEscenas {
                     }
                 }
 
+                //Si alguna bala se choca desaparece y si es un jugador le quita vida
                 for (Bala bala : balas) {
                     if (hanColisionado(contact, bala.idBala, "jugador1")) {
                         jugador1.setVida(jugador1.getVida() - bala.daño);
@@ -533,6 +549,10 @@ public class PantallaJuego extends PlantillaEscenas {
                 }
             }
 
+            /**
+             * Cuando se separan
+             * @param contact el choque
+             */
             @Override
             public void endContact(Contact contact) {
                 if (hanColisionado(contact, "jugador1", "jugador2")) {
@@ -569,6 +589,12 @@ public class PantallaJuego extends PlantillaEscenas {
         );
     }
 
+    /**
+     * Carga los suelos dependiendo del mapa elegida el la pantalla de mapas
+     *
+     * @param indice el indice del mapa a utilizar
+     * @return coleccion con los suelos creados
+     */
     private ArrayList<Suelo> cargaSuelos(int indice) {
         ArrayList<Suelo> suelos = new ArrayList<Suelo>();
         boolean relleno = false;
@@ -585,12 +611,21 @@ public class PantallaJuego extends PlantillaEscenas {
         return suelos;
     }
 
+    /**
+     * Carga el con las texturas seleccionadas, el arma seleccionada y lo coloca en el mundo
+     *
+     * @param selector el selector del arma y las texturas
+     * @param turno    si tiene el turno
+     * @param posicion la posisicon en la que se coloca
+     * @return un nuevo jugador con esas propiedades
+     */
     private Jugador cargaJugadore(SelectorPersonajeArma selector, boolean turno, Vector2 posicion) {
         String nombreJug = "dino";
         String arma = "armas/gun.png";
         String bala = "armas/bullet.png";
         String tipoBala = "pistola";
         int cantidadBalasJugador = 1;
+        //datos para guardar y para coger las texturas
         switch (selector.indicePersonaje) {
             case 0:
                 nombreJug = "dino";
@@ -599,7 +634,7 @@ public class PantallaJuego extends PlantillaEscenas {
                 nombreJug = "dog";
                 break;
         }
-
+        //dependiendo del arma escogida cambia la cantidad de balas y las imagenes a mostrar de las mismas
         switch (selector.indiceArma) {
             case 0:
                 arma = "armas/gun.png";
@@ -631,7 +666,7 @@ public class PantallaJuego extends PlantillaEscenas {
         Jugador jugador = new Jugador(mundo, texturas.parado, texturas.mov, texturas.salto, texturas.muerto, posicion,
                 juego.manager.get(bala, Texture.class),
                 texturaArma,
-                juego, turno, Jugador.Movimiento.nada, juego.pantallaJuego, tipoBala, cantidadBalasJugador);
+                juego, turno, Jugador.Movimiento.nada, tipoBala, cantidadBalasJugador);
         jugador.setVida(selector.personajes[selector.indicePersonaje].getVida());
         jugador.nombre = nombreJug;
         jugador.arma = arma;
@@ -643,6 +678,12 @@ public class PantallaJuego extends PlantillaEscenas {
         return jugador;
     }
 
+    /**
+     * Carga las texturas del jugador dependiendo del nombre del personaje
+     *
+     * @param nombre en nombre en el que estan las teturas, nombre del animal
+     * @return un nuevo objeto con las texturas
+     */
     private TexturasJugador cargaTexturas(String nombre) {
         TexturasJugador texturasJugador = new TexturasJugador();
         texturasJugador.parado[0] = juego.manager.get(nombre + "/Idle (1).png", Texture.class);
@@ -689,6 +730,11 @@ public class PantallaJuego extends PlantillaEscenas {
         return texturasJugador;
     }
 
+    /**
+     * Comprueba si se finaliza la partida
+     * En ese caso espera dos segundos y cambia a la pantalla de finalizacion de partida cambiando
+     * los frames a mostrar y tambien los datos de la partida para su posterior guardado
+     */
     private void comprobarFinalizacion() {
         for (final Jugador jugador : jugadores) {
             if (!partidaAcabada) {
@@ -700,11 +746,10 @@ public class PantallaJuego extends PlantillaEscenas {
                         idGanador = 1;
                     Gdx.input.setInputProcessor(null);
                     fling.clear();
-                    //Cuando acaba la partida espera 1 segundo y ejecuta el siguiente codigo
+                    //Cuando acaba la partida espera 2 segundo y ejecuta el siguiente codigo
                     escenario.addAction(Actions.sequence(Actions.delay(2), Actions.run(new Runnable() {
                         @Override
                         public void run() {
-                            juego.finalizacionPartida.pantallaAnterior = juego.pantallaJuego;
                             juego.finalizacionPartida.ganador = idGanador;
                             juego.finalizacionPartida.setTiempo(segundosPartida);
                             juego.finalizacionPartida.balas = balasUtilizadas;
@@ -723,6 +768,9 @@ public class PantallaJuego extends PlantillaEscenas {
         }
     }
 
+    /**
+     * Tiemer que cambia de frame, de turno y los segundos que quedan
+     */
     private void timer() {
         if (visible && !partidaAcabada) {
             contTimer++;
@@ -746,6 +794,10 @@ public class PantallaJuego extends PlantillaEscenas {
         }
     }
 
+    /**
+     * Renderiza el juego actual mostrando los actores, el texto y si se pulsa attras lanza la ventana de confirmacion
+     * @param delta el tiempo desde la ultima ejecuion, no se usa porque box2d no depende de ese delta
+     */
     @Override
     public void render(float delta) {
         super.render(delta);
@@ -754,7 +806,7 @@ public class PantallaJuego extends PlantillaEscenas {
             timer.cancel();
             confirmacion();
         }
-
+        //Si existe el movimiento fling
         if (fling.size() > 1) {
             formas.begin(ShapeRenderer.ShapeType.Line);
             formas.setColor(Color.BLACK);
@@ -762,11 +814,10 @@ public class PantallaJuego extends PlantillaEscenas {
 
             Vector2 centroJugador = new Vector2(jugActual.getX() + jugActual.tamañoX * juego.PIXEL_METRO_X, jugActual.getY() + jugActual.tamañoY * juego.PIXEL_METRO_Y);
             Vector2 ptoFinal = fling.get(fling.size() - 1);
-            float yy = altoPantalla - ptoFinal.y - centroJugador.y;
+            float yy = altoPantalla - ptoFinal.y - centroJugador.y; //Calcula el angulo con el que apunta el jugador
             float xx = ptoFinal.x - centroJugador.x;
             angulo = (float) Math.atan2(yy, xx);
             jugActual.angulo = (float) Math.toDegrees(angulo);
-//            System.out.println(jugActual.angulo);
 
             inicio = new Vector2(jugActual.getX() + jugActual.tamañoX * juego.PIXEL_METRO_X, jugActual.getY() + jugActual.tamañoY * juego.PIXEL_METRO_Y);
 
@@ -776,9 +827,9 @@ public class PantallaJuego extends PlantillaEscenas {
         }
 
         escenario.act();
-        mundo.step(delta, 6, 2);
+        mundo.step(delta, 6, 2); //Actualiza el mundo
         camera.update();
-        if (juego.debug)
+        if (juego.debug)        //Para poder ver los limites de box2d
             renderer.render(mundo, camera.combined);
         escenario.draw();
 
@@ -789,7 +840,7 @@ public class PantallaJuego extends PlantillaEscenas {
                 balas.remove(i);
             }
         }
-
+        //Informacion de la partida
         batchTexto.begin();
         fuente.draw(batchTexto, juego.idiomas.get("jugador") + ": " + idActual, anchoPantalla / 3, altoPantalla - altoPantalla / 10);
         fuente.draw(batchTexto, tiempoString + "s", anchoPantalla / 3 * 2, altoPantalla - altoPantalla / 10);
@@ -799,9 +850,14 @@ public class PantallaJuego extends PlantillaEscenas {
         batchTexto.end();
     }
 
+    /**
+     * Se ejecuta cuando la pantalla no esta visible
+     */
     @Override
     public void hide() {
+        super.hide();
         visible = false;
+        //Primero los elimina del mundo y despues del escenario
         for (Suelo suelo : suelos) {
             suelo.elimina();
             suelo.remove();
@@ -810,11 +866,6 @@ public class PantallaJuego extends PlantillaEscenas {
         jugador1.remove();
         jugador2.elimina();
         jugador2.remove();
-
-        if (bala != null) {
-            bala.elimina();
-            bala.remove();
-        }
 
         btAtras.remove();
         btAdelante.remove();
@@ -830,6 +881,9 @@ public class PantallaJuego extends PlantillaEscenas {
         Gdx.input.setInputProcessor(null);
     }
 
+    /**
+     * Cuando se cierra la aplicacion se elmina el escenario y el mundo
+     */
     @Override
     public void dispose() {
         escenario.dispose();

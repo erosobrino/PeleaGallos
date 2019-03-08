@@ -3,88 +3,88 @@ package com.peleadegallos;
 import java.util.ArrayList;
 
 /**
- * The type Objeto guardado.
+ * El objeto con los datos que se guardan
  */
 public class ObjetoGuardado {
     private ArrayList<Record> records;
     private int tiempo, partidas,balas;
 
     /**
-     * Gets records.
+     * Devuelve records.
      *
-     * @return the records
+     * @return los records
      */
     public ArrayList<Record> getRecords() {
         return records;
     }
 
     /**
-     * Sets records.
+     * Establece records.
      *
-     * @param records the records
+     * @param records los records
      */
     public void setRecords(ArrayList<Record> records) {
         this.records = records;
     }
 
     /**
-     * Gets tiempo.
+     * Devuelve tiempo.
      *
-     * @return the tiempo
+     * @return el tiempo
      */
     public int getTiempo() {
         return tiempo;
     }
 
     /**
-     * Sets tiempo.
+     * Establece tiempo.
      *
-     * @param tiempo the tiempo
+     * @param tiempo el tiempo
      */
     public void setTiempo(int tiempo) {
         this.tiempo = tiempo;
     }
 
     /**
-     * Gets partidas.
+     * Devuelve partidas.
      *
-     * @return the partidas
+     * @return las partidas
      */
     public int getPartidas() {
         return partidas;
     }
 
     /**
-     * Sets partidas.
+     * Establece partidas.
      *
-     * @param partidas the partidas
+     * @param partidas las partidas
      */
     public void setPartidas(int partidas) {
         this.partidas = partidas;
     }
 
     /**
-     * Gets balas.
+     * Devuelve balas.
      *
-     * @return the balas
+     * @return las balas
      */
     public int getBalas() {
         return balas;
     }
 
     /**
-     * Sets balas.
+     * Establece balas.
      *
-     * @param balas the balas
+     * @param balas las balas
      */
     public void setBalas(int balas) {
         this.balas = balas;
     }
 
     /**
-     * Add record.
+     * Añade un record modificando el resto de datos
      *
-     * @param record the record
+     * @param record el record
      */
     public void addRecord(Record record){
         this.balas+=record.balas;
@@ -94,12 +94,12 @@ public class ObjetoGuardado {
     }
 
     /**
-     * Instantiates a new Objeto guardado.
+     *Inicialia el objeto para guardado
      *
-     * @param records  the records
-     * @param tiempo   the tiempo
-     * @param partidas the partidas
-     * @param balas    the balas
+     * @param records  los records
+     * @param tiempo   el tiempo total
+     * @param partidas las partidas totales
+     * @param balas    las balas totales
      */
     public ObjetoGuardado(ArrayList<Record> records, int tiempo, int partidas, int balas) {
         this.records = records;
@@ -109,7 +109,7 @@ public class ObjetoGuardado {
     }
 
     /**
-     * Instantiates a new Objeto guardado.
+     * Inicialia el objeto para guardado con datos preestablecidos
      */
     public ObjetoGuardado(){
         this.partidas=0;

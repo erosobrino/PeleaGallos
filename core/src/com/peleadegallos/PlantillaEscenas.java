@@ -18,90 +18,91 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * The type Plantilla escenas.
+ * Plantilla para todas las escenas, en esta se crean las nubes,
  */
 public class PlantillaEscenas implements Screen {
 
     /**
-     * The Juego.
+     * La pantalla de juego principal
      */
     public JuegoPrincipal juego;
     /**
-     * The Ancho pantalla.
+     * El Ancho pantalla.
      */
     int anchoPantalla = Gdx.graphics.getWidth();
     /**
-     * The Alto pantalla.
+     * El Alto pantalla.
      */
     int altoPantalla = Gdx.graphics.getHeight();
     /**
-     * The Fuente.
+     * La Fuente, es la misma que la de la skin
      */
     BitmapFont fuente;
     /**
-     * The Musica.
+     * La Musica.
      */
     Music musica;
     /**
-     * The Fondo.
+     * El Fondo.
      */
     Image fondo;
     /**
-     * The Sonido click.
+     * El Sonido click.
      */
     Sound sonidoClick;
     /**
-     * The Home.
+     * El boton home
      */
     Image home;
     /**
-     * The Skin.
+     * La skin utilizada para los botones y el resto de iu
      */
     Skin skin;
     /**
-     * The Nubes.
+     * Coleccion con las nubes del escenario
      */
     ArrayList<Nube> nubes;
     /**
-     * The Nubes textura.
+     * Las texturas de las Nubes
      */
     ArrayList<Texture> nubesTextura;
     /**
-     * The Rand.
+     * El Random para crear las nubes
      */
     Random rand;
     /**
-     * The Escenario.
+     * El Escenario.
      */
     Stage escenario;
 
+    //Escalados usados para la fuente y que se adapten a los distintos tamños de pantallas
     /**
-     * The Escalado 03.
+     * El Escalado 03.
      */
     float escalado03 = anchoPantalla / 6400f;
     /**
-     * The Escalado 075.
+     * El Escalado 075.
      */
     float escalado075 = anchoPantalla / 2560f;
     /**
-     * The Escalado 04.
+     * El Escalado 04.
      */
     float escalado04 = anchoPantalla / 4800f;
     /**
-     * The Escalado 035.
+     * El Escalado 035.
      */
     float escalado035 = anchoPantalla / 5486f;
     /**
-     * The Escalado 025.
+     * El Escalado 025.
      */
     float escalado025 = anchoPantalla / 7680f;
     /**
-     * The Escalado 05.
+     * El Escalado 05.
      */
     float escalado05 = anchoPantalla / 3840f;
 
     /**
-     * Instantiates a new Plantilla escenas.
+     * Inicializa la plantilla para las pantallas, asi tenemos todos estos elemento en todas las pantallas
      *
      * @param juego the juego
      */
@@ -110,7 +111,6 @@ public class PlantillaEscenas implements Screen {
 
         rand = new Random();
         escenario = new Stage();
-        escenario.setDebugAll(juego.debug);
 
         fondo = new Image(juego.manager.get("suelo.png", Texture.class));     //Coge imagen del assetmanager
         fondo.setSize(anchoPantalla, altoPantalla);
@@ -145,7 +145,11 @@ public class PlantillaEscenas implements Screen {
         anadeNubes(1);
     }
 
-    //Añade 5 nubes mas por cada vez que se suma uno a cantidad
+    /**
+     * Añade 5 nubes mas por cada vez que se suma uno a cantidad
+     *
+     * @param cantidad la cantida de veces que se añaden 5 nubes
+     */
     private void anadeNubes(int cantidad) {
         for (int j = 0; j < cantidad; j++) {
             nubesTextura.add(juego.manager.get("nubes/nube1.png", Texture.class));
@@ -156,6 +160,9 @@ public class PlantillaEscenas implements Screen {
         }
     }
 
+    /**
+     * Se ejecuta al mostrar la pantalla, enciende la musica y añade las nubes al escenario
+     */
     @Override
     public void show() {
         if (juego.musicaEncendida)
@@ -168,11 +175,19 @@ public class PlantillaEscenas implements Screen {
 
     }
 
+    /**
+     * Rendereiza la pantalla, pone el fondo azul y vacia la memoria de video
+     * En caso de que estea el modo desarrollo activado y se tape el sensor de luz muestra los
+     * limites de los actores de box2d y los del escenario
+     *
+     * @param delta el tiempo desde la ultima ejecucion
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);    //Vacia memoria video grafica
 
+        //Utiliza una interfaz para poder acceder a los sensores
         if (juego.adaptadorCodigoAndroid.getCurrentLux() < 10 && juego.modoDesarrollo) {
             juego.debug = true;
             escenario.setDebugAll(juego.debug);
@@ -197,6 +212,9 @@ public class PlantillaEscenas implements Screen {
 
     }
 
+    /**
+     * Se ejecuta al desaparecer la pantalla, quita las nubes del escenario
+     */
     @Override
     public void hide() {
         for (Nube nube : nubes) {

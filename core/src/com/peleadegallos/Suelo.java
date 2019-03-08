@@ -11,59 +11,63 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 /**
- * The type Suelo.
+ * El actor suelo, este es estatico
  */
 public class Suelo extends Actor {
     /**
-     * The Textura.
+     * La Textura.
      */
     Texture textura;
 
     /**
-     * The Mundo.
+     * El Mundo.
      */
     World mundo;
-
+    //Los bodys son los cuerpos, estes tiene varias fixtures para poder gestionar donde se esta con el jugador
     /**
-     * The Body.
+     * El Body.
      */
-    Body body, /**
-     * The Borde izq.
+    Body body,
+    /**
+     * El Borde izq.
      */
     bordeIzq, /**
-     * The Borde der.
+     * El Borde der.
      */
     bordeDer,bordeArriba;
 
-
+    //Las fixture almacena los datos de los cuerpos
     /**
-     * The Fixture.
+     * La Fixture.
      */
-    Fixture fixture, /**
+    Fixture fixture,
+    /**
      * The Fixture izq.
      */
-    fixtureIzq, /**
-     * The Fixture der.
+    fixtureIzq,
+    /**
+     * La Fixture der.
      */
     fixtureDer,fixtureArriba;
 
     /**
-     * The Juego.
+     * El Juego.
      */
     JuegoPrincipal juego;
 
     /**
-     * The Ancho pantalla.
+     * El Ancho pantalla.
      */
-    int anchoPantalla, /**
-     * The Alto pantalla.
+    int anchoPantalla,
+    /**
+     * El Alto pantalla.
      */
     altoPantalla;
     /**
-     * The Tamaño x.
+     * El Tamaño x.
      */
     float tamañoX, /**
-     * The Tamaño y.
+     * El Tamaño y.
      */
     tamañoY;//Son la mitad del real
     /**
@@ -72,17 +76,17 @@ public class Suelo extends Actor {
     boolean relleno;
 
     /**
-     * Instantiates a new Suelo.
+     * Inicializa el suelo con todos los datos
      *
-     * @param mundo         the mundo
-     * @param textura       the textura
-     * @param posicion      the posicion
-     * @param juego         the juego
-     * @param anchoPantalla the ancho pantalla
-     * @param altoPantalla  the alto pantalla
-     * @param tamañoX       the tamaño x
-     * @param tamañoY       the tamaño y
-     * @param relleno       the relleno
+     * @param mundo         el mundo
+     * @param textura       la textura
+     * @param posicion      la posicion
+     * @param juego         el juego
+     * @param anchoPantalla el ancho pantalla
+     * @param altoPantalla  el alto pantalla
+     * @param tamañoX       el tamaño x
+     * @param tamañoY       el tamaño y
+     * @param relleno       el relleno
      */
     public Suelo(World mundo, Texture textura, Vector2 posicion, JuegoPrincipal juego, int anchoPantalla, int altoPantalla, float tamañoX, float tamañoY, boolean relleno) {
         this.mundo = mundo;
@@ -138,20 +142,25 @@ public class Suelo extends Actor {
     }
 
     /**
-     * Instantiates a new Suelo.
+     * Inicializa el suelo con algunos datos predefinidos
      *
-     * @param mundo         the mundo
-     * @param textura       the textura
-     * @param posicion      the posicion
-     * @param juego         the juego
-     * @param anchoPantalla the ancho pantalla
-     * @param altoPantalla  the alto pantalla
-     * @param relleno       the relleno
+     * @param mundo         el mundo
+     * @param textura       la textura
+     * @param posicion      la posicion
+     * @param juego         la pantalla de juego principal
+     * @param anchoPantalla el ancho pantalla
+     * @param altoPantalla  el alto pantalla
+     * @param relleno       si se rellena
      */
     public Suelo(World mundo, Texture textura, Vector2 posicion, JuegoPrincipal juego, int anchoPantalla, int altoPantalla, boolean relleno) {
         this(mundo, textura, posicion, juego, anchoPantalla, altoPantalla, 1, 1, relleno);
     }
 
+    /**
+     * Dibuja el suelo y si relleno es true, superpone varias veces la misma textura para que no queden huecos
+     * @param batch dibuja las texturas
+     * @param parentAlpha el alpha del padre
+     */
     @Override
     public void draw(Batch batch, float parentAlpha) {
         setPosition(body.getPosition().x * juego.PIXEL_METRO_X + 1f * juego.PIXEL_METRO_X, body.getPosition().y * juego.PIXEL_METRO_Y - 0.5f * juego.PIXEL_METRO_Y);
@@ -165,12 +174,9 @@ public class Suelo extends Actor {
         batch.draw(textura, getX(), getY(), juego.PIXEL_METRO_X * 2 * tamañoX, juego.PIXEL_METRO_Y * 2 * tamañoY);
     }
 
-    @Override
-    public void act(float delta) {
-    }
-
     /**
-     * Elimina.
+     * Destruye las fixtures y los cuerpos del mundo para no cargar la memoria,
+     * si la bala es de canon vibra y suena el sonido de disparo
      */
     public void elimina() {
         bordeIzq.destroyFixture(fixtureIzq);

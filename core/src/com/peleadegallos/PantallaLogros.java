@@ -7,22 +7,22 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 
 /**
- * The type Pantalla logros.
+ * La pantalla en la que se muestran los logros
  */
 public class PantallaLogros extends PlantillaEscenas {
     /**
-     * The Texto.
+     * Para poder escribir en la pantalla
      */
     SpriteBatch texto;
     /**
-     * The Pos dedo.
+     * La posicion del dedo para mover los records y asi ver todos
      */
     int posDedo;
 
     /**
-     * Instantiates a new Pantalla logros.
+     * Inicializa una nueva pantalla e logros
      *
-     * @param juego the juego
+     * @param juego la pantalla de juegos principal
      */
     public PantallaLogros(JuegoPrincipal juego) {
         super(juego);
@@ -30,6 +30,10 @@ public class PantallaLogros extends PlantillaEscenas {
         texto = new SpriteBatch();
     }
 
+    /**
+     * Se ejecuta al mostrar la pantalla, añade los actores y cambia el inputprocessor por
+     * uno que gestiona el deplazamiento del dedo, GestosScrollRecords
+     */
     @Override
     public void show() {
         super.show();
@@ -38,11 +42,15 @@ public class PantallaLogros extends PlantillaEscenas {
         escenario.addActor(home);
         fuente.getData().setScale(escalado025);
 
-        posDedo=0;
+        posDedo = 0;
 
         Gdx.input.setInputProcessor(new GestosScrollRecords(new GestureDetector.GestureAdapter(), escenario, altoPantalla, this));
     }
 
+    /**
+     * Renderiza la pantalla actual y escribe la infromacion de los records
+     * @param delta el tiempo desde la ultima ejecucion, marca el gandor y perdedor por colores
+     */
     @Override
     public void render(float delta) {
         super.render(delta);
@@ -96,6 +104,9 @@ public class PantallaLogros extends PlantillaEscenas {
         texto.end();
     }
 
+    /**
+     * Se ejecuta cuando la pantalla descarece, quita los actores y el inputprocessor
+     */
     @Override
     public void hide() {
         super.hide();
