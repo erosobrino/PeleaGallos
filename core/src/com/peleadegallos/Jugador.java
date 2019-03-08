@@ -229,6 +229,10 @@ public class Jugador extends Actor {
      * La fuerza y con la que salta, dependiendo de donde esta el jugador se cambia esta propiedad
      */
     int fuerzaY = 10;
+    /**
+     * La velocidad
+     */
+    int velocidad;
 
     /**
      * Inicializa el jugador
@@ -246,8 +250,9 @@ public class Jugador extends Actor {
      * @param movimiento        el movimiento
      * @param tipoBala          el tipo de bala
      * @param cantidadBalas     la cantidad de balas
+     * @param velocidad         la velocidad
      */
-    public Jugador(World mundo, Texture[] texturaParado, Texture[] texturaMovimiento, Texture[] texturaSaltando, Texture[] muerto, Vector2 posicion, Texture imgBala, Texture imgArma, JuegoPrincipal juego, boolean turno, Movimiento movimiento, String tipoBala, int cantidadBalas) {
+    public Jugador(World mundo, Texture[] texturaParado, Texture[] texturaMovimiento, Texture[] texturaSaltando, Texture[] muerto, Vector2 posicion, Texture imgBala, Texture imgArma, JuegoPrincipal juego, boolean turno, Movimiento movimiento, String tipoBala, int cantidadBalas, int velocidad) {
         this.mundo = mundo;
         this.frameParadoAv = texturaParado;
         this.frameMovimientoAv = texturaMovimiento;
@@ -262,6 +267,7 @@ public class Jugador extends Actor {
         this.tipoBala = tipoBala;
         this.cantidadBalas = cantidadBalas;
         this.balasRestantes = cantidadBalas;
+        this.velocidad=velocidad;
 
         if (imgArma != null) {
             aspectoArma = imgArma.getWidth() / imgArma.getHeight();
@@ -435,12 +441,12 @@ public class Jugador extends Actor {
                 case atras:
                     avanza = false;
                     angulo = 135;
-                    body.applyLinearImpulse(-0.75f, 0, posicionCuerpo.x, posicionCuerpo.y, true);
+                    body.applyLinearImpulse(-0.75f/2*velocidad, 0, posicionCuerpo.x, posicionCuerpo.y, true);
                     break;
                 case adelante:
                     avanza = true;
                     angulo = 45;
-                    body.applyLinearImpulse(0.75f, 0, posicionCuerpo.x, posicionCuerpo.y, true);
+                    body.applyLinearImpulse(0.75f/2*velocidad, 0, posicionCuerpo.x, posicionCuerpo.y, true);
                     break;
                 case saltaAtras:
                     avanza = false;

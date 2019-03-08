@@ -651,7 +651,7 @@ public class PantallaJuego extends PlantillaEscenas {
             case 2:
                 arma = null;
                 bala = "armas/bomb.png";
-                tipoBala = "canon";
+                tipoBala = "bomba";
                 cantidadBalasJugador = 1;
                 break;
         }
@@ -666,7 +666,7 @@ public class PantallaJuego extends PlantillaEscenas {
         Jugador jugador = new Jugador(mundo, texturas.parado, texturas.mov, texturas.salto, texturas.muerto, posicion,
                 juego.manager.get(bala, Texture.class),
                 texturaArma,
-                juego, turno, Jugador.Movimiento.nada, tipoBala, cantidadBalasJugador);
+                juego, turno, Jugador.Movimiento.nada, tipoBala, cantidadBalasJugador, selector.personajes[selector.indicePersonaje].getVelocidad());
         jugador.setVida(selector.personajes[selector.indicePersonaje].getVida());
         jugador.nombre = nombreJug;
         jugador.arma = arma;
@@ -796,6 +796,7 @@ public class PantallaJuego extends PlantillaEscenas {
 
     /**
      * Renderiza el juego actual mostrando los actores, el texto y si se pulsa attras lanza la ventana de confirmacion
+     *
      * @param delta el tiempo desde la ultima ejecuion, no se usa porque box2d no depende de ese delta
      */
     @Override

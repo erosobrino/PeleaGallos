@@ -129,7 +129,7 @@ public class GestosScrollRecords extends GestureDetector {
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         if (!escenario.touchDragged(screenX, screenY, pointer)) {
             super.touchDragged(screenX, screenY, pointer);
-            if ((pInicio.y - screenY) > (altoPantalla / 120)) {
+            if (Math.abs((pInicio.y - screenY)) > (altoPantalla / 50)) {
                 if (pInicio.y > screenY) {
                     if (logros.posDedo < (logros.juego.datosGuardados.getRecords().size() - 6)) { //6 es la cantidad de records que se mostraran a la vez
                         logros.posDedo++;

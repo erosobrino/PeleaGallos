@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -60,6 +61,30 @@ public class AdaptadorAndroid implements AdaptadorCodigoAndroid, SensorEventList
     @Override
     public float getCurrentLux() {
         return currentLux;
+    }
+
+    /**
+     * Comparte un mensage en redes sociales
+     * Primero intenta con facebook y despues con whatsapp
+     *
+     * @param mensage el mensage a compartir
+     */
+    @Override
+    public void comparteEnRS(String mensage) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, mensage);
+        intent.setPackage("com.facebook.katana");
+        try {
+
+            activityPrincipal.startActivity(intent);
+        } catch (Exception e) {
+            try {
+                intent.setPackage("com.whatsapp");
+                activityPrincipal.startActivity(intent);
+            } catch (Exception ea) {
+            }
+        }
     }
 
     /**

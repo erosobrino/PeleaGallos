@@ -49,6 +49,7 @@ public class PantallaLogros extends PlantillaEscenas {
 
     /**
      * Renderiza la pantalla actual y escribe la infromacion de los records
+     *
      * @param delta el tiempo desde la ultima ejecucion, marca el gandor y perdedor por colores
      */
     @Override
@@ -80,25 +81,28 @@ public class PantallaLogros extends PlantillaEscenas {
         y -= altoPantalla / 8;
 
         for (int i = 0 + posDedo; i < juego.datosGuardados.getRecords().size(); i++) {
-            fuente.draw(texto, (i + 1) + "", anchoPantalla / 10 * 0.25f, y);
-            if (juego.datosGuardados.getRecords().get(i).idGanador == 1)
-                fuente.setColor(Color.YELLOW);
-            else
-                fuente.setColor(Color.RED);
-            fuente.draw(texto, juego.idiomas.get(juego.datosGuardados.getRecords().get(i).jugador1), anchoPantalla / 10 * 1, y);
-            fuente.draw(texto, juego.idiomas.get(juego.datosGuardados.getRecords().get(i).arma1), anchoPantalla / 10 * 2.75f, y);
-            if (juego.datosGuardados.getRecords().get(i).idGanador == 2)
-                fuente.setColor(Color.YELLOW);
-            else
-                fuente.setColor(Color.RED);
-            fuente.draw(texto, juego.idiomas.get(juego.datosGuardados.getRecords().get(i).jugador2), anchoPantalla / 10 * 3.75f, y);
-            fuente.draw(texto, juego.idiomas.get(juego.datosGuardados.getRecords().get(i).arma2), anchoPantalla / 10 * 5.5f, y);
-            fuente.setColor(Color.BLACK);
-            fuente.draw(texto, juego.idiomas.get(juego.datosGuardados.getRecords().get(i).mapa), anchoPantalla / 10 * 6.75f, y);
-            fuente.draw(texto, juego.datosGuardados.getRecords().get(i).balas + "", anchoPantalla / 10 * 7.75f, y);
-            String tiempoString = String.format("%02d:%02d", juego.datosGuardados.getRecords().get(i).tiempo / 60, juego.datosGuardados.getRecords().get(i).tiempo % 60);
-            fuente.draw(texto, tiempoString, anchoPantalla / 10 * 8.75f, y);
-
+//            try {
+                fuente.draw(texto, (i + 1) + "", anchoPantalla / 10 * 0.25f, y);
+                if (juego.datosGuardados.getRecords().get(i).idGanador == 1)
+                    fuente.setColor(Color.YELLOW);
+                else
+                    fuente.setColor(Color.RED);
+                fuente.draw(texto, juego.idiomas.get(juego.datosGuardados.getRecords().get(i).jugador1), anchoPantalla / 10 * 1, y);
+                fuente.draw(texto, juego.idiomas.get(juego.datosGuardados.getRecords().get(i).arma1), anchoPantalla / 10 * 2.75f, y);
+                if (juego.datosGuardados.getRecords().get(i).idGanador == 2)
+                    fuente.setColor(Color.YELLOW);
+                else
+                    fuente.setColor(Color.RED);
+                fuente.draw(texto, juego.idiomas.get(juego.datosGuardados.getRecords().get(i).jugador2), anchoPantalla / 10 * 3.75f, y);
+                fuente.draw(texto, juego.idiomas.get(juego.datosGuardados.getRecords().get(i).arma2), anchoPantalla / 10 * 5.5f, y);
+                fuente.setColor(Color.BLACK);
+                fuente.draw(texto, juego.idiomas.get(juego.datosGuardados.getRecords().get(i).mapa), anchoPantalla / 10 * 6.75f, y);
+                fuente.draw(texto, juego.datosGuardados.getRecords().get(i).balas + "", anchoPantalla / 10 * 7.75f, y);
+                String tiempoString = String.format("%02d:%02d", juego.datosGuardados.getRecords().get(i).tiempo / 60, juego.datosGuardados.getRecords().get(i).tiempo % 60);
+                fuente.draw(texto, tiempoString, anchoPantalla / 10 * 8.75f, y);
+//            } catch (Exception e) {
+//                fuente.setColor(Color.BLACK);
+//            }//Salta si alguno de los datos no esta en los idiomas
             y -= altoPantalla / 8;
         }
         texto.end();

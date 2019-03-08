@@ -104,6 +104,13 @@ public class MenuInicio extends PlantillaEscenas {
         ayuda.setPosition(ancho * 5 - ancho * 0.25f, alto * 0.75f);
         ayuda.getLabel().setFontScale(escalado03);
         ayuda.getLabel().setColor(Color.BLACK);
+        ayuda.addCaptureListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                juego.botonPulsado(sonidoClick);
+                juego.setScreen(juego.ayuda);
+            }
+        });
 
         imgInfo = new Image(juego.manager.get("iconos/info-circle.png", Texture.class));
         imgInfo.setSize(altoPantalla / 7, altoPantalla / 7);

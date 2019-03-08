@@ -19,4 +19,10 @@ public interface AdaptadorCodigoAndroid {
      * @return la luz actual
      */
     float getCurrentLux();
+
+    /**
+     * Comparte un mensage en redes sociales
+     * @param mensage el mensage a compartir
+     */
+    void comparteEnRS(String mensage);
 }

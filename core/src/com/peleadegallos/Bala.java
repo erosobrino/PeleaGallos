@@ -145,7 +145,7 @@ public class Bala extends Actor {
                 posicion.x = centroJugador.x / juego.PIXEL_METRO_X - 2 + jugador.tamañoX * (float) Math.cos(angulo) * 1.5f;      //Dependiendo del angulo la bala sale mas arriba o abajo
                 posicion.y = centroJugador.y / juego.PIXEL_METRO_Y - 0.5f + jugador.tamañoY * (float) Math.sin(angulo) * 1.3f;
                 break;
-            case "canon":
+            case "bomba":
                 sonidoCanon = juego.manager.get("sonidos/sonidoCanon.mp3", Sound.class);
                 juego.botonPulsado(null);
                 radio = 0.25f;

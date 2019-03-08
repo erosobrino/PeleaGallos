@@ -56,6 +56,10 @@ public class JuegoPrincipal extends Game {
      */
     PantallaLogros logros;
     /**
+     * La pantalla de ayuda
+     */
+    PantallaAyuda ayuda;
+    /**
      * Los Datos guardados.
      */
     ObjetoGuardado datosGuardados = new ObjetoGuardado();
@@ -212,6 +216,15 @@ public class JuegoPrincipal extends Game {
             }
         }
 
+        manager.load("tutorial/tutorial1.png", Texture.class); //Imagenes para tutorial
+        manager.load("tutorial/tutorial2.png", Texture.class);
+        manager.load("tutorial/tutorial3.png", Texture.class);
+        manager.load("tutorial/tutorial4.png", Texture.class);
+        manager.load("tutorial/tutorial5.png", Texture.class);
+        manager.load("tutorial/tutorial6.png", Texture.class);
+        manager.load("tutorial/tutorial7.png", Texture.class);
+        manager.load("tutorial/tutorial8.png", Texture.class);
+
         manager.load("Music.wav", Music.class);                  //Musica y sonidos
         manager.load("sonidos/sonidoClick.mp3", Sound.class);
         manager.load("sonidos/sonidoCanon.mp3", Sound.class);
@@ -236,8 +249,10 @@ public class JuegoPrincipal extends Game {
         Personaje[] personajes = new Personaje[animales.length];    //Carga los personajes con sus texturas y sus propiedades
         for (int i = 0; i < personajes.length; i++) {
             personajes[i] = new Personaje(manager.get(animales[i] + "/Idle (1).png", Texture.class), 100, 2, animales[i]);
-            if (animales[i].equals("dog"))
+            if (animales[i].equals("dog")) {
                 personajes[i].setVida(80);
+                personajes[i].setVelocidad(3);
+            }
         }
 
         Arma[] armas = new Arma[3];                 //Carga las armas con sus propiedades
@@ -281,15 +296,15 @@ public class JuegoPrincipal extends Game {
         selectorPersonajeArma = new SelectorPersonajeArma(this, personajes, armas, 1);
         selectorPersonajeArma2 = new SelectorPersonajeArma(this, personajes, armas, 2);
         selectorMapa = new SelectorMapa(this, mapas, 3);
+        ayuda = new PantallaAyuda(this);
 
-        datosGuardados.addRecord(new Record("dino", "dog", "nieve", "uzi", "gun", 20, 60, 1));
-        datosGuardados.addRecord(new Record("dino", "dog", "nieve", "uzi", "gun", 20, 60, 1));
-        datosGuardados.addRecord(new Record("dino", "dog", "nieve", "uzi", "gun", 20, 60, 1));
-        datosGuardados.addRecord(new Record("dino", "dog", "nieve", "uzi", "gun", 20, 60, 1));
-        datosGuardados.addRecord(new Record("dino", "dog", "nieve", "uzi", "gun", 20, 60, 1));
-
-        guardaDatos();
-
+//        datosGuardados.addRecord(new Record("dino", "dog", "nieve", "uzi", "gun", 20, 60, 1));        //Para pruebas
+//        datosGuardados.addRecord(new Record("dino", "dog", "tierra", "bomba", "gun", 20, 60, 1));
+//        datosGuardados.addRecord(new Record("dino", "dog", "nieve", "uzi", "shootgun", 20, 60, 1));
+//        datosGuardados.addRecord(new Record("dino", "dog", "nieve", "uzi", "gun", 20, 60, 1));
+//        datosGuardados.addRecord(new Record("dino", "dog", "nieve", "uzi", "gun", 20, 60, 1));
+//
+//        guardaDatos();
         setScreen(menuInicio);                             //Cambia al menu de inicio
     }
 
@@ -335,8 +350,10 @@ public class JuegoPrincipal extends Game {
     }
 
     /**
-     * Envia unanotificacion al usuario si see cumple alguna de las condiciones,
+     * Envia una notificacion al usuario si see cumple alguna de las condiciones,
      * si se enviaran dos notifciaciones o no hubiese quitado la anterior, la nueva la sustituye
+     * En la partida 1 y 10 intenta compartir un mensage en las redes sociales, si se publicase la app
+     * en el mensage se incluiria la ruta a la tienda de aplicaciones
      */
     private void notificacion() {
         if (datosGuardados.getBalas() > 80 && datosGuardados.getBalas() < 180)
@@ -345,8 +362,10 @@ public class JuegoPrincipal extends Game {
             adaptadorCodigoAndroid.nuevaNotificacion("Pelea de Gallos", idiomas.get("tiempoTotal") + ": " + String.format("%02d:%02d", datosGuardados.getTiempo() / 60, datosGuardados.getTiempo() % 60));
         if (datosGuardados.getRecords().size() == 1) {
             adaptadorCodigoAndroid.nuevaNotificacion("Pelea de Gallos", idiomas.get("partidas") + ": " + datosGuardados.getRecords().size());
+            adaptadorCodigoAndroid.comparteEnRS(idiomas.get("redesSociales"));
         } else {
             if (datosGuardados.getRecords().size() == 10) {
+                adaptadorCodigoAndroid.comparteEnRS(idiomas.get("redesSociales"));
                 adaptadorCodigoAndroid.nuevaNotificacion("Pelea de Gallos", idiomas.get("partidas") + ": " + datosGuardados.getRecords().size());
             } else {
                 if (datosGuardados.getRecords().size() % 100 == 0) {

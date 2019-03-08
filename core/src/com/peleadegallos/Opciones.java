@@ -98,6 +98,7 @@ class Opciones extends PlantillaEscenas {
                 dialogo.cancel();
                 dialogo.remove();
                 juego.borraDatos();
+                muestraTexto=true;
                 return true;
             }
 
@@ -111,6 +112,7 @@ class Opciones extends PlantillaEscenas {
                 dialogo.hide();
                 dialogo.cancel();
                 dialogo.remove();
+                muestraTexto=true;
                 return true;
             }
 
