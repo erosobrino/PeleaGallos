@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -110,7 +111,7 @@ public class PlantillaEscenas implements Screen {
         this.juego = juego;
 
         rand = new Random();
-        escenario = new Stage();
+        escenario = new Stage(new FitViewport(anchoPantalla,altoPantalla));
 
         fondo = new Image(juego.manager.get("suelo.png", Texture.class));     //Coge imagen del assetmanager
         fondo.setSize(anchoPantalla, altoPantalla);

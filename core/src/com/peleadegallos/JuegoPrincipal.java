@@ -286,7 +286,7 @@ public class JuegoPrincipal extends Game {
         mapas[1].puntos[6] = new Vector2(12, 0.65f);
         mapas[1].puntos[7] = new Vector2(14, 0);
         mapas[1].rozamiento = 0.5f;
-        mapas[0].nombre = "nieve";
+        mapas[1].nombre = "nieve";
 
         menuInicio = new MenuInicio(this);      //Crea las diferentes pantallas
         opciones = new Opciones(this);
@@ -298,13 +298,6 @@ public class JuegoPrincipal extends Game {
         selectorMapa = new SelectorMapa(this, mapas, 3);
         ayuda = new PantallaAyuda(this);
 
-//        datosGuardados.addRecord(new Record("dino", "dog", "nieve", "uzi", "gun", 20, 60, 1));        //Para pruebas
-//        datosGuardados.addRecord(new Record("dino", "dog", "tierra", "bomba", "gun", 20, 60, 1));
-//        datosGuardados.addRecord(new Record("dino", "dog", "nieve", "uzi", "shootgun", 20, 60, 1));
-//        datosGuardados.addRecord(new Record("dino", "dog", "nieve", "uzi", "gun", 20, 60, 1));
-//        datosGuardados.addRecord(new Record("dino", "dog", "nieve", "uzi", "gun", 20, 60, 1));
-//
-//        guardaDatos();
         setScreen(menuInicio);                             //Cambia al menu de inicio
     }
 
