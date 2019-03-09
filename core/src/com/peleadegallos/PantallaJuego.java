@@ -192,6 +192,11 @@ public class PantallaJuego extends PlantillaEscenas {
     Timer.Task timer;
 
     /**
+     * Coleccion con todos los powerUps para despues eliminarlos
+     */
+    ArrayList<ActorPowerUp> powerUps;
+
+    /**
      * Inicializa la pantalla de juego
      * Inicia los botones y el mundo pero no añade los actores, eso se hace en el show
      *
@@ -416,11 +421,12 @@ public class PantallaJuego extends PlantillaEscenas {
         super.show();
         fling = new ArrayList<Vector2>();
         balas = new ArrayList<Bala>();
+        powerUps = new ArrayList<>();
         idGanador = 0;
         segundosPartida = 0;
         partidaAcabada = false;
         visible = true;
-        //Limites  visible 0-8x 0-15y
+        //Limites  visible 0-8y 0-15x
         suelos = cargaSuelos(juego.selectorMapa.indiceMapa);
 
         jugador1 = cargaJugadore(juego.selectorPersonajeArma, true, new Vector2(0, 3));
@@ -453,7 +459,6 @@ public class PantallaJuego extends PlantillaEscenas {
         escenario.addActor(btCambioPersonaje);
 
         escenario.addActor(btDisparo);
-
 
         mundo.setContactListener(new ContactListener() {
 
@@ -511,6 +516,42 @@ public class PantallaJuego extends PlantillaEscenas {
                         jugador2.fuerzaY = 6;   //Asi cuando salte salta menos
                         if (debeSaltar)
                             juego.botonPulsado(jugador2.sonidoSalto);
+                    }
+                }
+
+                //Si algun jugador coge un power up
+                for (ActorPowerUp powerUp : powerUps) {
+                    for (Jugador jugador : jugadores) {
+                        if (hanColisionado(contact, jugador.fixture.getUserData(), powerUp.idPowerUp)) {
+                            switch (powerUp.tipoPowerUp) {
+                                case sumaVida:
+                                    jugador.setVida(jugador.getVida() + 10);
+                                    break;
+                                case quitaVida:
+                                    jugador.setVida(jugador.getVida() - 10);
+                                    break;
+                                case pierdeTurno:
+                                    tiempo = 0;
+                                    break;
+                                case rivalSumaVida:
+                                    if (jugador.fixture.getUserData().equals("jugador1"))
+                                        jugador2.setVida(jugador2.getVida() + 10);
+                                    else
+                                        jugador1.setVida(jugador1.getVida() + 10);
+                                    break;
+                                case rivalquitaVida:
+                                    if (jugador.fixture.getUserData().equals("jugador1"))
+                                        jugador2.setVida(jugador2.getVida() - 10);
+                                    else
+                                        jugador1.setVida(jugador1.getVida() - 10);
+                                    break;
+                                case dobleBalas:
+                                    jugador.balasRestantes += jugador.cantidadBalas;  //Le suma las balas que
+                                    jugador.cantidadBalas *= 2;                       // tenia antes al maximo y despues tendra el doble en cada turno
+                            }
+                            juego.adaptadorCodigoAndroid.toastMensage(juego.idiomas.get(powerUp.tipoPowerUp.name()));
+                            powerUp.recogida = true;
+                        }
                     }
                 }
 
@@ -769,7 +810,13 @@ public class PantallaJuego extends PlantillaEscenas {
     }
 
     /**
-     * Tiemer que cambia de frame, de turno y los segundos que quedan
+     * Tiempo para lanzado de cajas
+     */
+    int tiempoAnterior = 0;
+
+    /**
+     * Tiemer que cambia de frame, de turno y los segundos que quedan, cada 10 segundos hace un random
+     * y si sale el 0 lanza una nueva caja
      */
     private void timer() {
         if (visible && !partidaAcabada) {
@@ -790,6 +837,15 @@ public class PantallaJuego extends PlantillaEscenas {
             }
             for (Jugador jugador : jugadores) {
                 jugador.cambiaFrame();
+            }
+            if (segundosPartida % 10 == 0 && tiempoAnterior != segundosPartida && powerUps.size()<4) {//Cada 10 segundos, la segunda condicion es por que se ejecutaba dos veces
+                tiempoAnterior = segundosPartida;
+                int posibilidad = (int) (Math.random() * ((3) + 1));
+                if (posibilidad == 0) {
+                    ActorPowerUp powerUp = new ActorPowerUp(mundo, juego.manager.get("powerup/box.png", Texture.class), juego);
+                    powerUps.add(powerUp);
+                    escenario.addActor(powerUp);
+                }
             }
         }
     }
@@ -841,6 +897,14 @@ public class PantallaJuego extends PlantillaEscenas {
                 balas.remove(i);
             }
         }
+
+        for (int i = powerUps.size() - 1; i >= 0; i--) {
+            if (powerUps.get(i).recogida) { //Se elimina despues del mundo step para evitar error al renderizar la caja a null
+                powerUps.get(i).elimina();
+                powerUps.get(i).remove();
+                powerUps.remove(i);
+            }
+        }
         //Informacion de la partida
         batchTexto.begin();
         fuente.draw(batchTexto, juego.idiomas.get("jugador") + ": " + idActual, anchoPantalla / 3, altoPantalla - altoPantalla / 10);
@@ -878,6 +942,18 @@ public class PantallaJuego extends PlantillaEscenas {
 
         limiteMapa.elimina();
         limiteMapa.remove();
+
+        //Si queda alguna bala o powerup se eliminan para que no queden en el mapa
+        for (int i = balas.size() - 1; i >= 0; i--) {
+            balas.get(i).elimina();
+            balas.get(i).remove();
+            balas.remove(i);
+        }
+
+        for (int i = powerUps.size() - 1; i >= 0; i--) {
+            powerUps.get(i).elimina();
+            powerUps.get(i).remove();
+        }
 
         Gdx.input.setInputProcessor(null);
     }

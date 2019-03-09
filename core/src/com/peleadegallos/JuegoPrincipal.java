@@ -244,6 +244,8 @@ public class JuegoPrincipal extends Game {
 
         manager.load("skin/fuente200.fnt", BitmapFont.class);    //Fuente
 
+        manager.load("powerup/box.png", Texture.class); //Caja
+
         manager.finishLoading();                             //Espera a que acabe de cargar
 
         Personaje[] personajes = new Personaje[animales.length];    //Carga los personajes con sus texturas y sus propiedades

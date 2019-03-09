@@ -9,6 +9,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Handler;
+import android.widget.Toast;
+
 
 /**
  * Adaptador utilizado con codigo nativo de android y asi
@@ -85,6 +88,27 @@ public class AdaptadorAndroid implements AdaptadorCodigoAndroid, SensorEventList
             } catch (Exception ea) {
             }
         }
+    }
+
+    /**
+     * Utilizado para poder lanzar el Toast
+     */
+    protected Handler handler = new Handler();
+
+
+    /**
+     * Crea y muestra un nuevo Toast con un mensage dado
+     *
+     * @param mensage el mensage del toast
+     */
+    @Override
+    public void toastMensage(final String mensage) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(activityPrincipal, mensage, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**

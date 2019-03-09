@@ -25,4 +25,10 @@ public interface AdaptadorCodigoAndroid {
      * @param mensage el mensage a compartir
      */
     void comparteEnRS(String mensage);
+
+    /**
+     * Crea un nuevo Toast y lo muestra
+     * @param mensage el mensage del toast
+     */
+    void toastMensage(String mensage);
 }
